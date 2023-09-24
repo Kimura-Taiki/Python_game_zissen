@@ -6,6 +6,16 @@ img_galaxy = pygame.image.load("image_gl/galaxy.png")
 
 bg_y = 0
 
+def quit_event():
+    pygame.quit()
+    sys.exit()
+
+def fullscreen_event(screen, x, y):
+    screen = pygame.display.set_mode((x ,y), pygame.FULLSCREEN)
+
+def windowed_event(screen, x, y):
+    screen = pygame.display.set_mode((x ,y))
+
 def main(): # メインループ
     global bg_y
 
@@ -17,13 +27,12 @@ def main(): # メインループ
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                quit_event()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_F1:
-                    screen = pygame.display.set_mode((960, 720), pygame.FULLSCREEN)
+                    fullscreen_event(screen=screen, x=960, y=720)
                 if event.key == pygame.K_F2 or event.key == pygame.K_ESCAPE:
-                    screen = pygame.display.set_mode((960, 720))
+                    windowed_event(screen=screen, x=960, y=720)
         
         # 背景のスクロール
         bg_y = (bg_y+16)%720
