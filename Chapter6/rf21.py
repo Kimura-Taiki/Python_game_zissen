@@ -6,25 +6,28 @@ from functools import partial
 img_galaxy = pygame.image.load("image_gl/galaxy.png")
 
 bg_y = 0
+WIN_X = 960
+WIN_Y = 720
+WIN_SIZE = (WIN_X, WIN_Y)
 
-screen = pygame.display.set_mode((960, 720))
 
+screen = pygame.display.set_mode(WIN_SIZE)
 
 def quit_event():
     pygame.quit()
     sys.exit()
 
-def fullscreen_event(screen, x, y):
-    screen = pygame.display.set_mode((x ,y), pygame.FULLSCREEN)
+def fullscreen_event(screen, size):
+    screen = pygame.display.set_mode(size=size, flags=pygame.FULLSCREEN)
 
-def windowed_event(screen, x, y):
-    screen = pygame.display.set_mode((x ,y))
+def windowed_event(screen, size):
+    screen = pygame.display.set_mode(size=size)
 
 event_mapping = [
     {"type":pygame.QUIT,                            "func":quit_event},
-    {"type":pygame.KEYDOWN, "key":pygame.K_F1,      "func":partial(fullscreen_event, screen=screen, x=960, y=720)},
-    {"type":pygame.KEYDOWN, "key":pygame.K_F2,      "func":partial(windowed_event, screen=screen, x=960, y=720)},
-    {"type":pygame.KEYDOWN, "key":pygame.K_ESCAPE,  "func":partial(windowed_event, screen=screen, x=960, y=720)}]
+    {"type":pygame.KEYDOWN, "key":pygame.K_F1,      "func":partial(fullscreen_event, screen=screen, size=WIN_SIZE)},
+    {"type":pygame.KEYDOWN, "key":pygame.K_F2,      "func":partial(windowed_event, screen=screen, size=WIN_SIZE)},
+    {"type":pygame.KEYDOWN, "key":pygame.K_ESCAPE,  "func":partial(windowed_event, screen=screen, size=WIN_SIZE)}]
 
 def solve_event(mapping):
     for event in pygame.event.get():
