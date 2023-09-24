@@ -1,10 +1,14 @@
 import pygame
 import sys
+from functools import partial
 
 # 画像の読み込み
 img_galaxy = pygame.image.load("image_gl/galaxy.png")
 
 bg_y = 0
+
+screen = pygame.display.set_mode((960, 720))
+
 
 def quit_event():
     pygame.quit()
@@ -16,23 +20,28 @@ def fullscreen_event(screen, x, y):
 def windowed_event(screen, x, y):
     screen = pygame.display.set_mode((x ,y))
 
+event_mapping = [
+    {"type":pygame.QUIT,                            "func":quit_event},
+    {"type":pygame.KEYDOWN, "key":pygame.K_F1,      "func":partial(fullscreen_event, screen=screen, x=960, y=720)},
+    {"type":pygame.KEYDOWN, "key":pygame.K_F2,      "func":partial(windowed_event, screen=screen, x=960, y=720)},
+    {"type":pygame.KEYDOWN, "key":pygame.K_ESCAPE,  "func":partial(windowed_event, screen=screen, x=960, y=720)}]
+
+def solve_event(mapping):
+    for event in pygame.event.get():
+        for map in mapping:
+            if event.type == map["type"] and (event.type != pygame.KEYDOWN or event.key == map["key"]):
+                map["func"]()
+                break
+
 def main(): # メインループ
-    global bg_y
+    global bg_y, screen, event_mapping
 
     pygame.init()
     pygame.display.set_caption("Galaxy Lancer")
-    screen = pygame.display.set_mode((960, 720))
     clock = pygame.time.Clock()
 
     while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                quit_event()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_F1:
-                    fullscreen_event(screen=screen, x=960, y=720)
-                if event.key == pygame.K_F2 or event.key == pygame.K_ESCAPE:
-                    windowed_event(screen=screen, x=960, y=720)
+        solve_event(event_mapping)
         
         # 背景のスクロール
         bg_y = (bg_y+16)%720
