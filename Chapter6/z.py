@@ -1,8 +1,8 @@
 import pygame
 
-print(pygame.QUIT)
+img_galaxy = pygame.image.load("image_gl/galaxy.png")
+IG = pygame.image.load("image_gl/galaxy.png")
 
-def p(hatena):
-    return pygame.hatena
-
-print(p(QUIT))
+print(img_galaxy)
+print(IG)
+print(type(IG))

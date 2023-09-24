@@ -2,16 +2,12 @@ import pygame
 import sys
 from functools import partial
 
+from mod.screen import screen, WIN_SIZE, WIN_Y
+
 # 画像の読み込み
 img_galaxy = pygame.image.load("image_gl/galaxy.png")
 
 bg_y = 0
-WIN_X = 960
-WIN_Y = 720
-WIN_SIZE = (WIN_X, WIN_Y)
-
-
-screen = pygame.display.set_mode(WIN_SIZE)
 
 def quit_event():
     pygame.quit()
@@ -39,16 +35,14 @@ def solve_event(mapping):
 def main(): # メインループ
     global bg_y, screen, event_mapping
 
-    pygame.init()
-    pygame.display.set_caption("Galaxy Lancer")
     clock = pygame.time.Clock()
 
     while True:
         solve_event(event_mapping)
         
         # 背景のスクロール
-        bg_y = (bg_y+16)%720
-        screen.blit(img_galaxy, [0, bg_y-720])
+        bg_y = (bg_y+16)%WIN_Y
+        screen.blit(img_galaxy, [0, bg_y-WIN_Y])
         screen.blit(img_galaxy, [0, bg_y])
 
         pygame.display.update()
