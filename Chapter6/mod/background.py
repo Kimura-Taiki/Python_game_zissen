@@ -1,5 +1,8 @@
 import pygame
+pygame.init()
+
 from mod.screen import WIN_Y
+
 
 # 背景関連の処理をBackGroundクラスへ集約
 class BackGround():
