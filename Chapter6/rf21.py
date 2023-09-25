@@ -1,4 +1,5 @@
 import pygame
+pygame.init()
 
 from mod.solve_event import event_mapping, solve_event # 解決すべきpygameイベントを定義
 from mod.screen import screen # ウィンドウを作成
