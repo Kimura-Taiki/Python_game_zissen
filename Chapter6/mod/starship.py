@@ -5,7 +5,7 @@ from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
 class StarShip():
     x = 480
     y = 360
-    ss_d = 0
+    roll = 0
     tmr = 0
 
     # 画像の読み込み
@@ -27,17 +27,17 @@ class StarShip():
     
     @classmethod
     def move(cls, key): # 自機の移動
-        cls.ss_d = 0
+        cls.roll = 0
         for map in cls.KEY_MAPPING:
             if key[map["key"]] != 1: continue
             cls.x += map["dx"]
             cls.y += map["dy"]
-            cls.ss_d = map["roll"]
+            cls.roll = map["roll"]
         cls.x = min(max(cls.x, 40), 920)
         cls.y = min(max(cls.y, 80), 640)
 
     @classmethod
     def draw(cls, screen):
         screen.blit(cls.IMG_SSHIP[3], [cls.x-8, cls.y+40+(cls.tmr%3)*2])
-        screen.blit(cls.IMG_SSHIP[cls.ss_d], [cls.x-37, cls.y-48])
+        screen.blit(cls.IMG_SSHIP[cls.roll], [cls.x-37, cls.y-48])
 
