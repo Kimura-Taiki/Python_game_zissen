@@ -15,17 +15,19 @@ class StarShip():
                    {"key":K_RIGHT,  "dx": V, "dy": 0})
 
     @classmethod
-    def coord():
-        return StarShip.x, StarShip.y
+    def coord(cls):
+        return cls.x, cls.y
     
-    def move(key): # 自機の移動
-        for map in StarShip.KEY_MAPPING:
+    @classmethod
+    def move(cls, key): # 自機の移動
+        for map in cls.KEY_MAPPING:
             if key[map["key"]] != 1: continue
-            StarShip.x += map["dx"]
-            StarShip.y += map["dy"]
-        StarShip.x = min(max(StarShip.x, 40), 920)
-        StarShip.y = min(max(StarShip.y, 80), 640)
+            cls.x += map["dx"]
+            cls.y += map["dy"]
+        cls.x = min(max(cls.x, 40), 920)
+        cls.y = min(max(cls.y, 80), 640)
 
-    def draw(screen):
-        screen.blit(StarShip.IMG_SSHIP, [StarShip.x-37, StarShip.y-48])
+    @classmethod
+    def draw(cls, screen):
+        screen.blit(cls.IMG_SSHIP, [cls.x-37, cls.y-48])
 
