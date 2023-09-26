@@ -1,4 +1,5 @@
 import pygame
+from pygame.locals import K_SPACE
 
 class Bullet():
     exist = False
@@ -9,7 +10,8 @@ class Bullet():
 
 
     @classmethod
-    def set(cls, mother): # 自機の発射する弾をセットする
+    def set(cls, key, mother): # 自機の発射する弾をセットする
+        if key[K_SPACE] == False: return
         if cls.exist == False:
             cls.exist = True
             cls.x = mother.x

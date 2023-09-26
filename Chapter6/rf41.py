@@ -22,13 +22,15 @@ def main(): # メインループ
         BackGround.scroll(speed=16)
         BackGround.draw(screen=screen)
 
+        # 入力諸元を更新
+        key = pygame.key.get_pressed()
+
         # 自機の移動
-        StarShip.move(key=pygame.key.get_pressed())
+        StarShip.move(key=key)
         StarShip.draw(screen=screen)
 
         # 弾の発射
-        if pygame.key.get_pressed()[pygame.K_SPACE]:
-            Bullet.set(mother=StarShip)
+        Bullet.set(key=key, mother=StarShip)
         Bullet.move()
         Bullet.draw(screen=screen)
 
