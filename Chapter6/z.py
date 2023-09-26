@@ -1,17 +1,8 @@
 def __z__():
     pass
 
-d_tuple = [
-    {"name":"foo", "value":1},
-    {"name":"hge", "value":4}
-]
-print(d_tuple)
-d_tuple.append({"name":"jay", "value":9})
-print(d_tuple)
-
-import pygame
-pygame.init
-
+g = +5
+print(g)
 exit()
 
 # 自機関連の処理と変数
