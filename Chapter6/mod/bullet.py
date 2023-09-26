@@ -24,5 +24,6 @@ class Bullet():
     
     @classmethod
     def draw(cls, screen): # 弾の描画
-        screen.blit(cls.IMG_WEAPON, [cls.x-10, cls.y-32])
+        if cls.exist == True:
+            screen.blit(cls.IMG_WEAPON, [cls.x-10, cls.y-32])
 
