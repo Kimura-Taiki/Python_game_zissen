@@ -13,12 +13,12 @@ msl_x = 0
 msl_y = 0
 
 
-def set_missile(): # 自機の発射する弾をセットする
+def set_missile(mother): # 自機の発射する弾をセットする
     global msl_f, msl_x, msl_y
     if msl_f == False:
         msl_f = True
-        msl_x = StarShip.x
-        msl_y = StarShip.y-50
+        msl_x = mother.x
+        msl_y = mother.y-50
 
 
 def move_missile(screen): # 弾の移動
@@ -50,7 +50,7 @@ def main(): # メインループ
 
         # 弾の発射
         if pygame.key.get_pressed()[pygame.K_SPACE]:
-            set_missile()
+            set_missile(StarShip)
         move_missile(screen=screen)
 
         # 映像の書き換えと更新周期の設定
