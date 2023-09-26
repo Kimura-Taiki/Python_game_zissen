@@ -21,8 +21,7 @@ def main(): # メインループ
         BackGround.draw(screen=screen)
 
         # 自機の移動
-        key = pygame.key.get_pressed()
-        StarShip.move(key=key)
+        StarShip.move(key=pygame.key.get_pressed())
         StarShip.draw(screen=screen)
 
         # 映像の書き換えと更新周期の設定
