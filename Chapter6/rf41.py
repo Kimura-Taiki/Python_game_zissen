@@ -29,7 +29,8 @@ def main(): # メインループ
         # 弾の発射
         if pygame.key.get_pressed()[pygame.K_SPACE]:
             Bullet.set(mother=StarShip)
-        Bullet.move(screen=screen)
+        Bullet.move()
+        Bullet.draw(screen=screen)
 
         # 映像の書き換えと更新周期の設定
         pygame.display.update()

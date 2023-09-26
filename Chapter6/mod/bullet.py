@@ -16,10 +16,13 @@ class Bullet():
             cls.y = mother.y-50
 
     @classmethod
-    def move(cls, screen): # 弾の移動
+    def move(cls): # 弾の移動
         if cls.exist == True:
             cls.y -= 36
-            screen.blit(cls.IMG_WEAPON, [cls.x-10, cls.y-32])
             if cls.y < 0:
                 cls.exist = False
+    
+    @classmethod
+    def draw(cls, screen): # 弾の描画
+        screen.blit(cls.IMG_WEAPON, [cls.x-10, cls.y-32])
 
