@@ -22,8 +22,8 @@ class StarShip():
                    {"key":K_RIGHT,  "dx": V, "dy": 0, "roll":2})
 
     @classmethod
-    def coord(cls):
-        return cls.x, cls.y
+    def elapse(cls):
+        cls.tmr += 1
     
     @classmethod
     def move(cls, key): # 自機の移動

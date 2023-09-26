@@ -14,7 +14,7 @@ def main(): # メインループ
     clock = pygame.time.Clock()
 
     while True:
-        StarShip.tmr += 1
+        StarShip.elapse()
         # pygameのイベントを解決
         solve_event(event_mapping)
         
