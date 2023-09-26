@@ -1,33 +1,39 @@
 def __z__():
     pass
 
+d_tuple = [
+    {"name":"foo", "value":1},
+    {"name":"hge", "value":4}
+]
+print(d_tuple)
+d_tuple.append({"name":"jay", "value":9})
+print(d_tuple)
 
-import sys
 import pygame
-from functools import partial
+pygame.init
 
+exit()
 
-def quit_event():
-    pygame.quit()
-    sys.exit()
+# 自機関連の処理と変数
+class StarShip():
+    x = 460
+    y = 380
 
-def fullscreen_event(screen, size):
-    screen = pygame.display.set_mode(size=size, flags=pygame.FULLSCREEN)
+    V = 20
+    IMG_SSHIP = pygame.image.load("image_gl/starship.png")
+    KEY_MAPPING = ({"key":pygame.K_UP,      "dx": 0, "dy":-V},
+                   {"key":pygame.K_DOWN,    "dx": 0, "dy": V},
+                   {"key":pygame.K_LEFT,    "dx":-V, "dy": 0},
+                   {"key":pygame.K_RIGHT,   "dx": V, "dy": 0})
 
-def windowed_event(screen, size):
-    screen = pygame.display.set_mode(size=size)
-
-WIN_SIZE = (960, 720)
-screen = pygame.display.set_mode(WIN_SIZE)
-
-event_mapping = [
-    {"type":pygame.QUIT,                            "func":quit_event},
-    {"type":pygame.KEYDOWN, "key":pygame.K_F1,      "func":partial(fullscreen_event, screen=screen, size=WIN_SIZE)},
-    {"type":pygame.KEYDOWN, "key":pygame.K_F2,      "func":partial(windowed_event, screen=screen, size=WIN_SIZE)},
-    {"type":pygame.KEYDOWN, "key":pygame.K_ESCAPE,  "func":partial(windowed_event, screen=screen, size=WIN_SIZE)}]
-
-# event_mapping = []
-event_mapping.append({"type":pygame.QUIT,                            "func":quit_event},)
-event_mapping.append({"type":pygame.KEYDOWN, "key":pygame.K_F1,      "func":partial(fullscreen_event, screen=screen, size=WIN_SIZE)},)
-
-print(event_mapping)
+    @classmethod
+    def coord():
+        return StarShip.x, StarShip.y
+    
+    @classmethod
+    def move(scrn, key):
+        for map in StarShip.KEY_MAPPING:
+            if key[map["key"]] == 1:
+                StarShip.x = max(min(StarShip.x+map["dx"], 920), 20)
+                StarShip.y = max(min(StarShip.y+map["dy"], 640), 40)
+        scrn.blit(StarShip.IMG_SSHIP, [StarShip.x-37, StarShip.y-48])
