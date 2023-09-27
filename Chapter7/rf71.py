@@ -10,7 +10,7 @@ from mod.screen import screen # ウィンドウを作成
 from mod.background import BackGround # 背景を流して描画する命令を提供
 from mod.starship import StarShip # 自機関連のクラスを提供
 from mod.bullet import Bullet # 自機ビーム弾関連のクラスを提供
-from mod.enemy import bring_enemy, move_enemy # 敵関連のクラスを提供
+from mod.enemy import Enemy # 敵関連のクラスを提供
 
 def main(): # メインループ
     global screen, event_mapping
@@ -41,8 +41,8 @@ def main(): # メインループ
         Bullet.draw(screen=screen)
 
         # 敵の表示と移動
-        bring_enemy(tmr=tmr)
-        move_enemy(screen)
+        Enemy.bring_enemy(tmr=tmr)
+        Enemy.move_enemy(screen=screen)
 
         # 映像の書き換えと更新周期の設定
         pygame.display.update()
