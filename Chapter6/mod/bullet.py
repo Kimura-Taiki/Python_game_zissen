@@ -26,5 +26,3 @@ class Bullet():
     def draw(cls, screen): # 弾の描画
         for bullet in cls.bullets:
             screen.blit(cls.IMG_WEAPON, [bullet.x, bullet.y])
-            
-
