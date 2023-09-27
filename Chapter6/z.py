@@ -1,24 +1,7 @@
 def __z__():
     pass
 
-class Coord():
-    x = 1
-    y = 2
+        # font = pygame.font.Font(None, 40)
+        # sur = font.render(str(cls.no), True, (255, 255, 255))
+        # screen.blit(sur, [0, 0])
 
-    @classmethod
-    def set(cls, x, y):
-        cls.x, cls.y = x, y
-
-    @classmethod
-    def pri(cls):
-        print(cls.x, cls.y)
-
-def cpri(cls):
-    print(cls, cls.x, cls.y)
-
-Coord.pri()
-cpri(Coord)
-
-Coord.set(100, 200)
-Coord.pri()
-cpri(Coord)
