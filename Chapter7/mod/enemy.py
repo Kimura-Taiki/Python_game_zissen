@@ -1,7 +1,5 @@
 import pygame
 pygame.init()
-# import math
-# import random
 from math import cos, sin, radians
 from random import randint
 
@@ -43,15 +41,15 @@ class Enemy():
             enemy.x += enemy.speed*cos(radians(enemy.angle))
             enemy.y += enemy.speed*sin(radians(enemy.angle))
             enemy.fire()
-            # if enemy.type == 1 and enemy.y > 360:
-            #     cls.enemies.append(Enemy(x=enemy.x, y=enemy.y, angle=90, type=0, speed=8))
-            #     enemy.angle = -45
-            #     enemy.speed = 16
             if enemy.x < cls.LINE_L or cls.LINE_R < enemy.x or enemy.y < cls.LINE_T or cls.LINE_B < enemy.y:
                 del enemy
+
+    @property
+    def img(self):
+        return self.IMG_ENEMY[self.type]
 
     @classmethod
     def draw(cls, screen): # 敵オブジェクトの描画
         for enemy in cls.enemies:
-            img_rz = pygame.transform.rotozoom(cls.IMG_ENEMY[enemy.type], -90-enemy.angle, 1.0)
+            img_rz = pygame.transform.rotozoom(enemy.img, -90-enemy.angle, 1.0)
             screen.blit(img_rz, [enemy.x-img_rz.get_width()/2, enemy.y-img_rz.get_height()/2])
