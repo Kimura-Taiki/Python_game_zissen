@@ -5,11 +5,6 @@ from random import randint
 
 class Enemy():
 
-    IMG_ENEMY = (
-        pygame.image.load("image_gl/enemy0.png"),
-        pygame.image.load("image_gl/enemy1.png")
-    )
-
     enemies = []
 
     LINE_T = -80
@@ -17,23 +12,19 @@ class Enemy():
     LINE_L = -80
     LINE_R = 1040
 
-    def __init__(self, x, y, angle, type, speed) -> None:
+    def __init__(self, x, y, angle, speed) -> None:
         self.x = x
         self.y = y
         self.angle = angle
-        self.type = type
         self.speed = speed
 
     @classmethod
     def bring_enemy(cls, tmr): # 敵を出す
         if tmr%30 == 0:
-            cls.enemies.append(Torpedoer(x=randint(20, 940), y=cls.LINE_T, angle=90, type=1, speed=6))
+            cls.enemies.append(Torpedoer(x=randint(20, 940), y=cls.LINE_T, angle=90, speed=6))
     
-    def fire(self): # 弾を発射する
-        if self.type == 1 and self.y > 360:
-            self.enemies.append(Torpedo(x=self.x, y=self.y, angle=90, type=0, speed=8))
-            self.angle = -45
-            self.speed = 16
+    def fire(self): # 弾を発射する、ここでは空処理にする
+        pass
 
     @classmethod
     def move(cls): # 敵オブジェクトの移動
@@ -46,7 +37,8 @@ class Enemy():
 
     @property
     def img(self):
-        return False
+        pass
+        # return False
 
     @classmethod
     def draw(cls, screen): # 敵オブジェクトの描画
@@ -55,6 +47,12 @@ class Enemy():
             screen.blit(img_rz, [enemy.x-img_rz.get_width()/2, enemy.y-img_rz.get_height()/2])
 
 class Torpedoer(Enemy):
+    def fire(self): # 弾を発射する、母機の処理にのみ弾の発射機構を追加する
+        if self.y > 360:
+            self.enemies.append(Torpedo(x=self.x, y=self.y, angle=90, speed=8))
+            self.angle = -45
+            self.speed = 16
+
     @property
     def img(self):
         return pygame.image.load("image_gl/enemy1.png")
