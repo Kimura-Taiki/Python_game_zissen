@@ -42,7 +42,8 @@ def main(): # メインループ
 
         # 敵の表示と移動
         Enemy.bring_enemy(tmr=tmr)
-        Enemy.move_enemy(screen=screen)
+        Enemy.move()
+        Enemy.draw(screen=screen)
 
         # 映像の書き換えと更新周期の設定
         pygame.display.update()
