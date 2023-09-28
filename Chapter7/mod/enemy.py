@@ -27,11 +27,11 @@ class Enemy():
     @classmethod
     def bring_enemy(cls, tmr): # 敵を出す
         if tmr%30 == 0:
-            cls.enemies.append(Enemy(x=randint(20, 940), y=cls.LINE_T, angle=90, type=1, speed=6))
+            cls.enemies.append(Torpedoer(x=randint(20, 940), y=cls.LINE_T, angle=90, type=1, speed=6))
     
     def fire(self): # 弾を発射する
         if self.type == 1 and self.y > 360:
-            self.enemies.append(Enemy(x=self.x, y=self.y, angle=90, type=0, speed=8))
+            self.enemies.append(Torpedo(x=self.x, y=self.y, angle=90, type=0, speed=8))
             self.angle = -45
             self.speed = 16
 
@@ -53,3 +53,9 @@ class Enemy():
         for enemy in cls.enemies:
             img_rz = pygame.transform.rotozoom(enemy.img, -90-enemy.angle, 1.0)
             screen.blit(img_rz, [enemy.x-img_rz.get_width()/2, enemy.y-img_rz.get_height()/2])
+
+class Torpedoer(Enemy):
+    pass
+
+class Torpedo(Enemy):
+    pass
