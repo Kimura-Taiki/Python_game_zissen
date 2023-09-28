@@ -46,7 +46,7 @@ class Enemy():
 
     @property
     def img(self):
-        return self.IMG_ENEMY[self.type]
+        return False
 
     @classmethod
     def draw(cls, screen): # 敵オブジェクトの描画
@@ -55,7 +55,11 @@ class Enemy():
             screen.blit(img_rz, [enemy.x-img_rz.get_width()/2, enemy.y-img_rz.get_height()/2])
 
 class Torpedoer(Enemy):
-    pass
+    @property
+    def img(self):
+        return pygame.image.load("image_gl/enemy1.png")
 
 class Torpedo(Enemy):
-    pass
+    @property
+    def img(self):
+        return pygame.image.load("image_gl/enemy0.png")
