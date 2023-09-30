@@ -26,6 +26,8 @@ class Enemy():
     def fire(self): # 弾を発射する、ここでは空処理にする
         pass
 
+    # def hit(self): # 弾と
+
     @classmethod
     def move(cls): # 敵オブジェクトの移動
         for enemy in cls.enemies:
