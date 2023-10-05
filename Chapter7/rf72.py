@@ -43,7 +43,10 @@ def main(): # メインループ
         # 敵の表示と移動
         Enemy.bring_enemy(tmr=tmr)
         Enemy.move()
+        Enemy.hit_bullet(bullets=Bullet.bullets)
         Enemy.draw(screen=screen)
+
+        # screen.blit(pygame.font.Font(None, size=40).render(str(Enemy.l), True, (255, 255, 255)), [0, 0])
 
         # 映像の書き換えと更新周期の設定
         pygame.display.update()

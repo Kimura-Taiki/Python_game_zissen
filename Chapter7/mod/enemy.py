@@ -26,16 +26,26 @@ class Enemy():
     def fire(self): # 弾を発射する、ここでは空処理にする
         pass
 
-    # def hit(self): # 弾と
+    @classmethod
+    def hit_bullet(cls, bullets):
+        for enemy in cls.enemies:
+            enemy.hit(bullets)
+
+    def hit(self, bullets): # 自弾とのヒットチェック
+        pass
 
     @classmethod
     def move(cls): # 敵オブジェクトの移動
-        for enemy in cls.enemies:
+        from mod.screen import screen
+        y = 0
+        for enemy in cls.enemies[:]:
+            screen.blit(pygame.font.Font(None, size=20).render(str(enemy), True, (255, 255, 255)), [0, y])
+            y += 20
             enemy.x += enemy.speed*cos(radians(enemy.angle))
             enemy.y += enemy.speed*sin(radians(enemy.angle))
             enemy.fire()
             if enemy.x < cls.LINE_L or cls.LINE_R < enemy.x or enemy.y < cls.LINE_T or cls.LINE_B < enemy.y:
-                del enemy
+                cls.enemies.remove(enemy)
 
     @property
     def img(self):
@@ -56,12 +66,26 @@ class Torpedoer(Enemy):
             self.angle = -45
             self.speed = 16
 
+    def hit(self, bullets) : # 自弾とのヒットチェック
+        w = self.IMG.get_width()
+        h = self.IMG.get_height()
+        r = int((w+h)/4)+12
+        for bullet in bullets[:]:
+            if get_dis(self.x, self.y, bullet.x, bullet.y) < r*r:
+                bullets.remove(bullet)
+                self.enemies.remove(self)
+                return
+
     @property
     def img(self):
         return self.IMG
 
 class Torpedo(Enemy):
     IMG = pygame.image.load("image_gl/enemy0.png")
+
     @property
     def img(self):
         return self.IMG
+
+def get_dis(x1, y1, x2, y2): # 二点間の距離を求める
+    return( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
