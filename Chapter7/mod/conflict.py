@@ -1,7 +1,5 @@
 import pygame
 pygame.init()
-from math import cos, sin, radians
-from random import randint
 
 from os.path import dirname
 import sys

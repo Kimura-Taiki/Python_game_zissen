@@ -13,6 +13,11 @@ from mod.bullet import Bullet # 自機ビーム弾関連のクラスを提供
 from mod.enemy import Enemy # 敵関連のクラスを提供
 from mod.conflict import Conflict # 接触時判定の命令を提供
 
+# Enemy.bring_enemy(0)
+# print(Enemy.enemies[0])
+# print(type(Enemy.enemies[0]))
+# exit()
+
 def main(): # メインループ
     global screen, event_mapping
 
