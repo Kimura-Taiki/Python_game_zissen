@@ -26,9 +26,6 @@ class Enemy():
     def fire(self): # 弾を発射する、ここでは空処理にする
         pass
 
-    def hit(self, bullets): # 自弾とのヒットチェック
-        pass
-
     @classmethod
     def move(cls): # 敵オブジェクトの移動
         from mod.screen import screen
@@ -60,16 +57,6 @@ class Torpedoer(Enemy):
             self.enemies.append(Torpedo(x=self.x, y=self.y, angle=90, speed=8))
             self.angle = -45
             self.speed = 16
-
-    def hit(self, bullets) : # 自弾とのヒットチェック
-        w = self.IMG.get_width()
-        h = self.IMG.get_height()
-        r = int((w+h)/4)+12
-        for bullet in bullets[:]:
-            if get_dis(self.x, self.y, bullet.x, bullet.y) < r*r:
-                bullets.remove(bullet)
-                self.enemies.remove(self)
-                return
 
     @property
     def img(self):

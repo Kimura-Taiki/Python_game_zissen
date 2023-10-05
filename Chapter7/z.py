@@ -2,7 +2,10 @@ class Zakki():
     def __init__(self):
         self.z = "Z"
 
+
 print("z.pyだよ")
+Zakki.md1()
+Zakki.md2
 # screen.blit(pygame.font.Font(None, size=40).render("", True, (255, 255, 255)), [0, 0])
 
 
