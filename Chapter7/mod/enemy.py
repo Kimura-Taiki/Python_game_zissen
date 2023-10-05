@@ -26,11 +26,6 @@ class Enemy():
     def fire(self): # 弾を発射する、ここでは空処理にする
         pass
 
-    @classmethod
-    def hit_bullet(cls, bullets):
-        for enemy in cls.enemies:
-            enemy.hit(bullets)
-
     def hit(self, bullets): # 自弾とのヒットチェック
         pass
 

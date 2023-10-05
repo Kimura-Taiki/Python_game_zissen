@@ -11,6 +11,7 @@ from mod.background import BackGround # 背景を流して描画する命令を�
 from mod.starship import StarShip # 自機関連のクラスを提供
 from mod.bullet import Bullet # 自機ビーム弾関連のクラスを提供
 from mod.enemy import Enemy # 敵関連のクラスを提供
+from mod.conflict import Conflict # 接触時判定の命令を提供
 
 def main(): # メインループ
     global screen, event_mapping
@@ -43,8 +44,10 @@ def main(): # メインループ
         # 敵の表示と移動
         Enemy.bring_enemy(tmr=tmr)
         Enemy.move()
-        Enemy.hit_bullet(bullets=Bullet.bullets)
         Enemy.draw(screen=screen)
+
+        # 敵機と自弾の衝突判定
+        Conflict.hit_bullet_and_enemy(bullets=Bullet.bullets, enemies=Enemy.enemies)
 
         # screen.blit(pygame.font.Font(None, size=40).render(str(Enemy.l), True, (255, 255, 255)), [0, 0])
 
