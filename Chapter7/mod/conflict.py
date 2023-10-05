@@ -11,6 +11,7 @@ class Conflict():
     @classmethod
     def hit_bullet_and_enemy(cls, bullets, enemies):
         for enemy in enemies:
+            if enemy.breakable == False: continue
             hit(enemy, bullets)
 
 def hit(enemy, bullets) : # 自弾とのヒットチェック
