@@ -64,3 +64,18 @@ class Torpedo(Enemy):
     IMG = pygame.image.load("image_gl/enemy0.png")
     DEFAULT_SPEED = 10
     DEFAULT_BREAKABLE = False
+
+
+class EnemyFactory():
+    DEFAULT_PARAMS = (('name', None), ('speed', 6), ('angle', 90), ('breakable', True))
+
+    def __init__(self, dict) -> None:
+        self.img = pygame.image.load(dict['img'])
+        for tuple in self.DEFAULT_PARAMS:
+            if tuple[0] in dict.keys():
+                setattr(self, tuple[0], dict[tuple[0]])
+            else:
+                setattr(self, tuple[0], tuple[1])
+
+ef = EnemyFactory({'img':"image_gl/enemy0.png", 'speed':99})
+print(ef, ef.img, ef.speed, ef.angle, ef.breakable)
