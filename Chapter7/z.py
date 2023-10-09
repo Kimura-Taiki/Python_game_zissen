@@ -1,4 +1,4 @@
-class Zakki():
+class Zakki(): 
     chr = "Z"
 
     def __init__(self):
