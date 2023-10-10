@@ -11,9 +11,6 @@ class Enemy():
     LINE_L = -80
     LINE_R = 1040
 
-    # DEFAULT_PARAMS = (('name', None), ('img', None), ('speed', 6), ('angle', 90), ('breakable', True), ('fire', no_func))
-        # for tuple in self.DEFAULT_PARAMS:
-        #     setattr(enemy, tuple[0], getattr(self, tuple[0]))
     DEFAULT_IMG = pygame.image.load("image_gl/enemy1.png")
 
     @staticmethod
