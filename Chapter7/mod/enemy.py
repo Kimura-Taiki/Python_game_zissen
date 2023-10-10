@@ -24,11 +24,6 @@ class Enemy():
         self.speed = self.DEFAULT_SPEED
         self.breakable = self.DEFAULT_BREAKABLE
 
-    # @classmethod
-    # def bring_enemy(cls, tmr): # 敵を出す
-    #     if tmr%30 == 0:
-    #         cls.enemies.append(Torpedoer(x=randint(20, 940), y=cls.LINE_T))
-    
     def fire(self): # 弾を発射する、ここでは空処理にする
         pass
 
@@ -41,26 +36,11 @@ class Enemy():
             if enemy.x < cls.LINE_L or cls.LINE_R < enemy.x or enemy.y < cls.LINE_T or cls.LINE_B < enemy.y:
                 cls.enemies.remove(enemy)
 
-    @property
-    def img(self):
-        return self.IMG
-
     @classmethod
     def draw(cls, screen): # 敵オブジェクトの描画
         for enemy in cls.enemies:
-            # print(enemy, enemy.img2, enemy.img, enemy.angle)
-            img_rz = pygame.transform.rotozoom(surface=enemy.img2, angle=-90-enemy.angle, scale=1.0)
-            # img_rz = pygame.transform.rotozoom(enemy.img, -90-enemy.angle, 1.0)
+            img_rz = pygame.transform.rotozoom(surface=enemy.img, angle=-90-enemy.angle, scale=1.0)
             screen.blit(img_rz, [enemy.x-img_rz.get_width()/2, enemy.y-img_rz.get_height()/2])
-
-class Torpedoer(Enemy):
-    IMG = pygame.image.load("image_gl/enemy1.png")
-
-    def fire(self): # 弾を発射する、母機の処理にのみ弾の発射機構を追加する
-        if self.y > 360:
-            self.enemies.append(Torpedo(x=self.x, y=self.y))
-            self.angle = -45
-            self.speed = 16
 
 class Torpedo(Enemy):
     IMG = pygame.image.load("image_gl/enemy0.png")

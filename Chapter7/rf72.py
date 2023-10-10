@@ -43,7 +43,6 @@ def main(): # メインループ
         Bullet.draw(screen=screen)
 
         # 敵の表示と移動
-        # Enemy.bring_enemy(tmr=tmr)
         EnemyFactory.bring_enemy(enemies=Enemy.enemies, tmr=tmr)
         Enemy.move()
         Enemy.draw(screen=screen)
