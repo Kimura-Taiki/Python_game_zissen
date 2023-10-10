@@ -4,22 +4,32 @@ class Zakki():
     def __init__(self):
         self.hatena = self.chr
 
-class Hoge():
-    def __init__(self, name) -> None:
-        self.name = name
+data1 = [0,1,2,3,4,5,6,7,8,9]
+for i in data1:
+    data1.remove(i)
 
-    def __del__(self) -> None:
-        print("{}を削除したよ".format(self.name))
+data2 = [0,1,2,3,4,5,6,7,8,9]
+for i in data2[:]:
+    data2.remove(i)
 
-h1 = Hoge("Hoge1")
-h2 = Hoge("ほげ２")
-h3 = Hoge("保外三")
-hsa = [h1, h2]
-hsb = [h2, h3]
-del h1
-del h2
-del hsa
-print("削除終わり")
+print(data1, data2)
+
+# class Hoge():
+#     def __init__(self, name) -> None:
+#         self.name = name
+
+#     def __del__(self) -> None:
+#         print("{}を削除したよ".format(self.name))
+
+# h1 = Hoge("Hoge1")
+# h2 = Hoge("ほげ２")
+# h3 = Hoge("保外三")
+# hsa = [h1, h2]
+# hsb = [h2, h3]
+# del h1
+# del h2
+# del hsa
+# print("削除終わり")
 
 
 # screen.blit(pygame.font.Font(None, size=40).render("", True, (255, 255, 255)), [0, 0])

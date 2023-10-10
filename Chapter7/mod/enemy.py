@@ -24,15 +24,12 @@ class Enemy():
         self.speed = self.DEFAULT_SPEED
         self.breakable = self.DEFAULT_BREAKABLE
 
-    def fire(self): # 弾を発射する、ここでは空処理にする
-        pass
-
     @classmethod
     def move(cls): # 敵オブジェクトの移動
         for enemy in cls.enemies[:]:
             enemy.x += enemy.speed*cos(radians(enemy.angle))
             enemy.y += enemy.speed*sin(radians(enemy.angle))
-            enemy.fire()
+            enemy.fire(enemy)
             if enemy.x < cls.LINE_L or cls.LINE_R < enemy.x or enemy.y < cls.LINE_T or cls.LINE_B < enemy.y:
                 cls.enemies.remove(enemy)
 
@@ -41,8 +38,3 @@ class Enemy():
         for enemy in cls.enemies:
             img_rz = pygame.transform.rotozoom(surface=enemy.img, angle=-90-enemy.angle, scale=1.0)
             screen.blit(img_rz, [enemy.x-img_rz.get_width()/2, enemy.y-img_rz.get_height()/2])
-
-class Torpedo(Enemy):
-    IMG = pygame.image.load("image_gl/enemy0.png")
-    DEFAULT_SPEED = 10
-    DEFAULT_BREAKABLE = False

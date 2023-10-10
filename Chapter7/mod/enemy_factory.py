@@ -9,7 +9,7 @@ from mod.enemy import Enemy
 
 
 class EnemyFactory():
-    def no_func():
+    def no_func(enemy: Enemy):
         pass
 
     DEFAULT_PARAMS = (('name', None), ('img', None), ('speed', 6), ('angle', 90), ('breakable', True), ('fire', no_func))
@@ -34,7 +34,8 @@ class EnemyFactory():
     
     @classmethod
     def bring_enemy(cls, enemies, tmr): # 敵を出す
-        if tmr%30 == 0:
+        # if tmr%30 == 0:
+        if tmr%10 == 0:
             enemies.append(torpedoer.make(x=randint(20, 940), y=Enemy.LINE_T))
     
 def torpedo_run(enemy: Enemy): # 弾を発射する、母機の処理にのみ弾の発射機構を追加する
@@ -43,17 +44,5 @@ def torpedo_run(enemy: Enemy): # 弾を発射する、母機の処理にのみ�
         enemy.angle = -45
         enemy.speed = 16
 
-torpedoer = EnemyFactory({'img':pygame.image.load("image_gl/enemy1.png"),   'name':"Torpedoer", 'fire':EnemyFactory.no_func})
-# torpedoer = EnemyFactory({'img':"image_gl/enemy1.png",    'name':"Torpedoer", 'fire':torpedo_run})
+torpedoer = EnemyFactory({'img':pygame.image.load("image_gl/enemy1.png"),   'name':"Torpedoer", 'fire':torpedo_run})
 torpedo =   EnemyFactory({'img':pygame.image.load("image_gl/enemy0.png"),   'name':"Torpedo",   'speed':10, 'breakable':False})
-
-
-
-tac = EnemyFactory({'img':pygame.image.load("image_gl/enemy1.png"),    'name':"Torpedoer", 'fire':torpedo_run})
-tpd = EnemyFactory({'img':pygame.image.load("image_gl/enemy0.png"),    'name':"Torpedo",   'speed':10, 'breakable':False})
-print(tac, tpd)
-tac.print()
-tpd.print()
-i = tac.make(x=30, y=40)
-print(i, type(i))
-print(i.name, i.img, i.x, i.y, i.speed, i.angle, i.breakable, i.fire)
