@@ -15,8 +15,8 @@ class Conflict():
             hit(enemy, bullets)
 
 def hit(enemy, bullets) : # 自弾とのヒットチェック
-    w = enemy.IMG.get_width()
-    h = enemy.IMG.get_height()
+    w = enemy.img2.get_width()
+    h = enemy.img2.get_height()
     r = int((w+h)/4)+12
     for bullet in bullets[:]:
         if get_dis(enemy.x, enemy.y, bullet.x, bullet.y) < r*r:

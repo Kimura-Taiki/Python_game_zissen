@@ -24,10 +24,10 @@ class Enemy():
         self.speed = self.DEFAULT_SPEED
         self.breakable = self.DEFAULT_BREAKABLE
 
-    @classmethod
-    def bring_enemy(cls, tmr): # 敵を出す
-        if tmr%30 == 0:
-            cls.enemies.append(Torpedoer(x=randint(20, 940), y=cls.LINE_T))
+    # @classmethod
+    # def bring_enemy(cls, tmr): # 敵を出す
+    #     if tmr%30 == 0:
+    #         cls.enemies.append(Torpedoer(x=randint(20, 940), y=cls.LINE_T))
     
     def fire(self): # 弾を発射する、ここでは空処理にする
         pass
@@ -48,7 +48,9 @@ class Enemy():
     @classmethod
     def draw(cls, screen): # 敵オブジェクトの描画
         for enemy in cls.enemies:
-            img_rz = pygame.transform.rotozoom(enemy.img, -90-enemy.angle, 1.0)
+            # print(enemy, enemy.img2, enemy.img, enemy.angle)
+            img_rz = pygame.transform.rotozoom(surface=enemy.img2, angle=-90-enemy.angle, scale=1.0)
+            # img_rz = pygame.transform.rotozoom(enemy.img, -90-enemy.angle, 1.0)
             screen.blit(img_rz, [enemy.x-img_rz.get_width()/2, enemy.y-img_rz.get_height()/2])
 
 class Torpedoer(Enemy):

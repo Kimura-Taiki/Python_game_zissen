@@ -12,11 +12,7 @@ from mod.starship import StarShip # 自機関連のクラスを提供
 from mod.bullet import Bullet # 自機ビーム弾関連のクラスを提供
 from mod.enemy import Enemy # 敵関連のクラスを提供
 from mod.conflict import Conflict # 接触時判定の命令を提供
-
-# Enemy.bring_enemy(0)
-# print(Enemy.enemies[0])
-# print(type(Enemy.enemies[0]))
-# exit()
+from mod.enemy_factory import EnemyFactory # 敵の生成クラスを提供
 
 def main(): # メインループ
     global screen, event_mapping
@@ -47,7 +43,8 @@ def main(): # メインループ
         Bullet.draw(screen=screen)
 
         # 敵の表示と移動
-        Enemy.bring_enemy(tmr=tmr)
+        # Enemy.bring_enemy(tmr=tmr)
+        EnemyFactory.bring_enemy(enemies=Enemy.enemies, tmr=tmr)
         Enemy.move()
         Enemy.draw(screen=screen)
 
