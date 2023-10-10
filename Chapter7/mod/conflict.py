@@ -7,9 +7,6 @@ if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 from mod.bullet import Bullet
 from mod.enemy import Enemy
 
-# type BulletList = list[Bullet]
-# type EnemyList = list[Enemy]
-
 class Conflict():
     @classmethod
     def hit_bullet_and_enemy(cls, bullets: list[Bullet], enemies: list[Enemy]):

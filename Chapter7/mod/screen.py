@@ -11,10 +11,10 @@ WIN_SIZE = (WIN_X, WIN_Y)
 pygame.display.set_caption("Galaxy Lancer")
 screen = pygame.display.set_mode(WIN_SIZE)
 
-def fullscreen_event(screen, size):
+def fullscreen_event(screen: pygame.surface.Surface, size: tuple[int, int]):
     screen = pygame.display.set_mode(size=size, flags=pygame.FULLSCREEN)
 
-def windowed_event(screen, size):
+def windowed_event(screen: pygame.surface.Surface, size: tuple[int, int]):
     screen = pygame.display.set_mode(size=size)
 
 event_mapping.append({"type":pygame.KEYDOWN, "key":pygame.K_F1,      "func":partial(fullscreen_event, screen=screen, size=WIN_SIZE)})
