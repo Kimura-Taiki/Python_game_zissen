@@ -21,7 +21,7 @@ class EnemyFactory():
         return enemy
     
     @classmethod
-    def bring_enemy(cls, enemies, tmr): # 敵を出す
+    def bring_enemy(cls, enemies: list[Enemy], tmr: int): # 敵を出す
         # if tmr%30 == 0:
         if tmr%10 == 0:
             enemies.append(TORPEDOER.make(x=randint(20, 940), y=Enemy.LINE_T))
