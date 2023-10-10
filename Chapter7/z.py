@@ -1,18 +1,28 @@
+k:int
+v:str
+
+k = 8
+k = "he"
+
+def hoi():
+    pass
+
+print(hoi, type(hoi))
+exit()
+
+
 class Zakki():
     chr = "Z"
 
     def __init__(self):
         self.hatena = self.chr
 
-# data1 = [0,1,2,3,4,5,6,7,8,9]
-# for i in data1:
-#     data1.remove(i)
-
-# data2 = [0,1,2,3,4,5,6,7,8,9]
-# for i in data2[:]:
-#     data2.remove(i)
-
-# print(data1, data2)
+type s_i = tuple[str, int]
+def sai(arg: s_i):
+    pass
+hansin = ("阪神", 334)
+sai(hansin)
+exit()
 
 class Hoge():
     def __init__(self, name) -> None:

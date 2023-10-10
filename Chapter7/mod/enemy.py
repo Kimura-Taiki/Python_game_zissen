@@ -11,9 +11,20 @@ class Enemy():
     LINE_L = -80
     LINE_R = 1040
 
+    # DEFAULT_PARAMS = (('name', None), ('img', None), ('speed', 6), ('angle', 90), ('breakable', True), ('fire', no_func))
+        # for tuple in self.DEFAULT_PARAMS:
+        #     setattr(enemy, tuple[0], getattr(self, tuple[0]))
+    # DEFAULT_IMG = pygame.image.load("image_gl/enemy1.png")
+
     def __init__(self, x, y) -> None:
-        self.x = x
-        self.y = y
+        self.x: int = x
+        self.y: int = y
+        self.name: str
+        self.img: pygame.surface.Surface
+        self.speed: int
+        self.angle: int
+        self.breakable: bool
+        self.fire: function
 
     @classmethod
     def move(cls): # 敵オブジェクトの移動

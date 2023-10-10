@@ -36,13 +36,13 @@ class EnemyFactory():
     def bring_enemy(cls, enemies, tmr): # 敵を出す
         # if tmr%30 == 0:
         if tmr%10 == 0:
-            enemies.append(torpedoer.make(x=randint(20, 940), y=Enemy.LINE_T))
+            enemies.append(TORPEDOER.make(x=randint(20, 940), y=Enemy.LINE_T))
     
 def torpedo_run(enemy: Enemy): # 弾を発射する、母機の処理にのみ弾の発射機構を追加する
     if enemy.y > 360:
-        enemy.enemies.append(torpedo.make(x=enemy.x, y=enemy.y))
+        enemy.enemies.append(TORPEDO.make(x=enemy.x, y=enemy.y))
         enemy.angle = -45
         enemy.speed = 16
 
-torpedoer = EnemyFactory({'img':pygame.image.load("image_gl/enemy1.png"),   'name':"Torpedoer", 'fire':torpedo_run})
-torpedo =   EnemyFactory({'img':pygame.image.load("image_gl/enemy0.png"),   'name':"Torpedo",   'speed':10, 'breakable':False})
+TORPEDOER = EnemyFactory({'img':pygame.image.load("image_gl/enemy1.png"),   'name':"Torpedoer", 'fire':torpedo_run})
+TORPEDO =   EnemyFactory({'img':pygame.image.load("image_gl/enemy0.png"),   'name':"Torpedo",   'speed':10, 'breakable':False})
