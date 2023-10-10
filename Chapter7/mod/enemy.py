@@ -83,6 +83,16 @@ class EnemyFactory():
     def print(self):
         print(self.name, self.img, self.speed, self.angle, self.breakable, self.fire)
 
+    def make(self, x, y, dict={}) -> Enemy:
+        enemy = Enemy(x=x, y=y)
+        enemy.img2 = self.img
+        for tuple in self.DEFAULT_PARAMS:
+            setattr(enemy, tuple[0], getattr(self, tuple[0]))
+        for tuple in dict:
+            setattr(enemy, tuple[0], tuple[1])
+        return enemy
+        
+
 def torpedo_run(enemy: Enemy): # 弾を発射する、母機の処理にのみ弾の発射機構を追加する
     if enemy.y > 360:
         enemy.enemies.append(Torpedo(x=enemy.x, y=enemy.y))
@@ -95,3 +105,6 @@ tpd = EnemyFactory({'img':"image_gl/enemy0.png",    'name':"Torpedo",   'speed':
 print(tac, tpd)
 tac.print()
 tpd.print()
+i = tac.make(x=30, y=40)
+print(i, type(i))
+print(i.name, i.img2, i.x, i.y, i.speed, i.angle, i.breakable, i.fire)
