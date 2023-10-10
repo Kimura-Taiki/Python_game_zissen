@@ -1,7 +1,6 @@
 import pygame
 pygame.init()
 from math import cos, sin, radians
-from random import randint
 
 class Enemy():
 
@@ -12,17 +11,9 @@ class Enemy():
     LINE_L = -80
     LINE_R = 1040
 
-    IMG = None
-    DEFAULT_ANGLE = 90
-    DEFAULT_SPEED = 6
-    DEFAULT_BREAKABLE = True
-
     def __init__(self, x, y) -> None:
         self.x = x
         self.y = y
-        self.angle = self.DEFAULT_ANGLE
-        self.speed = self.DEFAULT_SPEED
-        self.breakable = self.DEFAULT_BREAKABLE
 
     @classmethod
     def move(cls): # 敵オブジェクトの移動
