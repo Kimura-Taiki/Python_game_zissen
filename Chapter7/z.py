@@ -1,15 +1,16 @@
-k:int
-v:str
+class Hi():
+    @staticmethod
+    def hey(bb):
+        print(bb, "だよ")
 
-k = 8
-k = "he"
+    @classmethod
+    def hey2(cls, bb):
+        cls.hey(bb)
+        cls.hey(bb)
+        print("二度も言った！")
 
-def hoi():
-    pass
-
-print(hoi, type(hoi))
-exit()
-
+Hi.hey(Hi)
+Hi.hey2("ほいさー")
 
 class Zakki():
     chr = "Z"

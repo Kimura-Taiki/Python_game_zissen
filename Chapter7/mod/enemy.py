@@ -14,17 +14,21 @@ class Enemy():
     # DEFAULT_PARAMS = (('name', None), ('img', None), ('speed', 6), ('angle', 90), ('breakable', True), ('fire', no_func))
         # for tuple in self.DEFAULT_PARAMS:
         #     setattr(enemy, tuple[0], getattr(self, tuple[0]))
-    # DEFAULT_IMG = pygame.image.load("image_gl/enemy1.png")
+    DEFAULT_IMG = pygame.image.load("image_gl/enemy1.png")
+
+    @staticmethod
+    def pass_func(arg=None):
+        pass
 
     def __init__(self, x, y) -> None:
         self.x: int = x
         self.y: int = y
-        self.name: str
-        self.img: pygame.surface.Surface
-        self.speed: int
-        self.angle: int
-        self.breakable: bool
-        self.fire: function
+        self.name: str = "----"
+        self.img: pygame.surface.Surface = self.DEFAULT_IMG
+        self.speed: int = 6
+        self.angle: int = 90
+        self.breakable: bool = True
+        self.fire: function = self.pass_func
 
     @classmethod
     def move(cls): # 敵オブジェクトの移動

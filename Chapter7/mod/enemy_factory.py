@@ -9,27 +9,32 @@ from mod.enemy import Enemy
 
 
 class EnemyFactory():
-    def no_func(enemy: Enemy):
-        pass
+    # def no_func(enemy: Enemy):
+    #     pass
 
-    DEFAULT_PARAMS = (('name', None), ('img', None), ('speed', 6), ('angle', 90), ('breakable', True), ('fire', no_func))
+    # DEFAULT_PARAMS = (('name', None), ('img', None), ('speed', 6), ('angle', 90), ('breakable', True), ('fire', no_func))
 
-    def __init__(self, dict) -> None:
-        for tuple in self.DEFAULT_PARAMS:
-            if tuple[0] in dict.keys():
-                setattr(self, tuple[0], dict[tuple[0]])
-            else:
-                setattr(self, tuple[0], tuple[1])
+    def __init__(self, diffs: dict) -> None:
+        # for tuple in self.DEFAULT_PARAMS:
+        #     if tuple[0] in dict.keys():
+        #         setattr(self, tuple[0], dict[tuple[0]])
+        #     else:
+        #         setattr(self, tuple[0], tuple[1])
+        self.diffs = diffs
     
-    def print(self):
-        print(self.name, self.img, self.speed, self.angle, self.breakable, self.fire)
+    # def print(self):
+    #     print(self.name, self.img, self.speed, self.angle, self.breakable, self.fire)
 
-    def make(self, x, y, dict={}) -> Enemy:
+    def make(self, x: int, y: int, add_diffs: dict={}) -> Enemy:
         enemy = Enemy(x=x, y=y)
-        for tuple in self.DEFAULT_PARAMS:
-            setattr(enemy, tuple[0], getattr(self, tuple[0]))
-        for tuple in dict:
-            setattr(enemy, tuple[0], tuple[1])
+        # for tuple in self.DEFAULT_PARAMS:
+        #     setattr(enemy, tuple[0], getattr(self, tuple[0]))
+        # for tuple in self.diffs:
+        #     setattr(enemy, tuple[0], tuple[1])
+        for key, value in self.diffs.items():
+            setattr(enemy, key, value)
+        for key, value in add_diffs.items():
+            setattr(enemy, key, value)
         return enemy
     
     @classmethod
