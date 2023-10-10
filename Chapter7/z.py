@@ -1,4 +1,4 @@
-class Zakki(): 
+class Zakki():
     chr = "Z"
 
     def __init__(self):
@@ -17,8 +17,6 @@ class Factory():
 
 f = Factory({'x':38, 'z':"Get"})
 print(f, f.x, f.y)
-
-
 
 # screen.blit(pygame.font.Font(None, size=40).render("", True, (255, 255, 255)), [0, 0])
 

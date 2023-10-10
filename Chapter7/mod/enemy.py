@@ -67,7 +67,10 @@ class Torpedo(Enemy):
 
 
 class EnemyFactory():
-    DEFAULT_PARAMS = (('name', None), ('speed', 6), ('angle', 90), ('breakable', True))
+    def no_func():
+        pass
+
+    DEFAULT_PARAMS = (('name', None), ('speed', 6), ('angle', 90), ('breakable', True), ('fire', no_func))
 
     def __init__(self, dict) -> None:
         self.img = pygame.image.load(dict['img'])
@@ -76,6 +79,19 @@ class EnemyFactory():
                 setattr(self, tuple[0], dict[tuple[0]])
             else:
                 setattr(self, tuple[0], tuple[1])
+    
+    def print(self):
+        print(self.name, self.img, self.speed, self.angle, self.breakable, self.fire)
 
-ef = EnemyFactory({'img':"image_gl/enemy0.png", 'speed':99})
-print(ef, ef.img, ef.speed, ef.angle, ef.breakable)
+def torpedo_run(enemy: Enemy): # 弾を発射する、母機の処理にのみ弾の発射機構を追加する
+    if enemy.y > 360:
+        enemy.enemies.append(Torpedo(x=enemy.x, y=enemy.y))
+        enemy.angle = -45
+        enemy.speed = 16
+
+
+tac = EnemyFactory({'img':"image_gl/enemy1.png",    'name':"Torpedoer", 'fire':torpedo_run})
+tpd = EnemyFactory({'img':"image_gl/enemy0.png",    'name':"Torpedo",   'speed':10, 'breakable':False})
+print(tac, tpd)
+tac.print()
+tpd.print()
