@@ -52,3 +52,7 @@ class Enemy():
             screen.blit(img_rz, [enemy.x-img_rz.get_width()/2, enemy.y-img_rz.get_height()/2])
 
 # enemies: list[Enemy] = []
+
+def enemies_move(enemies: list[Enemy]):
+    for enemy in enemies[:]:
+        enemy.mono_move()
