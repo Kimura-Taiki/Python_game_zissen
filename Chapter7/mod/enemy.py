@@ -3,9 +3,6 @@ pygame.init()
 from math import cos, sin, radians
 
 class Enemy():
-
-    # enemies = []
-
     LINE_T: int = -80
     LINE_B: int = 800
     LINE_L: int = -80
@@ -46,7 +43,5 @@ def enemies_move(enemies: list[Enemy]):
         enemy.move()
 
 def enemies_draw(screen: pygame.surface.Surface, enemies: list[Enemy]):
-    Enemy.l = 0
     for enemy in enemies[:]:
         enemy.draw(screen=screen)
-        Enemy.l += 1

@@ -43,15 +43,11 @@ def main(): # メインループ
         Bullet.draw(screen=screen)
 
         # 敵の表示と移動
-        # EnemyFactory.bring_enemy(enemies=Enemy.enemies, tmr=tmr)
-        # enemies_move(enemies=Enemy.enemies)
-        # enemies_draw(screen=screen, enemies=Enemy.enemies)
         EnemyFactory.bring_enemy(enemies=enemies, tmr=tmr)
         enemies_move(enemies=enemies)
         enemies_draw(screen=screen, enemies=enemies)
 
         # 敵機と自弾の衝突判定
-        # Conflict.hit_bullet_and_enemy(bullets=Bullet.bullets, enemies=Enemy.enemies)
         Conflict.hit_bullet_and_enemy(bullets=Bullet.bullets, enemies=enemies)
 
         screen.blit(pygame.font.Font(None, size=40).render(str(Enemy.l), True, (255, 255, 255)), [0, 0])
