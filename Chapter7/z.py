@@ -11,6 +11,7 @@ class Hi():
 
 Hi.hey(Hi)
 Hi.hey2("ほいさー")
+print(type(Hi.hey))
 
 class Zakki():
     chr = "Z"

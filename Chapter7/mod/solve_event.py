@@ -8,7 +8,7 @@ def quit_event():
 
 event_mapping = [{"type":pygame.QUIT,                            "func":quit_event}]
 
-def solve_event(mapping):
+def solve_event(mapping: list[dict]):
     for event in pygame.event.get():
         for map in mapping:
             if event.type == map["type"] and (event.type != pygame.KEYDOWN or event.key == map["key"]):
