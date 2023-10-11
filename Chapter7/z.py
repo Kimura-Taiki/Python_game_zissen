@@ -1,17 +1,17 @@
-class Hi():
-    @staticmethod
-    def hey(bb):
-        print(bb, "だよ")
+def f(i: int | None):
+    if i is not None:
+        print("{}の二乗は{}です".format(i, i*i))
+    else:
+        print("な〜んにもない")
 
-    @classmethod
-    def hey2(cls, bb):
-        cls.hey(bb)
-        cls.hey(bb)
-        print("二度も言った！")
+data: int | None = None
+print(data, type(data))
 
-Hi.hey(Hi)
-Hi.hey2("ほいさー")
-print(type(Hi.hey))
+f(3)
+f(12)
+f(None)
+exit()
+
 
 class Zakki():
     chr = "Z"
@@ -19,12 +19,6 @@ class Zakki():
     def __init__(self):
         self.hatena = self.chr
 
-type s_i = tuple[str, int]
-def sai(arg: s_i):
-    pass
-hansin = ("阪神", 334)
-sai(hansin)
-exit()
 
 class Hoge():
     def __init__(self, name) -> None:
