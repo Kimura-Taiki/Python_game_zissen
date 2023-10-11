@@ -6,18 +6,18 @@ class Enemy():
 
     enemies = []
 
-    LINE_T = -80
-    LINE_B = 800
-    LINE_L = -80
-    LINE_R = 1040
+    LINE_T: int = -80
+    LINE_B: int = 800
+    LINE_L: int = -80
+    LINE_R: int = 1040
 
-    DEFAULT_IMG = pygame.image.load("image_gl/enemy1.png")
+    DEFAULT_IMG: pygame.surface.Surface = pygame.image.load("image_gl/enemy1.png")
 
     @staticmethod
     def pass_func(arg=None):
         pass
 
-    def __init__(self, x, y) -> None:
+    def __init__(self, x: int, y: int) -> None:
         self.x: int = x
         self.y: int = y
         self.name: str = "----"
@@ -37,7 +37,7 @@ class Enemy():
                 cls.enemies.remove(enemy)
 
     @classmethod
-    def draw(cls, screen): # 敵オブジェクトの描画
+    def draw(cls, screen: pygame.surface.Surface): # 敵オブジェクトの描画
         for enemy in cls.enemies:
-            img_rz = pygame.transform.rotozoom(surface=enemy.img, angle=-90-enemy.angle, scale=1.0)
+            img_rz:pygame.surface.Surface = pygame.transform.rotozoom(surface=enemy.img, angle=-90-enemy.angle, scale=1.0)
             screen.blit(img_rz, [enemy.x-img_rz.get_width()/2, enemy.y-img_rz.get_height()/2])
