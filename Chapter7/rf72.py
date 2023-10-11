@@ -10,7 +10,7 @@ from mod.screen import screen # ウィンドウを作成
 from mod.background import BackGround # 背景を流して描画する命令を提供
 from mod.starship import StarShip # 自機関連のクラスを提供
 from mod.bullet import Bullet # 自機ビーム弾関連のクラスを提供
-from mod.enemy import Enemy, enemies_move # 敵関連のクラスを提供
+from mod.enemy import Enemy, enemies_move, enemies_draw # 敵関連のクラスを提供
 from mod.conflict import Conflict # 接触時判定の命令を提供
 from mod.enemy_factory import EnemyFactory # 敵の生成クラスを提供
 
@@ -44,9 +44,9 @@ def main(): # メインループ
 
         # 敵の表示と移動
         EnemyFactory.bring_enemy(enemies=Enemy.enemies, tmr=tmr)
-        # Enemy.move()
         enemies_move(enemies=Enemy.enemies)
-        Enemy.draw(screen=screen)
+        # Enemy.draw(screen=screen)
+        enemies_draw(screen=screen, enemies=Enemy.enemies)
 
         # 敵機と自弾の衝突判定
         Conflict.hit_bullet_and_enemy(bullets=Bullet.bullets, enemies=Enemy.enemies)
