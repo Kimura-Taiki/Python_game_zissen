@@ -4,7 +4,7 @@ from math import cos, sin, radians
 
 class Enemy():
 
-    enemies = []
+    # enemies = []
 
     LINE_T: int = -80
     LINE_B: int = 800
@@ -33,18 +33,20 @@ class Enemy():
         self.y += self.speed*sin(radians(self.angle))
         self.fire(self)
         if self.x < self.LINE_L or self.LINE_R < self.x or self.y < self.LINE_T or self.LINE_B < self.y:
-            self.enemies.remove(self)
+            self.hldgs.remove(self)
 
     def draw(self, screen: pygame.surface.Surface): #的オブジェクトの描画
         img_rz:pygame.surface.Surface = pygame.transform.rotozoom(surface=self.img, angle=-90-self.angle, scale=1.0)
         screen.blit(img_rz, [self.x-img_rz.get_width()/2, self.y-img_rz.get_height()/2])
 
-# enemies: list[Enemy] = []
+enemies: list[Enemy] = []
 
 def enemies_move(enemies: list[Enemy]):
     for enemy in enemies[:]:
         enemy.move()
 
 def enemies_draw(screen: pygame.surface.Surface, enemies: list[Enemy]):
+    Enemy.l = 0
     for enemy in enemies[:]:
         enemy.draw(screen=screen)
+        Enemy.l += 1

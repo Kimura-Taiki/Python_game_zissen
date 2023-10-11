@@ -21,7 +21,7 @@ def hit(enemy: Enemy, bullets: list[Bullet]) : # 自弾とのヒットチェッ�
     for bullet in bullets[:]:
         if get_dis(enemy.x, enemy.y, bullet.x, bullet.y) < r*r:
             bullets.remove(bullet)
-            enemy.enemies.remove(enemy)
+            enemy.hldgs.remove(enemy)
             return
 
 def get_dis(x1: int, y1: int, x2: int, y2: int): # 二点間の距離を求める

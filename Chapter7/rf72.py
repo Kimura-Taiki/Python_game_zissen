@@ -10,7 +10,7 @@ from mod.screen import screen # ウィンドウを作成
 from mod.background import BackGround # 背景を流して描画する命令を提供
 from mod.starship import StarShip # 自機関連のクラスを提供
 from mod.bullet import Bullet # 自機ビーム弾関連のクラスを提供
-from mod.enemy import Enemy, enemies_move, enemies_draw # 敵関連のクラスを提供
+from mod.enemy import Enemy, enemies_move, enemies_draw, enemies # 敵関連のクラスを提供
 from mod.conflict import Conflict # 接触時判定の命令を提供
 from mod.enemy_factory import EnemyFactory # 敵の生成クラスを提供
 
@@ -43,15 +43,18 @@ def main(): # メインループ
         Bullet.draw(screen=screen)
 
         # 敵の表示と移動
-        EnemyFactory.bring_enemy(enemies=Enemy.enemies, tmr=tmr)
-        enemies_move(enemies=Enemy.enemies)
-        # Enemy.draw(screen=screen)
-        enemies_draw(screen=screen, enemies=Enemy.enemies)
+        # EnemyFactory.bring_enemy(enemies=Enemy.enemies, tmr=tmr)
+        # enemies_move(enemies=Enemy.enemies)
+        # enemies_draw(screen=screen, enemies=Enemy.enemies)
+        EnemyFactory.bring_enemy(enemies=enemies, tmr=tmr)
+        enemies_move(enemies=enemies)
+        enemies_draw(screen=screen, enemies=enemies)
 
         # 敵機と自弾の衝突判定
-        Conflict.hit_bullet_and_enemy(bullets=Bullet.bullets, enemies=Enemy.enemies)
+        # Conflict.hit_bullet_and_enemy(bullets=Bullet.bullets, enemies=Enemy.enemies)
+        Conflict.hit_bullet_and_enemy(bullets=Bullet.bullets, enemies=enemies)
 
-        # screen.blit(pygame.font.Font(None, size=40).render(str(Enemy.l), True, (255, 255, 255)), [0, 0])
+        screen.blit(pygame.font.Font(None, size=40).render(str(Enemy.l), True, (255, 255, 255)), [0, 0])
 
         # 映像の書き換えと更新周期の設定
         pygame.display.update()
