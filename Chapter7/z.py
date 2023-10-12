@@ -7,6 +7,7 @@ def f(i: int | None):
 data: int | None = None
 print(data, type(data))
 
+
 f(3)
 f(12)
 f(None)
