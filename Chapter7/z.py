@@ -6,7 +6,27 @@ def f(i: int | None):
 
 data: int | None = None
 print(data, type(data))
-
+company_branches: dict[str, dict[str, dict[str, str | bool | int]]]
+company_branches = {
+    "東京": {
+        "001": {
+            "name": "佐藤",
+            "is_leader": True,
+            "leader_period": 3,
+        },
+        "005": {"name": "田中", "is_leader": False},
+    },
+    "福岡": {
+        "003": {
+            "name": "伊藤",
+            "is_leader": True,
+            "leader_period": 5,
+        },
+        "008": {"name": "山本", "is_leader": False},
+        "011": {"name": "吉田", "is_leader": False},
+    },
+}
+print(company_branches)
 
 f(3)
 f(12)
