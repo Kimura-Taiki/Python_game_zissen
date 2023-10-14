@@ -1,6 +1,6 @@
-# from os.path import dirname
-# import sys
-# if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
+from os.path import dirname
+import sys
+if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 
 import pygame
 pygame.init()

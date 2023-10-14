@@ -1,3 +1,7 @@
+from os.path import dirname
+import sys
+if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
+
 import pygame
 import sys
 import math

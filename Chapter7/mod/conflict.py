@@ -6,6 +6,7 @@ import sys
 if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 from mod.bullet import Bullet
 from mod.enemy import Enemy
+from mod.effect import set_effect
 
 class Conflict():
     @classmethod
@@ -20,6 +21,7 @@ def hit(enemy: Enemy, bullets: list[Bullet]) -> None: # 自弾とのヒットチ
     r: int = int((w+h)/4)+12
     for bullet in bullets[:]:
         if get_dis(enemy.x, enemy.y, bullet.x, bullet.y) < r*r:
+            set_effect(x=enemy.x, y=enemy.y)
             bullets.remove(bullet)
             enemy.hldgs.remove(enemy)
             return
