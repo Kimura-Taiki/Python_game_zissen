@@ -37,8 +37,6 @@ class Enemy():
         img_rz:pygame.surface.Surface = pygame.transform.rotozoom(surface=self.img, angle=-90-self.angle, scale=1.0)
         screen.blit(img_rz, [self.x-img_rz.get_width()/2, self.y-img_rz.get_height()/2])
 
-enemies: list[Enemy] = []
-
 def enemies_move(enemies: list[Enemy]) -> None:
     for enemy in enemies[:]:
         enemy.move()
