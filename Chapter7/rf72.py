@@ -20,9 +20,9 @@ def main() -> None: # メインループ
     tmr = 0
     clock = pygame.time.Clock()
     enemies: list[Enemy] = []
+    s_ship = StarShip()
 
     while True:
-        StarShip.elapse()
         tmr += 1
         # pygameのイベントを解決
         solve_event(event_mapping)
@@ -35,11 +35,11 @@ def main() -> None: # メインループ
         key = pygame.key.get_pressed()
 
         # 自機の移動
-        StarShip.move(key=key)
-        StarShip.draw(screen=screen)
+        s_ship.move(key=key)
+        s_ship.draw(screen=screen, tmr=tmr)
 
         # 弾の発射
-        Bullet.set(key=key, mother=StarShip)
+        Bullet.set(key=key, mother=s_ship)
         Bullet.move()
         Bullet.draw(screen=screen)
 
