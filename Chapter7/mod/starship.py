@@ -3,11 +3,6 @@ pygame.init()
 from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
 
 class StarShip():
-    x = 480
-    y = 360
-    roll = 0
-    tmr = 0
-
     # 画像の読み込み
     IMG_SSHIP = (
         pygame.image.load("image_gl/starship.png"),
