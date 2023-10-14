@@ -16,7 +16,7 @@ class Effect():
         self.hldgs: list[Effect] = hldgs
         self.duration: int = 0
     
-    def elapse(self, t: int=1) -> None:
+    def elapse(self, t: int) -> None:
         self.duration += t
         if self.duration >= 5:
             self.hldgs.remove(self)
@@ -24,9 +24,9 @@ class Effect():
     def draw(self, screen: pygame.surface.Surface) -> None:
         screen.blit(source=self.IMG_EXPLODE[self.duration], dest=(self.x-48, self.y-48))
 
-def effects_elapse(effects: list[Effect]) -> None:
+def effects_elapse(effects: list[Effect], add_time: int=1) -> None:
     for effect in effects:
-        effect.elapse(t=1)
+        effect.elapse(t=add_time)
 
 def effects_draw(screen: pygame.surface.Surface, effects: list[Effect]) -> None:
     for effect in effects:

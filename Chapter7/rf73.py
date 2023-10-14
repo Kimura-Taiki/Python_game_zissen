@@ -52,7 +52,7 @@ def main() -> None: # メインループ
         enemies_draw(screen=screen, enemies=enemies)
 
         # 敵機と自弾の衝突判定
-        effects_elapse(effects=effects)
+        effects_elapse(effects=effects, add_time=1)
         Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
         effects_draw(screen=screen, effects=effects)
 
