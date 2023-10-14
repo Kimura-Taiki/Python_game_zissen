@@ -2,6 +2,7 @@ import pygame
 pygame.init()
 from pygame.locals import K_SPACE, K_z
 from math import cos, sin, radians
+from typing import Any
 
 from os.path import dirname
 import sys
@@ -11,7 +12,7 @@ from mod.starship import StarShip
 class Bullet():
     IMG_WEAPON = pygame.image.load("image_gl/bullet.png")
 
-    def __init__(self, x: int, y: int, a: int=270, hldgs=None) -> None:
+    def __init__(self, x: int, y: int, a: int=270, hldgs: Any=None) -> None:
         self.x: int = x
         self.y: int = y
         self.a: int = a

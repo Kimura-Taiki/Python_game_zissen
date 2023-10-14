@@ -1,6 +1,7 @@
 import pygame
 pygame.init()
 from math import cos, sin, radians
+from typing import Any
 
 class Enemy():
     LINE_T: int = -80
@@ -14,7 +15,7 @@ class Enemy():
     def pass_func(enemy: None=None) -> None:
         pass
 
-    def __init__(self, x: int, y: int, hldgs=None) -> None:
+    def __init__(self, x: int, y: int, hldgs: Any=None) -> None:
         self.x: int = x
         self.y: int = y
         self.hldgs: list[Enemy] = hldgs
