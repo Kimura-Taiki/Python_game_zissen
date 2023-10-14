@@ -13,7 +13,7 @@ from mod.bullet import Bullet, bullet_set, bullets_move, bullets_draw # 自機�
 from mod.enemy import Enemy, enemies_move, enemies_draw # 敵関連のクラスを提供
 from mod.conflict import Conflict # 接触時判定の命令を提供
 from mod.enemy_factory import EnemyFactory # 敵の生成クラスを提供
-from mod.effect import draw_effect # 爆風のエフェクトを提供
+from mod.effect import Effect, effects_elapse, effects_draw # 爆風のエフェクトを提供
 
 def main() -> None: # メインループ
     global screen, event_mapping
@@ -22,6 +22,7 @@ def main() -> None: # メインループ
     clock = pygame.time.Clock()
     bullets: list[Bullet] = []
     enemies: list[Enemy] = []
+    effects: list[Effect] = []
     s_ship = StarShip()
 
     while True:
@@ -41,7 +42,6 @@ def main() -> None: # メインループ
         s_ship.draw(screen=screen, tmr=tmr)
 
         # 弾の発射
-        # Bullet.set(key=key, mother=s_ship)
         bullet_set(key=key, bullets=bullets, x=s_ship.x, y=s_ship.y)
         bullets_move(bullets=bullets)
         bullets_draw(screen=screen, bullets=bullets)
@@ -52,8 +52,9 @@ def main() -> None: # メインループ
         enemies_draw(screen=screen, enemies=enemies)
 
         # 敵機と自弾の衝突判定
-        Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies)
-        draw_effect(screen=screen)
+        effects_elapse(effects=effects)
+        Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
+        effects_draw(screen=screen, effects=effects)
 
         # screen.blit(pygame.font.Font(None, size=40).render(str(Enemy.l), True, (255, 255, 255)), [0, 0])
 

@@ -6,22 +6,22 @@ import sys
 if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 from mod.bullet import Bullet
 from mod.enemy import Enemy
-from mod.effect import set_effect
+from mod.effect import Effect
 
 class Conflict():
     @classmethod
-    def hit_bullet_and_enemy(cls, bullets: list[Bullet], enemies: list[Enemy]) -> None:
+    def hit_bullet_and_enemy(cls, bullets: list[Bullet], enemies: list[Enemy], effects: list[Effect]) -> None:
         for enemy in enemies:
             if enemy.breakable == False: continue
-            hit(enemy, bullets)
+            hit(enemy=enemy, bullets=bullets, effects=effects)
 
-def hit(enemy: Enemy, bullets: list[Bullet]) -> None: # 自弾とのヒットチェック
+def hit(enemy: Enemy, bullets: list[Bullet], effects: list[Effect]) -> None: # 自弾とのヒットチェック
     w: int = enemy.img.get_width()
     h: int = enemy.img.get_height()
     r: int = int((w+h)/4)+12
     for bullet in bullets[:]:
         if get_dis(enemy.x, enemy.y, bullet.x, bullet.y) < r*r:
-            set_effect(x=enemy.x, y=enemy.y)
+            effects.append(Effect(x=enemy.x, y=enemy.y, hldgs=effects))
             bullets.remove(bullet)
             enemy.hldgs.remove(enemy)
             return
