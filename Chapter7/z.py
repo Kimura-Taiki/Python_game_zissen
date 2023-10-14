@@ -1,3 +1,11 @@
+import pygame
+
+pygame.init()
+key = pygame.key.get_pressed()
+print(type(key))
+print(key[pygame.K_3], type(key[pygame.K_3]))
+exit()
+
 def f(i: int | None):
     if i is not None:
         print("{}の二乗は{}です".format(i, i*i))
