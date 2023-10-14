@@ -10,15 +10,16 @@ from mod.screen import screen # ウィンドウを作成
 from mod.background import BackGround # 背景を流して描画する命令を提供
 from mod.starship import StarShip # 自機関連のクラスを提供
 from mod.bullet import Bullet # 自機ビーム弾関連のクラスを提供
-from mod.enemy import Enemy, enemies_move, enemies_draw, enemies # 敵関連のクラスを提供
+from mod.enemy import Enemy, enemies_move, enemies_draw # 敵関連のクラスを提供
 from mod.conflict import Conflict # 接触時判定の命令を提供
 from mod.enemy_factory import EnemyFactory # 敵の生成クラスを提供
 
-def main(): # メインループ
+def main() -> None: # メインループ
     global screen, event_mapping
 
     tmr = 0
     clock = pygame.time.Clock()
+    enemies: list[Enemy] = []
 
     while True:
         StarShip.elapse()
@@ -50,7 +51,7 @@ def main(): # メインループ
         # 敵機と自弾の衝突判定
         Conflict.hit_bullet_and_enemy(bullets=Bullet.bullets, enemies=enemies)
 
-        screen.blit(pygame.font.Font(None, size=40).render(str(Enemy.l), True, (255, 255, 255)), [0, 0])
+        # screen.blit(pygame.font.Font(None, size=40).render(str(Enemy.l), True, (255, 255, 255)), [0, 0])
 
         # 映像の書き換えと更新周期の設定
         pygame.display.update()
