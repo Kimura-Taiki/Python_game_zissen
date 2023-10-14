@@ -1,7 +1,7 @@
 import pygame
 pygame.init()
 from math import cos, sin, radians
-from typing import Any
+from typing import Any, Callable
 
 class Enemy():
     LINE_T: int = -80
@@ -12,7 +12,7 @@ class Enemy():
     DEFAULT_IMG: pygame.surface.Surface = pygame.image.load("image_gl/enemy1.png")
 
     @staticmethod
-    def pass_func(enemy: None=None) -> None:
+    def pass_func(enemy: Any=None) -> None:
         pass
 
     def __init__(self, x: int, y: int, hldgs: Any=None) -> None:
@@ -24,12 +24,12 @@ class Enemy():
         self.speed: int = 6
         self.angle: int = 90
         self.breakable: bool = True
-        self.fire: function = self.pass_func
+        self.fire: Callable[[Enemy], None] = self.pass_func
     
     def move(self) -> None: # 敵オブジェクトの移動
         self.x += int(self.speed*cos(radians(self.angle)))
         self.y += int(self.speed*sin(radians(self.angle)))
-        self.fire(self)
+        (self.fire)(self)
         if self.x < self.LINE_L or self.LINE_R < self.x or self.y < self.LINE_T or self.LINE_B < self.y:
             self.hldgs.remove(self)
 
