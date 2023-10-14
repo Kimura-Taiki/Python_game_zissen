@@ -9,7 +9,7 @@ from mod.solve_event import event_mapping, solve_event # 解決すべきpygame�
 from mod.screen import screen # ウィンドウを作成
 from mod.background import BackGround # 背景を流して描画する命令を提供
 from mod.starship import StarShip # 自機関連のクラスを提供
-from mod.bullet import Bullet # 自機ビーム弾関連のクラスを提供
+from mod.bullet import Bullet, bullet_set # 自機ビーム弾関連のクラスを提供
 from mod.enemy import Enemy, enemies_move, enemies_draw # 敵関連のクラスを提供
 from mod.conflict import Conflict # 接触時判定の命令を提供
 from mod.enemy_factory import EnemyFactory # 敵の生成クラスを提供
@@ -39,7 +39,8 @@ def main() -> None: # メインループ
         s_ship.draw(screen=screen, tmr=tmr)
 
         # 弾の発射
-        Bullet.set(key=key, mother=s_ship)
+        # Bullet.set(key=key, mother=s_ship)
+        bullet_set(key=key, bullets=Bullet.bullets, x=s_ship.x, y=s_ship.y)
         Bullet.move()
         Bullet.draw(screen=screen)
 
