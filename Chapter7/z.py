@@ -1,10 +1,14 @@
 import pygame
+from functools import partial
 
-pygame.init()
-key = pygame.key.get_pressed()
-print(type(key))
-print(key[pygame.K_3], type(key[pygame.K_3]))
+def pita(x: int, y: int) -> float:
+    return (x**2+y**2)**0.5
+
+print(pita, type(pita),pita(3,4), type(pita(3,4)))
+px = partial(pita, x=4, y=5)
+print(px, type(px), px(), type(px()))
 exit()
+
 
 def f(i: int | None):
     if i is not None:
