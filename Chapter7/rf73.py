@@ -53,7 +53,7 @@ def main() -> None: # メインループ
 
         # 敵機と自弾の衝突判定
         Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies)
-        draw_effect(scrn=screen)
+        draw_effect(screen=screen)
 
         # screen.blit(pygame.font.Font(None, size=40).render(str(Enemy.l), True, (255, 255, 255)), [0, 0])
 
