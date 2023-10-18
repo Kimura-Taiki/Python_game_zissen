@@ -40,7 +40,7 @@ def main() -> None: # メインループ
 
         # 自機の移動
         s_ship.move(key=key)
-        s_ship.draw(screen=screen, tmr=tmr)
+        s_ship.draw(screen=screen, tmr=tmr, muteki=Shield.muteki)
 
         # 弾の発射
         bullet_set(key=key, bullets=bullets, x=s_ship.x, y=s_ship.y)

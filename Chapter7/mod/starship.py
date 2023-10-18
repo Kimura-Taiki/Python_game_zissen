@@ -5,7 +5,6 @@ from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
 from os.path import dirname
 import sys
 if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
-from mod.shield import Shield
 
 class StarShip():
     # 画像の読み込み
@@ -36,7 +35,7 @@ class StarShip():
         self.x = min(max(self.x, 40), 920)
         self.y = min(max(self.y, 80), 640)
 
-    def draw(self, screen: pygame.surface.Surface, tmr: int=0) -> None:
-        if Shield.muteki%2 != 0: return
+    def draw(self, screen: pygame.surface.Surface, tmr: int=0, muteki: int=0) -> None:
+        if muteki%2 != 0: return
         screen.blit(self.IMG_SSHIP[3], (self.x-8, self.y+40+(tmr%3)*2))
         screen.blit(source=self.IMG_SSHIP[self.roll], dest=(self.x-37, self.y-48))
