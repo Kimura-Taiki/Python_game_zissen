@@ -57,6 +57,10 @@ def main() -> None: # メインループ
         Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
         effects_draw(screen=screen, effects=effects)
 
+        # シールドの描画
+        screen.blit(source=Shield.IMG_SHIELD, dest=(40, 680))
+        pygame.draw.rect(surface=screen, color=(64,32,32), rect=[40+Shield.shield*4, 680, (100-Shield.shield)*4, 12])
+
         # screen.blit(pygame.font.Font(None, size=40).render(str(Enemy.l), True, (255, 255, 255)), [0, 0])
 
         # 映像の書き換えと更新周期の設定
