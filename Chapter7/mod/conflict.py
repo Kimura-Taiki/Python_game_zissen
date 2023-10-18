@@ -10,12 +10,14 @@ from mod.effect import Effect
 
 class Conflict():
     @classmethod
-    def hit_bullet_and_enemy(cls, bullets: list[Bullet], enemies: list[Enemy], effects: list[Effect]) -> None:
+    def hit_bullet_and_enemy(cls, bullets: list[Bullet], enemies: list[Enemy], effects: list[Effect]) -> int:
+        shots_down: int = 0
         for enemy in enemies:
             if enemy.breakable == False: continue
-            hit(enemy=enemy, bullets=bullets, effects=effects)
+            shots_down += hit(enemy=enemy, bullets=bullets, effects=effects)
+        return shots_down
 
-def hit(enemy: Enemy, bullets: list[Bullet], effects: list[Effect]) -> None: # 自弾とのヒットチェック
+def hit(enemy: Enemy, bullets: list[Bullet], effects: list[Effect]) -> int: # 自弾とのヒットチェック
     w: int = enemy.img.get_width()
     h: int = enemy.img.get_height()
     r: int = int((w+h)/4)+12
@@ -24,7 +26,8 @@ def hit(enemy: Enemy, bullets: list[Bullet], effects: list[Effect]) -> None: # �
             effects.append(Effect(x=enemy.x, y=enemy.y, hldgs=effects))
             bullets.remove(bullet)
             enemy.hldgs.remove(enemy)
-            return
+            return 1
+    return 0
 
 def get_dis(x1: int, y1: int, x2: int, y2: int) -> int: # 二点間の距離を求める
     return (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)

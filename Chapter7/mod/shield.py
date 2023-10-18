@@ -41,5 +41,9 @@ class Shield():
                 cls.muteki = 60
             enemy.hldgs.remove(enemy)
 
+    @classmethod
+    def recover(cls, rec: int) -> None:
+        cls.shield = min(100, cls.shield+rec)
+
 def get_dis(x1: int, y1: int, x2: int, y2: int) -> int: # 二点間の距離を求める
     return (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)

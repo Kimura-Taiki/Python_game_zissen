@@ -54,7 +54,8 @@ def main() -> None: # メインループ
 
         # 敵機と自弾の衝突判定
         effects_elapse(effects=effects, add_time=1)
-        Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
+        shots_down = Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
+        Shield.recover(rec=shots_down)
         effects_draw(screen=screen, effects=effects)
 
         # 敵機と時期の衝突判定
