@@ -34,24 +34,3 @@ class StarShip():
     def draw(self, screen: pygame.surface.Surface, tmr: int=0) -> None:
         screen.blit(self.IMG_SSHIP[3], (self.x-8, self.y+40+(tmr%3)*2))
         screen.blit(source=self.IMG_SSHIP[self.roll], dest=(self.x-37, self.y-48))
-
-    # @classmethod
-    # def elapse(cls):
-    #     cls.tmr += 1
-    
-    # @classmethod
-    # def move(cls, key): # 自機の移動
-    #     cls.roll = 0
-    #     for map in cls.KEY_MAPPING:
-    #         if key[map["key"]] != 1: continue
-    #         cls.x += map["dx"]
-    #         cls.y += map["dy"]
-    #         cls.roll = map["roll"]
-    #     cls.x = min(max(cls.x, 40), 920)
-    #     cls.y = min(max(cls.y, 80), 640)
-
-    # @classmethod
-    # def draw(cls, screen):
-    #     screen.blit(cls.IMG_SSHIP[3], [cls.x-8, cls.y+40+(cls.tmr%3)*2])
-    #     screen.blit(cls.IMG_SSHIP[cls.roll], [cls.x-37, cls.y-48])
-
