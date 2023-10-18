@@ -34,9 +34,7 @@ class Shield():
         r: int = int((w+h)/4 + (74+96)/4)
         if get_dis(x1=enemy.x, y1=enemy.y, x2=s_ship.x, y2=s_ship.y) < r*r:
             effects.append(Effect(x=enemy.x, y=enemy.y, hldgs=effects))
-            cls.shield -= 10
-            if cls.shield < 0:
-                cls.shield = 0
+            cls.shield = max(0, cls.shield-10)
             if cls.muteki == 0:
                 cls.muteki = 60
             enemy.hldgs.remove(enemy)
