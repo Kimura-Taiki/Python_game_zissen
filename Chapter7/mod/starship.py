@@ -2,6 +2,11 @@ import pygame
 pygame.init()
 from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
 
+from os.path import dirname
+import sys
+if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
+# from mod.shield import Shield
+
 class StarShip():
     # 画像の読み込み
     IMG_SSHIP = (
