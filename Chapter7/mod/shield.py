@@ -3,6 +3,8 @@ import pygame
 from os.path import dirname
 import sys
 if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
+from mod.enemy import Enemy
+from mod.starship import StarShip
 
 
 class Shield():
@@ -17,7 +19,13 @@ class Shield():
         pygame.draw.rect(surface=screen, color=(64,32,32), rect=[40+cls.shield*4, 680, (100-cls.shield)*4, 12])
     
     @classmethod
-    def hit_ss_and_enemy(cls) -> None:
+    def hit_ss_and_enemy(cls, enemies: list[Enemy], s_ship: StarShip) -> None:
         if cls.muteki > 0:
             cls.muteki -= 1
             return
+        for enemy in enemies[:]:
+            cls.hit(enemy=enemy, s_ship=s_ship)
+    
+    @classmethod
+    def hit(cls, enemy: Enemy, s_ship: StarShip) -> None:
+        pass
