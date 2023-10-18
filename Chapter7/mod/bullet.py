@@ -7,8 +7,6 @@ from typing import Any
 from os.path import dirname
 import sys
 if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
-# from mod.starship import StarShip
-from mod.shield import Shield
 
 class Bullet():
     IMG_WEAPON = pygame.image.load("image_gl/bullet.png")
@@ -31,16 +29,17 @@ class Bullet():
 
 key_scp: int = 0
 key_z: int = 0
-def bullet_set(key: pygame.key.ScancodeWrapper, bullets: list[Bullet], x: int, y: int) -> None: # 自機の発射する弾をセットする
+def bullet_set(key: pygame.key.ScancodeWrapper, bullets: list[Bullet], x: int, y: int, may_z: bool) -> bool: # 自機の発射する弾をセットする
     global key_scp, key_z
     key_scp = (key_scp+1)*key[K_SPACE]
     if key_scp%5 ==1:
         bullets.append(Bullet(x=x, y=y-50, hldgs=bullets))
     key_z = (key_z+1)*key[K_z]
-    if key_z == 1 and Shield.shield > 10:
-        Shield.shield -= 10
+    if key_z == 1 and may_z == True:
         for a in range(160, 390, 10):
             bullets.append(Bullet(x=x, y=y-50, a=a, hldgs=bullets))
+        return True
+    return False
 
 def bullets_move(bullets: list[Bullet]) -> None:
     for bullet in bullets[:]:

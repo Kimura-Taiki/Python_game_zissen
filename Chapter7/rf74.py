@@ -43,7 +43,8 @@ def main() -> None: # メインループ
         s_ship.draw(screen=screen, tmr=tmr, muteki=Shield.muteki)
 
         # 弾の発射
-        bullet_set(key=key, bullets=bullets, x=s_ship.x, y=s_ship.y)
+        do_z = bullet_set(key=key, bullets=bullets, x=s_ship.x, y=s_ship.y, may_z=Shield.shield>10)
+        Shield.shield -= do_z*10
         bullets_move(bullets=bullets)
         bullets_draw(screen=screen, bullets=bullets)
 
