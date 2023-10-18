@@ -57,6 +57,9 @@ def main() -> None: # メインループ
         Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
         effects_draw(screen=screen, effects=effects)
 
+        # 敵機と時期の衝突判定
+        Shield.hit_ss_and_enemy()
+
         # シールドの描画
         Shield.draw(screen=screen)
 
