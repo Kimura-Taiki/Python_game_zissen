@@ -10,3 +10,8 @@ class Shield():
 
     shield: int = 100
     muteki: int = 0
+
+    @classmethod
+    def draw(cls, screen: pygame.surface.Surface) -> None:
+        screen.blit(source=cls.IMG_SHIELD, dest=(40, 680))
+        pygame.draw.rect(surface=screen, color=(64,32,32), rect=[40+cls.shield*4, 680, (100-cls.shield)*4, 12])

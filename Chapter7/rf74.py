@@ -58,8 +58,7 @@ def main() -> None: # メインループ
         effects_draw(screen=screen, effects=effects)
 
         # シールドの描画
-        screen.blit(source=Shield.IMG_SHIELD, dest=(40, 680))
-        pygame.draw.rect(surface=screen, color=(64,32,32), rect=[40+Shield.shield*4, 680, (100-Shield.shield)*4, 12])
+        Shield.draw(screen=screen)
 
         # screen.blit(pygame.font.Font(None, size=40).render(str(Enemy.l), True, (255, 255, 255)), [0, 0])
 
