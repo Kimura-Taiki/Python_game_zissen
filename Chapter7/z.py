@@ -2,22 +2,20 @@ import pygame
 from functools import partial
 from typing import Any
 
-pygame.sprite.Group()
-sp = pygame.sprite.Sprite()
-# rect = pygame.Rect.Rect(left_top=(1,2), width_height=(3,4))
-g = pygame.sprite.Group()
-r = pygame.sprite.RenderUpdates()
-print(g, type(g))
-print(r, type(r))
-# empty_sprite = []
-empty_sprite: list[pygame.sprite.Sprite] = []
+class Aaa():
+    def __init__(self, x: int=100, y: int=200) -> None:
+        self.x: int = x
+        self.y: int = y
 
-GROUP: Any = pygame.sprite.Group()
-# GROUP: pygame.sprite.Group = pygame.sprite.Group()
+class Bbb():
+    def __init__(self, b: int=111) -> None:
+        self.a0: Aaa = Aaa()
+        self.a1: Aaa = Aaa(x=1, y=11)
+        self.b: int = b
 
-print(pygame.sprite.Group.__mro__)
+b = Bbb()
+print(b, b.a0, b.a1, b.b, b.a0.x, b.a0.y, b.a1.x, b.a1.y)
 exit()
-# rect = pygame.rect.Rect(left=1, top=2, width=3, height=4)
 
 def pita(x: int, y: int) -> float:
     return (x**2+y**2)**0.5
