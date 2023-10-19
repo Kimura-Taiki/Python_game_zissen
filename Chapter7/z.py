@@ -1,5 +1,23 @@
 import pygame
 from functools import partial
+from typing import Any
+
+pygame.sprite.Group()
+sp = pygame.sprite.Sprite()
+# rect = pygame.Rect.Rect(left_top=(1,2), width_height=(3,4))
+g = pygame.sprite.Group()
+r = pygame.sprite.RenderUpdates()
+print(g, type(g))
+print(r, type(r))
+# empty_sprite = []
+empty_sprite: list[pygame.sprite.Sprite] = []
+
+GROUP: Any = pygame.sprite.Group()
+# GROUP: pygame.sprite.Group = pygame.sprite.Group()
+
+print(pygame.sprite.Group.__mro__)
+exit()
+# rect = pygame.rect.Rect(left=1, top=2, width=3, height=4)
 
 def pita(x: int, y: int) -> float:
     return (x**2+y**2)**0.5

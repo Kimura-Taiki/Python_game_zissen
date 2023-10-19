@@ -25,6 +25,7 @@ def main() -> None: # メインループ
     enemies: list[Enemy] = []
     effects: list[Effect] = []
     s_ship = StarShip()
+    print(s_ship)
 
     while True:
         tmr += 1
