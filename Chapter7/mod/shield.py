@@ -32,6 +32,7 @@ class Shield():
         w: int = enemy.img.get_width()
         h: int = enemy.img.get_height()
         r: int = int((w+h)/4 + (74+96)/4)
+        # if get_dis(x1=enemy.x, y1=enemy.y, x2=s_ship.x, y2=s_ship.y) < r*r:
         if get_dis(x1=enemy.x, y1=enemy.y, x2=s_ship.x, y2=s_ship.y) < r*r:
             effects.append(Effect(x=enemy.x, y=enemy.y, hldgs=effects))
             cls.shield = max(0, cls.shield-10)

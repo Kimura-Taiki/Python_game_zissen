@@ -40,25 +40,20 @@ class StarShip():
     def __init__(self) -> None:
         self.x: int = self.DEFAULT_X
         self.y: int = self.DEFAULT_Y
-        self.roll: int = 0
         self.group: Any = pygame.sprite.Group()
         self.craft: IntraSprite = IntraSprite(group=self.group, image=self.IMG_SSHIP[0], cx=self.DEFAULT_X, cy=self.DEFAULT_Y)
         self.burner: IntraSprite = IntraSprite(group=self.group, image=self.IMG_SSHIP[3], cx=self.DEFAULT_X, cy=self.DEFAULT_Y+56)
-        print(self.craft.image)
-        print("self", self)
-        print("Group", self.group)
-        print("Craft", self.craft, self.craft.image, self.craft.rect)
-        print("Burner", self.burner)
 
     def move(self, key: pygame.key.ScancodeWrapper) -> None: # 自機の移動
-        self.roll = 0
+        roll = 0
         for map in self.KEY_MAPPING:
             if key[map["key"]] != 1: continue
             self.x += map["dx"]
             self.y += map["dy"]
-            self.roll = map["roll"]
+            roll = map["roll"]
         self.x = min(max(self.x, 40), 920)
         self.y = min(max(self.y, 80), 640)
+        self.craft.image = self.IMG_SSHIP[roll]
         self.craft.rect.center = (self.x, self.y)
         self.burner.rect.center = (self.x, self.y+56)
 
