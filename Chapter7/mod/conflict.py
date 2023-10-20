@@ -18,16 +18,10 @@ class Conflict():
         return shots_down
 
 def hit(enemy: Enemy, bullets: list[Bullet], effects: list[Effect]) -> int: # 自弾とのヒットチェック
-    w: int = enemy.image.get_width()
-    h: int = enemy.image.get_height()
-    r: int = int((w+h)/4)+12
-    for bullet in bullets[:]:
-        if get_dis(enemy.x, enemy.y, bullet.x, bullet.y) < r*r:
-            effects.append(Effect(x=enemy.x, y=enemy.y, hldgs=effects))
-            bullets.remove(bullet)
-            enemy.hldgs.remove(enemy)
-            return 1
+    hitten: list[Bullet] = pygame.sprite.spritecollide(sprite=enemy, group=pygame.sprite.Group(bullets), dokill=False)
+    for bullet in hitten[:]:
+        effects.append(Effect(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=effects))
+        bullet.hldgs.remove(bullet)
+        enemy.hldgs.remove(enemy)
+        return 1
     return 0
-
-def get_dis(x1: int, y1: int, x2: int, y2: int) -> int: # 二点間の距離を求める
-    return (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)
