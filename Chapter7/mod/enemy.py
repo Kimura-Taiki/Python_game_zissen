@@ -46,9 +46,9 @@ class Enemy(IntraSprite):
     
     def move(self) -> None: # 敵オブジェクトの移動
         self.x += int(self.speed*cos(radians(self.angle)))
-        # self.rect.centerx = self.x
+        self.rect.centerx = self.x
         self.y += int(self.speed*sin(radians(self.angle)))
-        # self.rect.centery = self.y
+        self.rect.centery = self.y
         (self.fire)(self)
         if self.x < self.LINE_L or self.LINE_R < self.x or self.y < self.LINE_T or self.LINE_B < self.y:
             self.hldgs.remove(self)
@@ -62,8 +62,9 @@ def enemies_move(enemies: list[Enemy]) -> None:
         enemy.move()
 
 def enemies_draw(screen: pygame.surface.Surface, enemies: list[Enemy]) -> None:
-    for enemy in enemies[:]:
-        enemy.draw(screen=screen)
+    pygame.sprite.Group(enemies).draw(surface=screen)
+    # for enemy in enemies[:]:
+    #     enemy.draw(screen=screen)
 
 # from inspect import getmembers
 e = Enemy(x=100, y=200)
