@@ -1,5 +1,4 @@
 import pygame
-# from pygame.sprite import _Group
 pygame.init()
 from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
 from typing import Any
@@ -7,15 +6,7 @@ from typing import Any
 from os.path import dirname
 import sys
 if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
-
-class IntraSprite(pygame.sprite.Sprite):
-    def __init__(self, group: Any, image: pygame.surface.Surface, cx: int, cy: int) -> None:
-        super().__init__(group)
-        self.image = image
-        self.rect = pygame.rect.Rect(
-            cx-int(self.image.get_width()/2), cy-int(self.image.get_height()/2),
-            self.image.get_width(), self.image.get_height())
-
+from mod.sprite import Sprite
 
 class StarShip():
     # 画像の読み込み
@@ -41,8 +32,8 @@ class StarShip():
         self.x: int = self.DEFAULT_X
         self.y: int = self.DEFAULT_Y
         self.group: Any = pygame.sprite.Group()
-        self.craft: IntraSprite = IntraSprite(group=self.group, image=self.IMG_SSHIP[0], cx=self.DEFAULT_X, cy=self.DEFAULT_Y)
-        self.burner: IntraSprite = IntraSprite(group=self.group, image=self.IMG_SSHIP[3], cx=self.DEFAULT_X, cy=self.DEFAULT_Y+56)
+        self.craft: Sprite = Sprite(group=self.group, image=self.IMG_SSHIP[0], cx=self.DEFAULT_X, cy=self.DEFAULT_Y)
+        self.burner: Sprite = Sprite(group=self.group, image=self.IMG_SSHIP[3], cx=self.DEFAULT_X, cy=self.DEFAULT_Y+56)
 
     def move(self, key: pygame.key.ScancodeWrapper) -> None: # 自機の移動
         roll = 0
