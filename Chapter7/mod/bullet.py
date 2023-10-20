@@ -20,14 +20,6 @@ class Bullet(Sprite):
         self.roll_image()
         self.hldgs: list[Bullet] = hldgs
 
-    def roll_image(self) -> None:
-        '''画像をangleに応じて回転'''
-        x = self.rect.centerx
-        y = self.rect.centery
-        self.image = pygame.transform.rotozoom(surface=self.nega, angle=-90-self.angle, scale=1.0)
-        self.rect = self.image.get_rect()
-        self.rect.center = x, y
- 
     def move(self) -> None:
         self.x += int(36*cos(radians(self.angle)))
         self.y += int(36*sin(radians(self.angle)))

@@ -31,14 +31,6 @@ class Enemy(Sprite):
         self.breakable: bool = True
         self.fire: Callable[[Enemy], None] = self.pass_func
     
-    def roll_image(self) -> None:
-        '''画像をangleに応じて回転'''
-        x = self.rect.centerx
-        y = self.rect.centery
-        self.image = pygame.transform.rotozoom(surface=self.nega, angle=-90-self.angle, scale=1.0)
-        self.rect = self.image.get_rect()
-        self.rect.center = x, y
-    
     def move(self) -> None: # 敵オブジェクトの移動
         self.x += int(self.speed*cos(radians(self.angle)))
         self.rect.centerx = self.x
