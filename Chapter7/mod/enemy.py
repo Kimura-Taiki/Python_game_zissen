@@ -36,13 +36,10 @@ class Enemy(IntraSprite):
         self.y: int = y
         self.hldgs: list[Enemy] = hldgs
         self.name: str = "----"
-        # self.img: pygame.surface.Surface = self.DEFAULT_IMG
         self.speed: int = 6
         self.angle: int = 90
         self.breakable: bool = True
         self.fire: Callable[[Enemy], None] = self.pass_func
-        # self.image: pygame.surface.Surface = self.DEFAULT_IMG
-        # self.rect: pygame.rect.Rect = pygame.rect.Rect(x-self.image.get_width()/2, y-self.image.get_height()/2, x+self.image.get_width()/2, y+self.image.get_height()/2)
     
     def move(self) -> None: # 敵オブジェクトの移動
         self.x += int(self.speed*cos(radians(self.angle)))
@@ -63,8 +60,6 @@ def enemies_move(enemies: list[Enemy]) -> None:
 
 def enemies_draw(screen: pygame.surface.Surface, enemies: list[Enemy]) -> None:
     pygame.sprite.Group(enemies).draw(surface=screen)
-    # for enemy in enemies[:]:
-    #     enemy.draw(screen=screen)
 
 # from inspect import getmembers
 e = Enemy(x=100, y=200)

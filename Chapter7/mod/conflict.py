@@ -18,8 +18,8 @@ class Conflict():
         return shots_down
 
 def hit(enemy: Enemy, bullets: list[Bullet], effects: list[Effect]) -> int: # 自弾とのヒットチェック
-    w: int = enemy.img.get_width()
-    h: int = enemy.img.get_height()
+    w: int = enemy.image.get_width()
+    h: int = enemy.image.get_height()
     r: int = int((w+h)/4)+12
     for bullet in bullets[:]:
         if get_dis(enemy.x, enemy.y, bullet.x, bullet.y) < r*r:
