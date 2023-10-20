@@ -11,6 +11,7 @@ from mod.sprite import Sprite
 
 class Bullet(Sprite):
     IMG_WEAPON = pygame.image.load("image_gl/bullet.png")
+    SPEED = 36
 
     def __init__(self, x: int, y: int, angle: int=270, hldgs: Any=None) -> None:
         super().__init__(group=[], image=self.IMG_WEAPON, cx=x, cy=y)
@@ -21,8 +22,10 @@ class Bullet(Sprite):
         self.hldgs: list[Bullet] = hldgs
 
     def move(self) -> None:
-        self.x += int(36*cos(radians(self.angle)))
-        self.y += int(36*sin(radians(self.angle)))
+        self.x += int(self.SPEED*cos(radians(self.angle)))
+        self.rect.centerx = self.x
+        self.y += int(self.SPEED*sin(radians(self.angle)))
+        self.rect.centery = self.y
         if self.y < 0 or self.x < 0 or self.x > 960:
             self.hldgs.remove(self)
 
@@ -49,5 +52,4 @@ def bullets_move(bullets: list[Bullet]) -> None:
         bullet.move()
 
 def bullets_draw(screen: pygame.surface.Surface, bullets: list[Bullet]) -> None:
-    for bullet in bullets[:]:
-        bullet.draw(screen=screen)
+    pygame.sprite.Group(bullets).draw(surface=screen)
