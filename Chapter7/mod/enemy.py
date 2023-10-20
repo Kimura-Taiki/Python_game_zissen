@@ -36,7 +36,7 @@ class Enemy(IntraSprite):
         self.y: int = y
         self.hldgs: list[Enemy] = hldgs
         self.name: str = "----"
-        self.img: pygame.surface.Surface = self.DEFAULT_IMG
+        # self.img: pygame.surface.Surface = self.DEFAULT_IMG
         self.speed: int = 6
         self.angle: int = 90
         self.breakable: bool = True
@@ -53,9 +53,9 @@ class Enemy(IntraSprite):
         if self.x < self.LINE_L or self.LINE_R < self.x or self.y < self.LINE_T or self.LINE_B < self.y:
             self.hldgs.remove(self)
 
-    def draw(self, screen: pygame.surface.Surface) -> None: #的オブジェクトの描画
-        img_rz:pygame.surface.Surface = pygame.transform.rotozoom(surface=self.img, angle=-90-self.angle, scale=1.0)
-        screen.blit(img_rz, [self.x-img_rz.get_width()/2, self.y-img_rz.get_height()/2])
+    # def draw(self, screen: pygame.surface.Surface) -> None: #的オブジェクトの描画
+    #     img_rz:pygame.surface.Surface = pygame.transform.rotozoom(surface=self.img, angle=-90-self.angle, scale=1.0)
+    #     screen.blit(img_rz, [self.x-img_rz.get_width()/2, self.y-img_rz.get_height()/2])
 
 def enemies_move(enemies: list[Enemy]) -> None:
     for enemy in enemies[:]:
