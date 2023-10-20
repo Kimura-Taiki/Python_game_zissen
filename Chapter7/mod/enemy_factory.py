@@ -19,6 +19,8 @@ class EnemyFactory():
             setattr(enemy, key, value)
         for key, value in add_diffs.items():
             setattr(enemy, key, value)
+        # enemy.nega = enemy.image
+        enemy.roll_image()
         return enemy
     
     @classmethod
@@ -31,9 +33,8 @@ def torpedo_run(enemy: Enemy) -> None: # 弾を発射する、母機の処理に
     if enemy.y > 360:
         enemy.hldgs.append(TORPEDO.make(x=enemy.x, y=enemy.y, hldgs=enemy.hldgs))
         enemy.angle = -45
+        enemy.roll_image()
         enemy.speed = 16
 
-# TORPEDOER = EnemyFactory({'img':pygame.image.load("image_gl/enemy1.png"),   'name':"Torpedoer", 'fire':torpedo_run})
-# TORPEDO =   EnemyFactory({'img':pygame.image.load("image_gl/enemy0.png"),   'name':"Torpedo",   'speed':10, 'breakable':False})
-TORPEDOER = EnemyFactory({'image':pygame.image.load("image_gl/enemy1.png"),   'name':"Torpedoer", 'fire':torpedo_run})
-TORPEDO =   EnemyFactory({'image':pygame.image.load("image_gl/enemy0.png"),   'name':"Torpedo",   'speed':10, 'breakable':False})
+TORPEDOER = EnemyFactory({'nega':pygame.image.load("image_gl/enemy1.png"),   'name':"Torpedoer", 'fire':torpedo_run})
+TORPEDO =   EnemyFactory({'nega':pygame.image.load("image_gl/enemy0.png"),   'name':"Torpedo",   'speed':10, 'breakable':False})
