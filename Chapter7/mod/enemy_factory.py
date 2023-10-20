@@ -19,7 +19,6 @@ class EnemyFactory():
             setattr(enemy, key, value)
         for key, value in add_diffs.items():
             setattr(enemy, key, value)
-        # enemy.nega = enemy.image
         enemy.roll_image()
         return enemy
     

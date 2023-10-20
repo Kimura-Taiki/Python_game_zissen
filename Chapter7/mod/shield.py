@@ -24,25 +24,32 @@ class Shield():
         if cls.muteki > 0:
             cls.muteki -= 1
             return
-        for enemy in enemies[:]:
-            cls.hit(enemy=enemy, s_ship=s_ship, effects=effects)
-    
-    @classmethod
-    def hit(cls, enemy: Enemy, s_ship: StarShip, effects: list[Effect]) -> None:
-        w: int = enemy.image.get_width()
-        h: int = enemy.image.get_height()
-        r: int = int((w+h)/4 + (74+96)/4)
-        # if get_dis(x1=enemy.x, y1=enemy.y, x2=s_ship.x, y2=s_ship.y) < r*r:
-        if get_dis(x1=enemy.x, y1=enemy.y, x2=s_ship.x, y2=s_ship.y) < r*r:
-            effects.append(Effect(x=enemy.x, y=enemy.y, hldgs=effects))
+        craft = s_ship.craft
+        hitten: list[Enemy] = pygame.sprite.spritecollide(sprite=craft, group=pygame.sprite.Group(enemies), dokill=False)
+        if hitten == []: return
+        cls.muteki = 60 if cls.muteki == 0 else cls.muteki
+        for enemy in hitten[:]:
+            effects.append(Effect(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=effects))
             cls.shield = max(0, cls.shield-10)
-            if cls.muteki == 0:
-                cls.muteki = 60
             enemy.hldgs.remove(enemy)
+        # for enemy in enemies[:]:
+        #     cls.hit(enemy=enemy, s_ship=s_ship, effects=effects)
+    
+    # @classmethod
+    # def hit(cls, enemy: Enemy, s_ship: StarShip, effects: list[Effect]) -> None:
+    #     w: int = enemy.image.get_width()
+    #     h: int = enemy.image.get_height()
+    #     r: int = int((w+h)/4 + (74+96)/4)
+    #     if get_dis(x1=enemy.x, y1=enemy.y, x2=s_ship.x, y2=s_ship.y) < r*r:
+    #         effects.append(Effect(x=enemy.x, y=enemy.y, hldgs=effects))
+    #         cls.shield = max(0, cls.shield-10)
+    #         if cls.muteki == 0:
+    #             cls.muteki = 60
+    #         enemy.hldgs.remove(enemy)
 
     @classmethod
     def recover(cls, rec: int) -> None:
         cls.shield = min(100, cls.shield+rec)
 
-def get_dis(x1: int, y1: int, x2: int, y2: int) -> int: # 二点間の距離を求める
-    return (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)
+# def get_dis(x1: int, y1: int, x2: int, y2: int) -> int: # 二点間の距離を求める
+#     return (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)
