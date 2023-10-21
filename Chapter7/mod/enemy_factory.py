@@ -29,8 +29,8 @@ class EnemyFactory():
             enemies.append(TORPEDOER.make(x=randint(20, 940), y=Enemy.LINE_T, hldgs=enemies))
     
 def torpedo_run(enemy: Enemy) -> None: # 弾を発射する、母機の処理にのみ弾の発射機構を追加する
-    if enemy.y > 360:
-        enemy.hldgs.append(TORPEDO.make(x=enemy.x, y=enemy.y, hldgs=enemy.hldgs))
+    if enemy.rect.centery > 360:
+        enemy.hldgs.append(TORPEDO.make(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=enemy.hldgs))
         enemy.angle = -45
         enemy.roll_image()
         enemy.speed = 16

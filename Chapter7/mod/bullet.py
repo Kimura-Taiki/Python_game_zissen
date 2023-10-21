@@ -15,23 +15,15 @@ class Bullet(Sprite):
 
     def __init__(self, x: int, y: int, angle: int=270, hldgs: Any=None) -> None:
         super().__init__(group=[], image=self.IMG_WEAPON, cx=x, cy=y)
-        self.x: int = x
-        self.y: int = y
         self.angle: int = angle
         self.roll_image()
         self.hldgs: list[Bullet] = hldgs
 
     def move(self) -> None:
-        self.x += int(self.SPEED*cos(radians(self.angle)))
-        self.rect.centerx = self.x
-        self.y += int(self.SPEED*sin(radians(self.angle)))
-        self.rect.centery = self.y
-        if self.y < 0 or self.x < 0 or self.x > 960:
+        self.rect.centerx += int(self.SPEED*cos(radians(self.angle)))
+        self.rect.centery += int(self.SPEED*sin(radians(self.angle)))
+        if self.rect.centery < 0 or self.rect.centerx < 0 or self.rect.centerx > 960:
             self.hldgs.remove(self)
-
-    def draw(self, screen: pygame.surface.Surface) -> None:
-        img_rz = pygame.transform.rotozoom(surface=self.IMG_WEAPON, angle=-90-self.angle, scale=1.0)
-        screen.blit(source=img_rz, dest=(self.x-img_rz.get_width()/2, self.y-img_rz.get_height()/2))
 
 key_scp: int = 0
 key_z: int = 0
