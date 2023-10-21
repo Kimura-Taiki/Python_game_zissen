@@ -9,8 +9,8 @@ from mod.solve_event import event_mapping, solve_event # 解決すべきpygame�
 from mod.screen import screen # ウィンドウを作成
 from mod.background import BackGround # 背景を流して描画する命令を提供
 from mod.starship import StarShip # 自機関連のクラスを提供
-from mod.bullet import Bullet, bullet_set, bullets_move, bullets_draw # 自機ビーム弾関連のクラスを提供
-from mod.enemy import Enemy, enemies_move, enemies_draw # 敵関連のクラスを提供
+from mod.bullet import Bullet, bullet_set, bullets_move # 自機ビーム弾関連のクラスを提供
+from mod.enemy import Enemy, enemies_move # 敵関連のクラスを提供
 from mod.conflict import Conflict # 接触時判定の命令を提供
 from mod.enemy_factory import EnemyFactory # 敵の生成クラスを提供
 from mod.effect import Effect, effects_elapse, effects_draw # 爆風のエフェクトを提供
@@ -48,12 +48,12 @@ def main() -> None: # メインループ
         do_z = bullet_set(key=key, bullets=bullets, x=s_ship.x, y=s_ship.y, may_z=shield.shield>10)
         shield.shield -= do_z*10
         bullets_move(bullets=bullets)
-        bullets_draw(screen=screen, bullets=bullets)
+        pygame.sprite.Group(bullets).draw(surface=screen)
 
         # 敵の表示と移動
         EnemyFactory.bring_enemy(enemies=enemies, tmr=tmr)
         enemies_move(enemies=enemies)
-        enemies_draw(screen=screen, enemies=enemies)
+        pygame.sprite.Group(enemies).draw(surface=screen)
 
         # 敵機と自弾の衝突判定
         effects_elapse(effects=effects, add_time=1)

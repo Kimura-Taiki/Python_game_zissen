@@ -42,6 +42,3 @@ def bullet_set(key: pygame.key.ScancodeWrapper, bullets: list[Bullet], x: int, y
 def bullets_move(bullets: list[Bullet]) -> None:
     for bullet in bullets[:]:
         bullet.move()
-
-def bullets_draw(screen: pygame.surface.Surface, bullets: list[Bullet]) -> None:
-    pygame.sprite.Group(bullets).draw(surface=screen)

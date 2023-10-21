@@ -39,6 +39,3 @@ class Enemy(Sprite):
 def enemies_move(enemies: list[Enemy]) -> None:
     for enemy in enemies[:]:
         enemy.move()
-
-def enemies_draw(screen: pygame.surface.Surface, enemies: list[Enemy]) -> None:
-    pygame.sprite.Group(enemies).draw(surface=screen)
