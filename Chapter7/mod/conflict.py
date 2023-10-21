@@ -14,14 +14,11 @@ class Conflict():
         shots_down: int = 0
         for enemy in enemies:
             if enemy.breakable == False: continue
-            shots_down += hit(enemy=enemy, bullets=bullets, effects=effects)
+            hitten: list[Bullet] = pygame.sprite.spritecollide(sprite=enemy, group=pygame.sprite.Group(bullets), dokill=False)
+            for bullet in hitten:
+                shots_down += 1
+                effects.append(Effect(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=effects))
+                bullet.hldgs.remove(bullet)
+                enemy.hldgs.remove(enemy)
+                break
         return shots_down
-
-def hit(enemy: Enemy, bullets: list[Bullet], effects: list[Effect]) -> int: # 自弾とのヒットチェック
-    hitten: list[Bullet] = pygame.sprite.spritecollide(sprite=enemy, group=pygame.sprite.Group(bullets), dokill=False)
-    for bullet in hitten[:]:
-        effects.append(Effect(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=effects))
-        bullet.hldgs.remove(bullet)
-        enemy.hldgs.remove(enemy)
-        return 1
-    return 0
