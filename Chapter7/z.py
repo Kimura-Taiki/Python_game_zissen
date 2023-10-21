@@ -1,3 +1,9 @@
+class Coord():
+    x: int
+    y: int
+
+z = Coord()
+z.x, z.y = 10, 20
 
 # nametupleで美しいPythonを書く！
 # https://qiita.com/Seny/items/add4d03876f505442136

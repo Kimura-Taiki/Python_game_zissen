@@ -25,6 +25,7 @@ def main() -> None: # メインループ
     enemies: list[Enemy] = []
     effects: list[Effect] = []
     s_ship = StarShip()
+    shield = Shield()
     print(s_ship)
 
     while True:
@@ -41,11 +42,11 @@ def main() -> None: # メインループ
 
         # 自機の移動
         s_ship.move(key=key)
-        s_ship.draw(screen=screen, tmr=tmr, muteki=Shield.muteki)
+        s_ship.draw(screen=screen, tmr=tmr, muteki=shield.muteki)
 
         # 弾の発射
-        do_z = bullet_set(key=key, bullets=bullets, x=s_ship.x, y=s_ship.y, may_z=Shield.shield>10)
-        Shield.shield -= do_z*10
+        do_z = bullet_set(key=key, bullets=bullets, x=s_ship.x, y=s_ship.y, may_z=shield.shield>10)
+        shield.shield -= do_z*10
         bullets_move(bullets=bullets)
         bullets_draw(screen=screen, bullets=bullets)
 
@@ -57,14 +58,14 @@ def main() -> None: # メインループ
         # 敵機と自弾の衝突判定
         effects_elapse(effects=effects, add_time=1)
         shots_down = Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
-        Shield.recover(rec=shots_down)
+        shield.recover(rec=shots_down)
         effects_draw(screen=screen, effects=effects)
 
         # 敵機と時期の衝突判定
-        Shield.hit_ss_and_enemy(enemies=enemies, s_ship=s_ship, effects=effects)
+        shield.hit_ss_and_enemy(enemies=enemies, s_ship=s_ship, effects=effects)
 
         # シールドの描画
-        Shield.draw(screen=screen)
+        shield.draw(screen=screen)
 
         # screen.blit(pygame.font.Font(None, size=40).render(str(Enemy.l), True, (255, 255, 255)), [0, 0])
 
