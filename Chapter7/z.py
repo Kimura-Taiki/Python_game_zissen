@@ -1,10 +1,7 @@
-from typing import Literal
-def func() -> Literal[False]:
-    a = 0
-    return False
+from pygame.sprite import Sprite, Group
 
-print(func())
-exit()
+g = Group(Sprite(),Sprite())
+print(g)
 
 # nametupleで美しいPythonを書く！
 # https://qiita.com/Seny/items/add4d03876f505442136

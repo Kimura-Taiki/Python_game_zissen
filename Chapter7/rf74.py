@@ -62,7 +62,7 @@ def main() -> None: # メインループ
         [effect.draw(screen=screen) for effect in effects]
 
         # 敵機と時期の衝突判定
-        shield.hit_ss_and_enemy(enemies=enemies, s_ship=s_ship, effects=effects)
+        shield.hit_ss_and_enemy(enemies=enemies, craft=s_ship.craft, effects=effects)
 
         # シールドの描画
         shield.draw(screen=screen)
