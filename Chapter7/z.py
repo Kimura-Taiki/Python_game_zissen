@@ -1,7 +1,15 @@
-from pygame.sprite import Sprite, Group
+from typing import NamedTuple
+class Color(NamedTuple):
+    r: int
+    g: int
+    b: int
 
-g = Group(Sprite(),Sprite())
-print(g)
+r = Color(255, 0, 0)
+print(r, r.r, r.g, r.b)
+
+from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
+print(K_UP, K_DOWN, K_LEFT, K_RIGHT, type(K_UP))
+
 
 # nametupleで美しいPythonを書く！
 # https://qiita.com/Seny/items/add4d03876f505442136

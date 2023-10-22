@@ -29,8 +29,6 @@ class StarShip():
                    {"key":K_RIGHT,  "dx": V, "dy": 0, "roll":2})
     
     def __init__(self) -> None:
-        # self.x: int = self.DEFAULT_X
-        # self.y: int = self.DEFAULT_Y
         self.group: Any = pygame.sprite.Group()
         self.craft: Sprite = Sprite(group=self.group, image=self.IMG_SSHIP[0], cx=self.DEFAULT_X, cy=self.DEFAULT_Y)
         self.burner: Sprite = Sprite(group=self.group, image=self.IMG_SSHIP[3], cx=self.DEFAULT_X, cy=self.DEFAULT_Y+56)
@@ -40,18 +38,12 @@ class StarShip():
         x, y = self.craft.rect.center
         for map in self.KEY_MAPPING:
             if key[map["key"]] != 1: continue
-            # self.x += map["dx"]
-            # self.y += map["dy"]
             x += map["dx"]
             y += map["dy"]
             roll = map["roll"]
-        # self.x = min(max(self.x, 40), 920)
-        # self.y = min(max(self.y, 80), 640)
         self.craft.image = self.IMG_SSHIP[roll]
-        # self.craft.rect.center = (self.x, self.y)
         self.craft.rect.center = (min(max(x, 40), 920), min(max(y, 80), 640))
         self.burner.rect.center = self.craft.rect.centerx, self.craft.rect.centery+56
-        # self.burner.rect.center = (self.x, self.y+56)
 
     def draw(self, screen: pygame.surface.Surface, tmr: int=0, muteki: int=0) -> None:
         if muteki%2 != 0: return
