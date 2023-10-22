@@ -4,6 +4,11 @@ import math
 import random
 from pygame.locals import *
 
+BLACK = (  0,   0,   0)
+SILVER= (192, 208, 224)
+RED   = (255,   0,   0)
+CYAN  = (  0, 224, 255)
+
 # 画像の読み込み
 img_galaxy = pygame.image.load("image_gl/galaxy.png")
 img_sship = [
@@ -26,14 +31,20 @@ img_explode = [
     pygame.image.load("image_gl/explosion4.png"),
     pygame.image.load("image_gl/explosion5.png")
 ]
+img_title = [
+    pygame.image.load("image_gl/nebula.png"),
+    pygame.image.load("image_gl/logo.png")
+]
 
+idx = 0
 tmr = 0
+score = 0
 bg_y = 0
 
-ss_x = 480
-ss_y = 360
+ss_x = 0
+ss_y = 0
 ss_d = 0
-ss_shield = 100
+ss_shield = 0
 ss_muteki = 0
 key_spc = 0
 key_z = 0
@@ -71,8 +82,16 @@ def get_dis(x1, y1, x2, y2): # 二点間の距離を求める
     return( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
 
 
+def draw_text(scrn, txt, x, y, siz, col): # 文字の表示
+    fnt = pygame.font.Font(None, siz)
+    sur = fnt.render(txt, True, col)
+    x = x - sur.get_width()/2
+    y = y - sur.get_height()/2
+    scrn.blit(sur, [x, y])
+
+
 def move_starship(scrn, key): # 自機の移動
-    global ss_x, ss_y, ss_d, ss_shield, ss_muteki, key_spc, key_z
+    global idx, tmr, ss_x, ss_y, ss_d, ss_shield, ss_muteki, key_spc, key_z
     ss_d = 0
     if key[K_UP] == 1:
         ss_y = ss_y - 20
@@ -107,19 +126,22 @@ def move_starship(scrn, key): # 自機の移動
     if ss_muteki > 0:
         ss_muteki = ss_muteki - 1
         return
-    for i in range(ENEMY_MAX): # 敵とのヒットチェック
-        if emy_f[i] == True:
-            w = img_enemy[emy_type[i]].get_width()
-            h = img_enemy[emy_type[i]].get_height()
-            r = int((w+h)/4 + (74+96)/4)
-            if get_dis(emy_x[i], emy_y[i], ss_x, ss_y) < r*r:
-                set_effect(ss_x, ss_y)
-                ss_shield = ss_shield - 10
-                if ss_shield <= 0:
-                    ss_shield = 0
-                if ss_muteki == 0:
-                    ss_muteki = 60
-                emy_f[i] = False
+    elif idx == 1:
+        for i in range(ENEMY_MAX): # 敵とのヒットチェック
+            if emy_f[i] == True:
+                w = img_enemy[emy_type[i]].get_width()
+                h = img_enemy[emy_type[i]].get_height()
+                r = int((w+h)/4 + (74+96)/4)
+                if get_dis(emy_x[i], emy_y[i], ss_x, ss_y) < r*r:
+                    set_effect(ss_x, ss_y)
+                    ss_shield = ss_shield - 10
+                    if ss_shield <= 0:
+                        ss_shield = 0
+                        idx = 2
+                        tmr = 0
+                    if ss_muteki == 0:
+                        ss_muteki = 60
+                    emy_f[i] = False
 
 
 def set_missile(typ): # 自機の発射する弾をセットする
@@ -170,7 +192,7 @@ def set_enemy(x, y, a, ty, sp): # 敵機をセットする
 
 
 def move_enemy(scrn): # 敵機の移動
-    global ss_shield
+    global idx, tmr, score, ss_shield
     for i in range(ENEMY_MAX):
         if emy_f[i] == True:
             ang = -90-emy_a[i]
@@ -192,6 +214,7 @@ def move_enemy(scrn): # 敵機の移動
                     if msl_f[n] == True and get_dis(emy_x[i], emy_y[i], msl_x[n], msl_y[n]) < r*r:
                         msl_f[n] = False
                         set_effect(emy_x[i], emy_y[i])
+                        score = score + 100
                         emy_f[i] = False
                         if ss_shield < 100:
                             ss_shield = ss_shield + 1
@@ -218,7 +241,7 @@ def draw_effect(scrn): # 爆発の演出
 
 
 def main(): # メインループ
-    global tmr, bg_y
+    global idx, tmr, score, bg_y, ss_x, ss_y, ss_d, ss_shield, ss_muteki
 
     pygame.init()
     pygame.display.set_caption("Galaxy Lancer")
@@ -243,13 +266,56 @@ def main(): # メインループ
         screen.blit(img_galaxy, [0, bg_y])
 
         key = pygame.key.get_pressed()
-        move_starship(screen, key)
-        move_missile(screen)
-        bring_enemy()
-        move_enemy(screen)
-        draw_effect(screen)
-        screen.blit(img_shield, [40, 680])
-        pygame.draw.rect(screen, (64,32,32), [40+ss_shield*4, 680, (100-ss_shield)*4, 12])
+
+        if idx == 0: # タイトル
+            img_rz = pygame.transform.rotozoom(img_title[0], -tmr%360, 1.0)
+            screen.blit(img_rz, [480-img_rz.get_width()/2, 280-img_rz.get_height()/2])
+            screen.blit(img_title[1], [70, 160])
+            draw_text(screen, "Press [SPACE] to start!", 480, 600, 50, SILVER)
+            if key[K_SPACE] == 1:
+                idx = 1
+                tmr = 0
+                score = 0
+                ss_x = 480
+                ss_y = 600
+                ss_d = 0
+                ss_shield = 100
+                ss_muteki = 0
+                for i in range(ENEMY_MAX):
+                    emy_f[i] = False
+                for i in range(MISSILE_MAX):
+                    msl_f[i] = False
+
+        if idx == 1: # ゲームプレイ中
+            move_starship(screen, key)
+            move_missile(screen)
+            bring_enemy()
+            move_enemy(screen)
+            if tmr == 30*60:
+                idx = 3
+                tmr = 0
+
+        if idx == 2: # ゲームオーバー
+            move_missile(screen)
+            move_enemy(screen)
+            draw_text(screen, "GAME OVER", 480, 300, 80, RED)
+            if tmr == 150:
+                idx = 0
+                tmr = 0
+
+        if idx == 3: # ゲームクリア
+            move_starship(screen, key)
+            move_missile(screen)
+            draw_text(screen, "GAME CLEAR", 480, 300, 80, SILVER)
+            if tmr == 150:
+                idx = 0
+                tmr = 0
+
+        draw_effect(screen) # 爆発の演出
+        draw_text(screen, "SCORE "+str(score), 200, 30, 50, SILVER)
+        if idx != 0: # シールドの表示
+            screen.blit(img_shield, [40, 680])
+            pygame.draw.rect(screen, (64,32,32), [40+ss_shield*4, 680, (100-ss_shield)*4, 12])
 
         pygame.display.update()
         clock.tick(30)

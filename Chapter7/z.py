@@ -8,6 +8,10 @@ print(r, r.r, r.g, r.b)
 from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
 print(K_UP, K_DOWN, K_LEFT, K_RIGHT, type(K_UP))
 
+from pygame.sprite import Group
+g = Group()
+g.draw()
+
 
 # nametupleで美しいPythonを書く！
 # https://qiita.com/Seny/items/add4d03876f505442136
