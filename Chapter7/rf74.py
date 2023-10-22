@@ -45,7 +45,7 @@ def main() -> None: # メインループ
         s_ship.draw(screen=screen, tmr=tmr, muteki=shield.muteki)
 
         # 弾の発射
-        do_z = bullet_set(key=key, bullets=bullets, x=s_ship.x, y=s_ship.y, may_z=shield.shield>10)
+        do_z = bullet_set(key=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery, may_z=shield.shield>10)
         shield.shield -= do_z*10
         [bullet.move() for bullet in bullets]
         pygame.sprite.Group(bullets).draw(surface=screen)
