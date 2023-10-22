@@ -16,6 +16,19 @@ from mod.enemy_factory import EnemyFactory # 敵の生成クラスを提供
 from mod.effect import Effect # 爆風のエフェクトを提供
 from mod.shield import Shield # シールド制を提供
 
+BLACK = (  0,   0,   0)
+SILVER= (192, 208, 224)
+RED   = (255,   0,   0)
+CYAN  = (  0, 224, 255)
+
+img_title = [
+    pygame.image.load("image_gl/nebula.png"),
+    pygame.image.load("image_gl/logo.png")
+]
+
+idx = 0
+score = 0
+
 def main() -> None: # メインループ
     global screen, event_mapping
 
