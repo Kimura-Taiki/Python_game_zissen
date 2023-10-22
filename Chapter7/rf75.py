@@ -29,6 +29,12 @@ img_title = [
 idx = 0
 score = 0
 
+def draw_text(screen: pygame.surface.Surface,
+              text: str, x: int, y: int, size: int, col: tuple[int, int, int]) -> None:
+    '''文字を表示する命令です。'''
+    sur = pygame.font.Font(name=None, size=size).render(text=text, antialias=True, color=col)
+    screen.blit(source=sur, dest=[x-sur.get_width()/2, y-sur.get_height()/2])
+
 def main() -> None: # メインループ
     global screen, event_mapping
 
