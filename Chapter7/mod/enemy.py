@@ -35,7 +35,3 @@ class Enemy(Sprite):
         (self.fire)(self)
         if self.rect.centerx < self.LINE_L or self.LINE_R < self.rect.centerx or self.rect.centery < self.LINE_T or self.LINE_B < self.rect.centery:
             self.hldgs.remove(self)
-
-def enemies_move(enemies: list[Enemy]) -> None:
-    for enemy in enemies[:]:
-        enemy.move()

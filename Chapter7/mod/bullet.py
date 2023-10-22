@@ -38,7 +38,3 @@ def bullet_set(key: pygame.key.ScancodeWrapper, bullets: list[Bullet], x: int, y
             bullets.append(Bullet(x=x, y=y-50, angle=a, hldgs=bullets))
         return True
     return False
-
-def bullets_move(bullets: list[Bullet]) -> None:
-    for bullet in bullets[:]:
-        bullet.move()

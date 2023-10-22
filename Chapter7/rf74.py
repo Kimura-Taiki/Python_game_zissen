@@ -9,11 +9,11 @@ from mod.solve_event import event_mapping, solve_event # 解決すべきpygame�
 from mod.screen import screen # ウィンドウを作成
 from mod.background import BackGround # 背景を流して描画する命令を提供
 from mod.starship import StarShip # 自機関連のクラスを提供
-from mod.bullet import Bullet, bullet_set, bullets_move # 自機ビーム弾関連のクラスを提供
-from mod.enemy import Enemy, enemies_move # 敵関連のクラスを提供
+from mod.bullet import Bullet, bullet_set # 自機ビーム弾関連のクラスを提供
+from mod.enemy import Enemy # 敵関連のクラスを提供
 from mod.conflict import Conflict # 接触時判定の命令を提供
 from mod.enemy_factory import EnemyFactory # 敵の生成クラスを提供
-from mod.effect import Effect, effects_elapse, effects_draw # 爆風のエフェクトを提供
+from mod.effect import Effect # 爆風のエフェクトを提供
 from mod.shield import Shield # シールド制を提供
 
 def main() -> None: # メインループ
@@ -47,19 +47,19 @@ def main() -> None: # メインループ
         # 弾の発射
         do_z = bullet_set(key=key, bullets=bullets, x=s_ship.x, y=s_ship.y, may_z=shield.shield>10)
         shield.shield -= do_z*10
-        bullets_move(bullets=bullets)
+        [bullet.move() for bullet in bullets]
         pygame.sprite.Group(bullets).draw(surface=screen)
 
         # 敵の表示と移動
         EnemyFactory.bring_enemy(enemies=enemies, tmr=tmr)
-        enemies_move(enemies=enemies)
+        [enemy.move() for enemy in enemies]
         pygame.sprite.Group(enemies).draw(surface=screen)
 
         # 敵機と自弾の衝突判定
-        effects_elapse(effects=effects, add_time=1)
+        [effect.elapse(t=1) for effect in effects]
         shots_down = Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
         shield.recover(rec=shots_down)
-        effects_draw(screen=screen, effects=effects)
+        [effect.draw(screen=screen) for effect in effects]
 
         # 敵機と時期の衝突判定
         shield.hit_ss_and_enemy(enemies=enemies, s_ship=s_ship, effects=effects)

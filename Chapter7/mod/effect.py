@@ -24,10 +24,3 @@ class Effect():
     def draw(self, screen: pygame.surface.Surface) -> None:
         screen.blit(source=self.IMG_EXPLODE[self.duration], dest=(self.x-48, self.y-48))
 
-def effects_elapse(effects: list[Effect], add_time: int=1) -> None:
-    for effect in effects:
-        effect.elapse(t=add_time)
-
-def effects_draw(screen: pygame.surface.Surface, effects: list[Effect]) -> None:
-    for effect in effects:
-        effect.draw(screen=screen)

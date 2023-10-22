@@ -12,6 +12,16 @@ for i in l:
 
 [print(i) for i in l]
 
+from pygame.sprite import Group, Sprite
+from typing import List, Any
+
+g: Any = Group(Sprite(), Sprite(), Sprite())
+gl: list[Group] = list(g)
+
+for s in gl:
+    print(s)
+
+
 
 # nametupleで美しいPythonを書く！
 # https://qiita.com/Seny/items/add4d03876f505442136
