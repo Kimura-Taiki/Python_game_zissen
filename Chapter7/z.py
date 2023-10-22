@@ -1,8 +1,6 @@
 from typing import NamedTuple
 class Color(NamedTuple):
-    r: int
-    g: int
-    b: int
+    r: int; g: int; b: int
 
 r = Color(255, 0, 0)
 print(r, r.r, r.g, r.b)
