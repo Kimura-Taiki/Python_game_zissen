@@ -15,25 +15,7 @@ from mod.conflict import Conflict # 接触時判定の命令を提供
 from mod.enemy_factory import EnemyFactory # 敵の生成クラスを提供
 from mod.effect import Effect # 爆風のエフェクトを提供
 from mod.shield import Shield # シールド制を提供
-
-BLACK = (  0,   0,   0)
-SILVER= (192, 208, 224)
-RED   = (255,   0,   0)
-CYAN  = (  0, 224, 255)
-
-img_title = [
-    pygame.image.load("image_gl/nebula.png"),
-    pygame.image.load("image_gl/logo.png")
-]
-
-idx = 0
-score = 0
-
-def draw_text(screen: pygame.surface.Surface,
-              text: str, x: int, y: int, size: int, col: tuple[int, int, int]) -> None:
-    '''文字を表示する命令です。'''
-    sur = pygame.font.Font(name=None, size=size).render(text=text, antialias=True, color=col)
-    screen.blit(source=sur, dest=[x-sur.get_width()/2, y-sur.get_height()/2])
+from mod.title import * # タイトル画面他ゲームの外枠を提供
 
 def main() -> None: # メインループ
     global screen, event_mapping
