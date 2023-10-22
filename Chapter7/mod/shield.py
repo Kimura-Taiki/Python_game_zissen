@@ -36,3 +36,7 @@ class Shield():
 
     def recover(self, rec: int) -> None:
         self.shield = min(100, self.shield+rec)
+
+    def reset(self) -> None:
+        self.shield = 100
+        self.muteki = 0

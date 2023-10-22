@@ -22,7 +22,7 @@ class StarShip():
     BURNER_HEIGTH: int = IMG_SSHIP[3].get_height()
     V = 20
     DEFAULT_X: int = 480
-    DEFAULT_Y: int = 360
+    DEFAULT_Y: int = 600
     class _KM(NamedTuple):
         key: int; dx:int; dy:int; roll:int
     KEY_MAPPING = (_KM(K_UP,    0,  -V, 0),
@@ -50,3 +50,7 @@ class StarShip():
     def draw(self, screen: pygame.surface.Surface, tmr: int=0, muteki: int=0) -> None:
         if muteki%2 != 0: return
         self.group.draw(screen)
+
+    def reset(self) -> None:
+        self.craft.rect.center = (self.DEFAULT_X, self.DEFAULT_Y)
+        self.burner.rect.center = (self.DEFAULT_X, self.DEFAULT_Y)

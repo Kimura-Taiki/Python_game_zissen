@@ -20,7 +20,9 @@ from mod.title import * # タイトル画面他ゲームの外枠を提供
 def main() -> None: # メインループ
     global screen, event_mapping
 
+    idx = 0
     tmr = 0
+    score = 0
     clock = pygame.time.Clock()
     bullets: list[Bullet] = []
     enemies: list[Enemy] = []
@@ -40,35 +42,48 @@ def main() -> None: # メインループ
 
         # 入力諸元を更新
         key = pygame.key.get_pressed()
+        
+        if idx == 0: # タイトル
+            Title.draw(screen=screen, key=key, tmr=tmr)
+            if key[K_SPACE] == 1:
+                idx = 1
+                tmr = 0
+                score = 0
+                s_ship.reset()
+                shield.reset()
+                bullets = []
+                enemies = []
+                effects = []
+        elif idx == 1: # ゲームプレイ中
 
-        # 自機の移動
-        s_ship.move(key=key)
-        s_ship.draw(screen=screen, tmr=tmr, muteki=shield.muteki)
+            # 自機の移動
+            s_ship.move(key=key)
+            s_ship.draw(screen=screen, tmr=tmr, muteki=shield.muteki)
 
-        # 弾の発射
-        do_z = bullet_set(key=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery, may_z=shield.shield>10)
-        shield.shield -= do_z*10
-        [bullet.move() for bullet in bullets]
-        pygame.sprite.Group(bullets).draw(surface=screen)
+            # 弾の発射
+            do_z = bullet_set(key=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery, may_z=shield.shield>10)
+            shield.shield -= do_z*10
+            [bullet.move() for bullet in bullets]
+            pygame.sprite.Group(bullets).draw(surface=screen)
 
-        # 敵の表示と移動
-        EnemyFactory.bring_enemy(enemies=enemies, tmr=tmr)
-        [enemy.move() for enemy in enemies]
-        pygame.sprite.Group(enemies).draw(surface=screen)
+            # 敵の表示と移動
+            EnemyFactory.bring_enemy(enemies=enemies, tmr=tmr)
+            [enemy.move() for enemy in enemies]
+            pygame.sprite.Group(enemies).draw(surface=screen)
 
-        # 敵機と自弾の衝突判定
-        [effect.elapse(t=1) for effect in effects]
-        shots_down = Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
-        shield.recover(rec=shots_down)
-        [effect.draw(screen=screen) for effect in effects]
+            # 敵機と自弾の衝突判定
+            [effect.elapse(t=1) for effect in effects]
+            shots_down = Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
+            shield.recover(rec=shots_down)
+            [effect.draw(screen=screen) for effect in effects]
 
-        # 敵機と時期の衝突判定
-        shield.hit_ss_and_enemy(enemies=enemies, craft=s_ship.craft, effects=effects)
+            # 敵機と時期の衝突判定
+            shield.hit_ss_and_enemy(enemies=enemies, craft=s_ship.craft, effects=effects)
 
-        # シールドの描画
-        shield.draw(screen=screen)
+            # シールドの描画
+            shield.draw(screen=screen)
 
-        # screen.blit(pygame.font.Font(None, size=40).render(str(Enemy.l), True, (255, 255, 255)), [0, 0])
+            # screen.blit(pygame.font.Font(None, size=40).render(str(Enemy.l), True, (255, 255, 255)), [0, 0])
 
         # 映像の書き換えと更新周期の設定
         pygame.display.update()
