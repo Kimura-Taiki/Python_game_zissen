@@ -2,7 +2,7 @@ import pygame
 pygame.init()
 from pygame.locals import K_SPACE, K_z
 from math import cos, sin, radians
-from typing import Any
+from typing import Any, Literal
 
 from os.path import dirname
 import sys
@@ -19,11 +19,16 @@ class Bullet(Sprite):
         self.roll_image()
         self.hldgs: list[Bullet] = hldgs
 
-    def move(self) -> None:
+    def move(self) -> Literal[False]:
+        '''Bulletをangleに従って直線運動させます。
+
+        リスト内包表記で繰り返し処理する際に戻り値が無いとエラーを起こす為、
+        戻り値にFalseを与えてあります。'''
         self.rect.centerx += int(self.SPEED*cos(radians(self.angle)))
         self.rect.centery += int(self.SPEED*sin(radians(self.angle)))
         if self.rect.centery < 0 or self.rect.centerx < 0 or self.rect.centerx > 960:
             self.hldgs.remove(self)
+        return False
 
 key_scp: int = 0
 key_z: int = 0
