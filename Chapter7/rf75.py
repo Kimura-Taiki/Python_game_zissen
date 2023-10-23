@@ -102,8 +102,13 @@ def main() -> None: # メインループ
 
         # 敵機と自期の衝突判定
         shield.hit_ss_and_enemy(enemies=enemies, craft=s_ship.craft, effects=effects)
+        if shield.shield <= 0:
+            shield.shield = 100
+            idx = 2
+            tmr = 0
 
         draw_text(screen, "Score "+str(score), 200, 30, 50, SILVER)
+        draw_text(screen, "Timer "+str(tmr), 200, 30+40, 50, SILVER)
         # シールドの描画
         if idx != 0:
             shield.draw(screen=screen)
