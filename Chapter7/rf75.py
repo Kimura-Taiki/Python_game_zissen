@@ -4,6 +4,7 @@
 
 import pygame
 pygame.init()
+from pygame.locals import K_SPACE
 
 from mod.solve_event import event_mapping, solve_event # 解決すべきpygameイベントを定義
 from mod.screen import screen # ウィンドウを作成
@@ -15,7 +16,7 @@ from mod.conflict import Conflict # 接触時判定の命令を提供
 from mod.enemy_factory import EnemyFactory # 敵の生成クラスを提供
 from mod.effect import Effect # 爆風のエフェクトを提供
 from mod.shield import Shield # シールド制を提供
-from mod.title import * # タイトル画面他ゲームの外枠を提供
+from mod.title import Title, draw_text, RED, SILVER # タイトル画面他ゲームの外枠を提供
 
 def main() -> None: # メインループ
     global screen, event_mapping
@@ -66,6 +67,24 @@ def main() -> None: # メインループ
                 # 敵の生成
                 EnemyFactory.bring_enemy(enemies=enemies, tmr=tmr)
 
+                if tmr == 30*6:
+                    idx = 3
+                    tmr = 0
+            case 2: # ゲームオーバー
+                draw_text(screen, "GAME OVER", 480, 300, 80, RED)
+                if tmr == 30*5:
+                    idx = 0
+                    tmr = 0
+            case 3: # ゲームクリア
+                # 自機の移動と描画
+                s_ship.move(key=key)
+                s_ship.draw(screen=screen, tmr=tmr, muteki=shield.muteki)
+
+                draw_text(screen, "GAME CLEAR", 480, 300, 80, SILVER)
+                if tmr == 30*5:
+                    idx = 0
+                    tmr = 0
+        
         # 弾の表示と移動
         [bullet.move() for bullet in bullets]
         pygame.sprite.Group(bullets).draw(surface=screen)
@@ -83,6 +102,7 @@ def main() -> None: # メインループ
         # 敵機と時期の衝突判定
         shield.hit_ss_and_enemy(enemies=enemies, craft=s_ship.craft, effects=effects)
 
+        draw_text(screen, "Time "+str(tmr), 200, 30, 50, SILVER)
         # シールドの描画
         if idx != 0:
             shield.draw(screen=screen)
