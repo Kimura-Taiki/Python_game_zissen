@@ -97,12 +97,13 @@ def main() -> None: # メインループ
         [effect.elapse(t=1) for effect in effects]
         shots_down = Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
         shield.recover(rec=shots_down)
+        score += shots_down*100
         [effect.draw(screen=screen) for effect in effects]
 
-        # 敵機と時期の衝突判定
+        # 敵機と自期の衝突判定
         shield.hit_ss_and_enemy(enemies=enemies, craft=s_ship.craft, effects=effects)
 
-        draw_text(screen, "Time "+str(tmr), 200, 30, 50, SILVER)
+        draw_text(screen, "Score "+str(score), 200, 30, 50, SILVER)
         # シールドの描画
         if idx != 0:
             shield.draw(screen=screen)
