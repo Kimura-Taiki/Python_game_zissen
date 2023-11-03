@@ -29,7 +29,7 @@ class Enemy(Sprite):
         self.breakable: bool = True
         self.fire: Callable[[Enemy], None] = self.pass_func
     
-    def move(self) -> Literal[False]: # 敵オブジェクトの移動
+    def elapse(self) -> Literal[False]: # 敵オブジェクトの移動
         '''Enemyをangleに従って直線運動させます。
 
         リスト内包表記で繰り返し処理する際に戻り値が無いとエラーを起こす為、

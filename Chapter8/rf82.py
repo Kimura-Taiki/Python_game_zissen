@@ -22,19 +22,8 @@ from mod.sound import adjusted_bgm, SE_DAMAGE
 def main_elapse(screen: pygame.surface.Surface, bullets: list[Bullet], enemies: list[Enemy], effects: list[Effect]):
     '''メイン画面で操作に関係無く時間経過で動いていく処理。
     主にスプライトの移動と描画、消滅を担う。'''
-    # # 弾の表示と移動
-    # [bullet.move() for bullet in bullets]
-    # pygame.sprite.Group(bullets).draw(surface=screen)
-    # # 敵の表示と移動
-    # [enemy.move() for enemy in enemies]
-    # pygame.sprite.Group(enemies).draw(surface=screen)
-    # # 爆風の表示と消滅
-    # [effect.elapse(t=1) for effect in effects]
-    # [effect.draw(screen=screen) for effect in effects]
-    # [effect.move() for effect in effects]
-    [sprite.move() for sprite in bullets+enemies+effects]
-    pygame.sprite.Group(bullets+enemies).draw(surface=screen)
-    [effect.draw(screen=screen) for effect in effects]
+    [sprite.elapse() for sprite in bullets+enemies+effects]
+    pygame.sprite.Group(bullets+enemies+effects).draw(surface=screen)
 
 def main() -> None: # メインループ
     global screen, event_mapping
@@ -120,23 +109,12 @@ def main() -> None: # メインループ
                         idx = 0
                         tmr = 0
         
-        # # 弾の表示と移動
-        # [bullet.move() for bullet in bullets]
-        # pygame.sprite.Group(bullets).draw(surface=screen)
-
-        # # 敵の表示と移動
-        # [enemy.move() for enemy in enemies]
-        # pygame.sprite.Group(enemies).draw(surface=screen)
+        main_elapse(screen=screen, bullets=bullets, enemies=enemies, effects=effects)
 
         # 敵機と自弾の衝突判定
         shots_down = Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
         shield.recover(rec=shots_down)
         score += shots_down*100
-        # # 爆風の表示と消滅
-        # [effect.elapse(t=1) for effect in effects]
-        # [effect.draw(screen=screen) for effect in effects]
-
-        main_elapse(screen=screen, bullets=bullets, enemies=enemies, effects=effects)
 
         # 敵機と自期の衝突判定
         shield.hit_ss_and_enemy(enemies=enemies, craft=s_ship.craft, effects=effects)

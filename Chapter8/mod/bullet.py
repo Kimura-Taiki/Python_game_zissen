@@ -8,10 +8,6 @@ from os.path import dirname
 import sys
 if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 from mod.sound import SE_SHOT, SE_BARRAGE
-
-from os.path import dirname
-import sys
-if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 from mod.sprite import Sprite
 
 class Bullet(Sprite):
@@ -24,7 +20,7 @@ class Bullet(Sprite):
         self.roll_image()
         self.hldgs: list[Bullet] = hldgs
 
-    def move(self) -> Literal[False]:
+    def elapse(self) -> Literal[False]:
         '''Bulletをangleに従って直線運動させます。
 
         リスト内包表記で繰り返し処理する際に戻り値が無いとエラーを起こす為、
