@@ -55,6 +55,9 @@ def main() -> None: # メインループ
                     bullets = []
                     enemies = []
                     effects = []
+                    pygame.mixer.music.load(filename="sound_gl/bgm.ogg")
+                    pygame.mixer.music.play(loops=-1)
+                    pygame.mixer.music.set_volume(0.1)
             case 1: # ゲームプレイ中
                 # 自機の移動と描画
                 s_ship.move(key=key)
