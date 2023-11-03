@@ -8,6 +8,8 @@ import sys
 if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 from mod.sprite import Sprite
 from mod.shield import Shield
+from mod.enemy import Enemy
+from mod.effect import Effect
 
 class StarShip():
     # 画像の読み込み
@@ -57,3 +59,17 @@ class StarShip():
         self.craft.rect.center = (self.DEFAULT_X, self.DEFAULT_Y)
         self.burner.rect.center = (self.DEFAULT_X, self.DEFAULT_Y)
         self.shield.reset()
+    
+    def recover(self, rec: int) -> None:
+        self.shield.recover(rec=rec)
+
+    def hit_ss_and_enemy(self, enemies: list[Enemy], effects: list[Effect]) -> None:
+        self.shield.hit_ss_and_enemy(enemies=enemies, craft=self.craft, effects=effects)
+
+    @property
+    def hp(self) -> int:
+        return self.shield.shield
+
+    @hp.setter
+    def hp(self, val: int) -> None:
+        self.shield.shield += val

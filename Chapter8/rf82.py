@@ -132,7 +132,6 @@ def main() -> None: # メインループ
         # 敵機と自期の衝突判定
         s_ship.shield.hit_ss_and_enemy(enemies=enemies, craft=s_ship.craft, effects=effects)
         if s_ship.shield.shield <= 0 and idx != 2:
-            # s_ship.shield.shield = 100
             idx = 2
             tmr = 0
 
