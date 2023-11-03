@@ -55,9 +55,9 @@ def main() -> None: # メインループ
                     bullets = []
                     enemies = []
                     effects = []
+                    pygame.mixer.music.set_volume(0.1)
                     pygame.mixer.music.load(filename="sound_gl/bgm.ogg")
                     pygame.mixer.music.play(loops=-1)
-                    pygame.mixer.music.set_volume(0.1)
             case 1: # ゲームプレイ中
                 # 自機の移動と描画
                 s_ship.move(key=key)
@@ -74,20 +74,39 @@ def main() -> None: # メインループ
                     idx = 3
                     tmr = 0
             case 2: # ゲームオーバー
-                draw_text(screen, "GAME OVER", 480, 300, 80, RED)
-                if tmr == 30*5:
-                    idx = 0
-                    tmr = 0
+                match tmr:
+                    case 1:
+                        pygame.mixer.music.stop()
+                        se_damage = pygame.mixer.Sound(file="sound_gl/damage.ogg")
+                        se_damage.set_volume(0.1)
+                    case n if n <= 90 and n%5 == 0:
+                        se_damage.play()
+                        effects.append(Effect(x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery, hldgs=effects))
+                    case n if n < 90:
+                        s_ship.draw(screen=screen, tmr=tmr, muteki=shield.muteki)
+                    case 120:
+                        pygame.mixer.music.load(filename="sound_gl/gameover.ogg")
+                        pygame.mixer.music.play(loops=0)
+                    case n if 120 < n and n < 300:
+                        draw_text(screen, "GAME OVER", 480, 300, 80, RED)
+                    case 300:
+                        idx = 0
+                        tmr = 0
             case 3: # ゲームクリア
                 # 自機の移動と描画
                 s_ship.move(key=key)
                 s_ship.draw(screen=screen, tmr=tmr, muteki=shield.muteki)
-
-                draw_text(screen, "GAME CLEAR", 480, 300, 80, SILVER)
-                if tmr == 30*5:
-                    idx = 0
-                    tmr = 0
-        
+                match tmr:
+                    case 1:
+                        pygame.mixer.music.stop()
+                    case 2:
+                        pygame.mixer.music.load(filename="sound_gl/gameclear.ogg")
+                        pygame.mixer.music.play(loops=0)
+                    case n if 20 < n and n < 300:
+                        draw_text(screen, "GAME CLEAR", 480, 300, 80, SILVER)
+                    case 300:
+                        idx = 0
+                        tmr = 0
         # 弾の表示と移動
         [bullet.move() for bullet in bullets]
         pygame.sprite.Group(bullets).draw(surface=screen)
