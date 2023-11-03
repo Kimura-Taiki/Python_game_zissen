@@ -7,6 +7,11 @@ from typing import Any, Literal
 from os.path import dirname
 import sys
 if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
+from mod.sound import SE_SHOT, SE_BARRAGE
+
+from os.path import dirname
+import sys
+if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 from mod.sprite import Sprite
 
 class Bullet(Sprite):
@@ -37,9 +42,11 @@ def bullet_set(key: pygame.key.ScancodeWrapper, bullets: list[Bullet], x: int, y
     key_scp = (key_scp+1)*key[K_SPACE]
     if key_scp%5 ==1:
         bullets.append(Bullet(x=x, y=y-50, hldgs=bullets))
+        SE_SHOT.play()
     key_z = (key_z+1)*key[K_z]
     if key_z == 1 and may_z == True:
         for a in range(160, 390, 10):
             bullets.append(Bullet(x=x, y=y-50, angle=a, hldgs=bullets))
+        SE_BARRAGE.play()
         return True
     return False

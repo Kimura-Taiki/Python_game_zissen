@@ -6,6 +6,7 @@ if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 from mod.enemy import Enemy
 from mod.effect import Effect
 from mod.sprite import Sprite
+from mod.sound import SE_DAMAGE
 
 
 class Shield():
@@ -31,6 +32,7 @@ class Shield():
         self.muteki = 60 if self.muteki == 0 else self.muteki
         for enemy in hitten[:]:
             effects.append(Effect(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=effects))
+            SE_DAMAGE.play()
             self.shield = max(0, self.shield-10)
             enemy.hldgs.remove(enemy)
 

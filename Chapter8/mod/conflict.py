@@ -7,6 +7,7 @@ if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 from mod.bullet import Bullet
 from mod.enemy import Enemy
 from mod.effect import Effect
+from mod.sound import SE_EXPLOSION
 
 class Conflict():
     @classmethod
@@ -17,6 +18,7 @@ class Conflict():
             for bullet in hitten:
                 shots_down += 1
                 effects.append(Effect(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=effects))
+                SE_EXPLOSION.play()
                 bullet.hldgs.remove(bullet)
                 enemy.hldgs.remove(enemy)
                 break
