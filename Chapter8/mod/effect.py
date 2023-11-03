@@ -31,12 +31,13 @@ class Effect(Sprite):
             self.hldgs.remove(self)
         else:
             self.image = self.IMG_EXPLODE[self.duration]
+        return None
     
-    def draw(self, screen: pygame.surface.Surface) -> Literal[False]:
-        '''Effectを描画します。screen.blitを使用しています。
+    # def draw(self, screen: pygame.surface.Surface) -> Literal[False]:
+    #     '''Effectを描画します。screen.blitを使用しています。
 
-        リスト内包表記で繰り返し処理する際に戻り値が無いとエラーを起こす為、
-        戻り値にFalseを与えてあります。'''
-        screen.blit(source=self.IMG_EXPLODE[self.duration], dest=(self.x-48, self.y-48))
-        return False
+    #     リスト内包表記で繰り返し処理する際に戻り値が無いとエラーを起こす為、
+    #     戻り値にFalseを与えてあります。'''
+    #     screen.blit(source=self.IMG_EXPLODE[self.duration], dest=(self.x-48, self.y-48))
+    #     return False
 

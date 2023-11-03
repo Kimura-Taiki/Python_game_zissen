@@ -19,11 +19,11 @@ from mod.shield import Shield # シールド制を提供
 from mod.title import Title, draw_text, RED, SILVER # タイトル画面他ゲームの外枠を提供
 from mod.sound import adjusted_bgm, SE_DAMAGE
 
-def main_elapse(screen: pygame.surface.Surface, bullets: list[Bullet], enemies: list[Enemy], effects: list[Effect]):
+def main_elapse(screen: pygame.surface.Surface, bullets: list[Bullet], enemies: list[Enemy], effects: list[Effect]) -> None:
     '''メイン画面で操作に関係無く時間経過で動いていく処理。
     主にスプライトの移動と描画、消滅を担う。'''
     [sprite.elapse() for sprite in bullets+enemies+effects]
-    pygame.sprite.Group(bullets+enemies+effects).draw(surface=screen)
+    pygame.sprite.Group(bullets,enemies,effects).draw(surface=screen)
 
 def main() -> None: # メインループ
     global screen, event_mapping
