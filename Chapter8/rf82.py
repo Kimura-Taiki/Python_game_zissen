@@ -15,7 +15,6 @@ from mod.enemy import Enemy # 敵関連のクラスを提供
 from mod.conflict import Conflict # 接触時判定の命令を提供
 from mod.enemy_factory import EnemyFactory # 敵の生成クラスを提供
 from mod.effect import Effect # 爆風のエフェクトを提供
-from mod.shield import Shield # シールド制を提供
 from mod.title import Title, draw_text, RED, SILVER # タイトル画面他ゲームの外枠を提供
 from mod.sound import adjusted_bgm, SE_DAMAGE
 
@@ -104,8 +103,8 @@ def main() -> None: # メインループ
                 s_ship.draw(screen=screen, tmr=tmr)
 
                 # 弾の生成
-                do_z = bullet_set(key=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery, may_z=s_ship.shield.shield>10)
-                s_ship.shield.shield -= do_z*10
+                do_z = bullet_set(key=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery, may_z=s_ship.hp>10)
+                s_ship.hp -= do_z*10
 
                 # 敵の生成
                 EnemyFactory.bring_enemy(enemies=enemies, tmr=tmr)
@@ -126,12 +125,12 @@ def main() -> None: # メインループ
 
         # 敵機と自弾の衝突判定
         shots_down = Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
-        s_ship.shield.recover(rec=shots_down)
+        s_ship.recover(rec=shots_down)
         score += shots_down*100
 
         # 敵機と自期の衝突判定
-        s_ship.shield.hit_ss_and_enemy(enemies=enemies, craft=s_ship.craft, effects=effects)
-        if s_ship.shield.shield <= 0 and idx != 2:
+        s_ship.hit_ss_and_enemy(enemies=enemies, effects=effects)
+        if s_ship.hp <= 0 and idx == 1:
             idx = 2
             tmr = 0
 
@@ -139,7 +138,7 @@ def main() -> None: # メインループ
         draw_text(screen, "Timer "+str(tmr), 200, 30+40, 50, SILVER)
         # シールドの描画
         if idx != 0:
-            s_ship.shield.draw(screen=screen)
+            s_ship.shield_draw(screen=screen)
 
         # screen.blit(pygame.font.Font(None, size=40).render(str(Enemy.l), True, (255, 255, 255)), [0, 0])
 

@@ -66,10 +66,16 @@ class StarShip():
     def hit_ss_and_enemy(self, enemies: list[Enemy], effects: list[Effect]) -> None:
         self.shield.hit_ss_and_enemy(enemies=enemies, craft=self.craft, effects=effects)
 
+    def shield_draw(self, screen: pygame.surface.Surface) -> None:
+        self.shield.draw(screen=screen)
+
     @property
     def hp(self) -> int:
         return self.shield.shield
 
     @hp.setter
-    def hp(self, val: int) -> None:
-        self.shield.shield += val
+    def hp(self, value: int) -> None:
+        self.shield.shield = value
+
+    def __iadd__(self, other: int) -> None:
+        self.shield.shield += other
