@@ -17,7 +17,7 @@ class Title():
     ]
 
     @classmethod
-    def draw(cls, screen :pygame.surface.Surface, key :pygame.key.ScancodeWrapper, tmr: int):
+    def draw(cls, screen :pygame.surface.Surface, key :pygame.key.ScancodeWrapper, tmr: int) -> None:
         img_rz = pygame.transform.rotozoom(cls.IMG_TITLE[0], -tmr%360, 1.0)
         screen.blit(img_rz, [480-img_rz.get_width()/2, 280-img_rz.get_height()/2])
         screen.blit(cls.IMG_TITLE[1], [70, 160])
