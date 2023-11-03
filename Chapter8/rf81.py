@@ -69,7 +69,7 @@ def main() -> None: # メインループ
                 # 敵の生成
                 EnemyFactory.bring_enemy(enemies=enemies, tmr=tmr)
 
-                if tmr == 30*6:
+                if tmr == 30*15:
                     idx = 3
                     tmr = 0
             case 2: # ゲームオーバー
