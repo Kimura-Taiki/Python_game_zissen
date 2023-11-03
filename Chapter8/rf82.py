@@ -25,13 +25,13 @@ def main_elapse(screen: pygame.surface.Surface, bullets: list[Bullet], enemies: 
     [sprite.elapse() for sprite in bullets+enemies+effects]
     pygame.sprite.Group(bullets,enemies,effects).draw(surface=screen)
 
-def game_clear(screen: pygame.surface.Surface, key: pygame.key.ScancodeWrapper, s_ship: StarShip, shield: Shield, tmr: int) -> bool:
+def game_clear(screen: pygame.surface.Surface, key: pygame.key.ScancodeWrapper, s_ship: StarShip, tmr: int) -> bool:
     '''mainのwhileループが肥大化していたのでgame_clearの特有処理部分を切り出し。
     
     idxとtmrの書き換えの為にbool値を返す。Trueならば十分に時間が経過した事を示す。'''
     # 自機の移動と描画
     s_ship.move(key=key)
-    s_ship.draw(screen=screen, tmr=tmr, muteki=shield.muteki)
+    s_ship.draw(screen=screen, tmr=tmr)
     match tmr:
         case 1:
             pygame.mixer.music.stop()
@@ -43,7 +43,7 @@ def game_clear(screen: pygame.surface.Surface, key: pygame.key.ScancodeWrapper, 
             return True
     return False
 
-def game_over(screen: pygame.surface.Surface, effects: list[Effect], s_ship: StarShip, shield: Shield, tmr: int) -> bool:
+def game_over(screen: pygame.surface.Surface, effects: list[Effect], s_ship: StarShip, tmr: int) -> bool:
     match tmr:
         case 1:
             pygame.mixer.music.stop()
@@ -51,7 +51,7 @@ def game_over(screen: pygame.surface.Surface, effects: list[Effect], s_ship: Sta
             SE_DAMAGE.play()
             effects.append(Effect(x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery, hldgs=effects))
         case n if n < 90:
-            s_ship.draw(screen=screen, tmr=tmr, muteki=shield.muteki)
+            s_ship.draw(screen=screen, tmr=tmr)
         case 120:
             adjusted_bgm(file="sound_gl/gameover.ogg", loops=0)
         case n if 120 < n and n < 300:
@@ -73,7 +73,6 @@ def main() -> None: # メインループ
     enemies: list[Enemy] = []
     effects: list[Effect] = []
     s_ship = StarShip()
-    # shield = Shield()
     print(s_ship)
 
     while True:
@@ -95,7 +94,6 @@ def main() -> None: # メインループ
                     tmr = 0
                     score = 0
                     s_ship.reset()
-                    # shield.reset()
                     bullets.clear()
                     enemies.clear()
                     effects.clear()
@@ -103,7 +101,7 @@ def main() -> None: # メインループ
             case 1: # ゲームプレイ中
                 # 自機の移動と描画
                 s_ship.move(key=key)
-                s_ship.draw(screen=screen, tmr=tmr, muteki=s_ship.shield.muteki)
+                s_ship.draw(screen=screen, tmr=tmr)
 
                 # 弾の生成
                 do_z = bullet_set(key=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery, may_z=s_ship.shield.shield>10)
@@ -116,11 +114,11 @@ def main() -> None: # メインループ
                     idx = 3
                     tmr = 0
             case 2: # ゲームオーバー
-                if game_over(screen=screen, effects=effects, s_ship=s_ship, shield=s_ship.shield, tmr=tmr):
+                if game_over(screen=screen, effects=effects, s_ship=s_ship, tmr=tmr):
                     idx = 0
                     tmr = 0
             case 3: # ゲームクリア
-                if game_clear(screen=screen, key=key, s_ship=s_ship, shield=s_ship.shield, tmr=tmr):
+                if game_clear(screen=screen, key=key, s_ship=s_ship, tmr=tmr):
                     idx = 0
                     tmr = 0
         
@@ -133,8 +131,8 @@ def main() -> None: # メインループ
 
         # 敵機と自期の衝突判定
         s_ship.shield.hit_ss_and_enemy(enemies=enemies, craft=s_ship.craft, effects=effects)
-        if s_ship.shield.shield <= 0:
-            s_ship.shield.shield = 100
+        if s_ship.shield.shield <= 0 and idx != 2:
+            # s_ship.shield.shield = 100
             idx = 2
             tmr = 0
 

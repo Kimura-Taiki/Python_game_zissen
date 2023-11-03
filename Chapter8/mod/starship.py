@@ -49,7 +49,7 @@ class StarShip():
         self.craft.rect.center = (min(max(x, 40), 920), min(max(y, 80), 640))
         self.burner.rect.center = self.craft.rect.centerx, self.craft.rect.centery+56
 
-    def draw(self, screen: pygame.surface.Surface, tmr: int=0, muteki: int=0) -> None:
+    def draw(self, screen: pygame.surface.Surface, tmr: int=0) -> None:
         if self.shield.muteki%2 != 0: return
         self.group.draw(screen)
 
