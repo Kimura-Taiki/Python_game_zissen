@@ -1,16 +1,8 @@
-def compare_number(num):
-    match num:
-        case n if isinstance(n, int) and n > 0:
-            print(f"numは正の整数 ({n}) です")
-        case n if isinstance(n, int) and n < 0:
-            print(f"numは負の整数 ({n}) です")
-        case _:
-            print("numは整数ではありません")
+x = [1, 2]
+y = [3, 4]
+z = x+y
+print(z)
 
-compare_number(10)
-compare_number(-5)
-compare_number(0)
-compare_number("文字列")  # ここはパターンにマッチしないため、最後のケースが実行される
 exit()
 from typing import NamedTuple, Optional
 
