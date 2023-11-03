@@ -25,6 +25,25 @@ def main_elapse(screen: pygame.surface.Surface, bullets: list[Bullet], enemies: 
     [sprite.elapse() for sprite in bullets+enemies+effects]
     pygame.sprite.Group(bullets,enemies,effects).draw(surface=screen)
 
+def game_clear(screen: pygame.surface.Surface, key: pygame.key.ScancodeWrapper, s_ship: StarShip, shield: Shield, tmr: int) -> bool:
+    '''mainのwhileループが肥大化していたのでgame_clearの特有処理部分を切り出し。
+    
+    idxとtmrの書き換えの為にbool値を返す。Trueならば十分に時間が経過した事を示す。'''
+    # 自機の移動と描画
+    s_ship.move(key=key)
+    s_ship.draw(screen=screen, tmr=tmr, muteki=shield.muteki)
+    match tmr:
+        case 1:
+            pygame.mixer.music.stop()
+        case 2:
+            adjusted_bgm(file="sound_gl/gameclear.ogg", loops=0)
+        case n if 20 < n and n < 300:
+            draw_text(screen, "GAME CLEAR", 480, 300, 80, SILVER)
+        case 300:
+            return True
+    return False
+
+
 def main() -> None: # メインループ
     global screen, event_mapping
 
@@ -95,19 +114,9 @@ def main() -> None: # メインループ
                         idx = 0
                         tmr = 0
             case 3: # ゲームクリア
-                # 自機の移動と描画
-                s_ship.move(key=key)
-                s_ship.draw(screen=screen, tmr=tmr, muteki=shield.muteki)
-                match tmr:
-                    case 1:
-                        pygame.mixer.music.stop()
-                    case 2:
-                        adjusted_bgm(file="sound_gl/gameclear.ogg", loops=0)
-                    case n if 20 < n and n < 300:
-                        draw_text(screen, "GAME CLEAR", 480, 300, 80, SILVER)
-                    case 300:
-                        idx = 0
-                        tmr = 0
+                if game_clear(screen=screen, key=key, s_ship=s_ship, shield=shield, tmr=tmr):
+                    idx = 0
+                    tmr = 0
         
         main_elapse(screen=screen, bullets=bullets, enemies=enemies, effects=effects)
 
