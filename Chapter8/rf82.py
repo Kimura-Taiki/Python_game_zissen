@@ -43,6 +43,24 @@ def game_clear(screen: pygame.surface.Surface, key: pygame.key.ScancodeWrapper, 
             return True
     return False
 
+def game_over(screen: pygame.surface.Surface, effects: list[Effect], s_ship: StarShip, shield: Shield, tmr: int) -> bool:
+    match tmr:
+        case 1:
+            pygame.mixer.music.stop()
+        case n if n <= 90 and n%5 == 0:
+            SE_DAMAGE.play()
+            effects.append(Effect(x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery, hldgs=effects))
+        case n if n < 90:
+            s_ship.draw(screen=screen, tmr=tmr, muteki=shield.muteki)
+        case 120:
+            adjusted_bgm(file="sound_gl/gameover.ogg", loops=0)
+        case n if 120 < n and n < 300:
+            draw_text(screen, "GAME OVER", 480, 300, 80, RED)
+        case 300:
+            return True
+    return False
+
+
 
 def main() -> None: # メインループ
     global screen, event_mapping
@@ -98,21 +116,9 @@ def main() -> None: # メインループ
                     idx = 3
                     tmr = 0
             case 2: # ゲームオーバー
-                match tmr:
-                    case 1:
-                        pygame.mixer.music.stop()
-                    case n if n <= 90 and n%5 == 0:
-                        SE_DAMAGE.play()
-                        effects.append(Effect(x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery, hldgs=effects))
-                    case n if n < 90:
-                        s_ship.draw(screen=screen, tmr=tmr, muteki=shield.muteki)
-                    case 120:
-                        adjusted_bgm(file="sound_gl/gameover.ogg", loops=0)
-                    case n if 120 < n and n < 300:
-                        draw_text(screen, "GAME OVER", 480, 300, 80, RED)
-                    case 300:
-                        idx = 0
-                        tmr = 0
+                if game_over(screen=screen, effects=effects, s_ship=s_ship, shield=shield, tmr=tmr):
+                    idx = 0
+                    tmr = 0
             case 3: # ゲームクリア
                 if game_clear(screen=screen, key=key, s_ship=s_ship, shield=shield, tmr=tmr):
                     idx = 0
