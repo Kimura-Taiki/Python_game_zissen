@@ -31,8 +31,8 @@ def main_elapse(screen: pygame.surface.Surface, bullets: list[Bullet], enemies: 
     # # 爆風の表示と消滅
     # [effect.elapse(t=1) for effect in effects]
     # [effect.draw(screen=screen) for effect in effects]
-    [effect.elapse(t=1) for effect in effects]
-    [sprite.move() for sprite in bullets+enemies]
+    # [effect.move() for effect in effects]
+    [sprite.move() for sprite in bullets+enemies+effects]
     pygame.sprite.Group(bullets+enemies).draw(surface=screen)
     [effect.draw(screen=screen) for effect in effects]
 

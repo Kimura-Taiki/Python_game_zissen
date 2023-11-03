@@ -1,5 +1,5 @@
 import pygame
-from typing import Any, Literal
+from typing import Any, Literal, Optional
 
 class Effect():
     IMG_EXPLODE: list[pygame.surface.Surface] = [
@@ -25,6 +25,15 @@ class Effect():
         if self.duration >= 5:
             self.hldgs.remove(self)
         return False
+    
+    def move(self, t: int =1) -> Optional[bool]:
+        '''Effect.elapseと同じです。時間経過をさせます。
+        
+        この命令はリスト内表記で繰り返し処理する際にmypyで弾かれぬべく、
+        戻り値の型ヒントにOptional[bool]を与えてあります。'''
+        self.duration += t
+        if self.duration >= 5:
+            self.hldgs.remove(self)
     
     def draw(self, screen: pygame.surface.Surface) -> Literal[False]:
         '''Effectを描画します。screen.blitを使用しています。

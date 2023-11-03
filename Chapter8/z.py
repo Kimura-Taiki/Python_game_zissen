@@ -1,7 +1,9 @@
-x = [1, 2]
-y = [3, 4]
-z = x+y
-print(z)
+from typing import Optional
+
+def x() -> Optional[bool]:
+    pass
+
+print([x() for i in range(10)])
 
 exit()
 from typing import NamedTuple, Optional
