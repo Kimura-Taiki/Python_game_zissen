@@ -125,7 +125,7 @@ def main() -> None: # メインループ
 
         # 敵機と自弾の衝突判定
         shots_down = Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
-        s_ship.recover(rec=shots_down)
+        s_ship.hp += shots_down
         score += shots_down*100
 
         # 敵機と自期の衝突判定

@@ -32,8 +32,7 @@ class StarShip():
         self.group: Any = pygame.sprite.Group()
         self.craft: Sprite = Sprite(group=self.group, image=self.IMG_SSHIP[0], cx=self.DEFAULT_X, cy=self.DEFAULT_Y)
         self.burner: Sprite = Sprite(group=self.group, image=self.IMG_SSHIP[3], cx=self.DEFAULT_X, cy=self.DEFAULT_Y+56)
-        # self.shield: Shield = Shield()
-        self.hp: int = 100
+        self._hp: int = 100
         self.muteki: int = 0
 
     def move(self, key: pygame.key.ScancodeWrapper) -> None: # 自機の移動
@@ -52,20 +51,14 @@ class StarShip():
         self.hp = 100
         self.muteki = 0
     
-    def recover(self, rec: int) -> None:
-        self.hp = min(100, self.hp+rec)
-
     def shield_draw(self, screen: pygame.surface.Surface) -> None:
         screen.blit(source=self.IMG_SHIELD, dest=(40, 680))
         pygame.draw.rect(surface=screen, color=(64,32,32), rect=[40+self.hp*4, 680, (100-self.hp)*4, 12])
 
     @property
     def hp(self) -> int:
-        return self.shield.shield
+        return self._hp
 
     @hp.setter
     def hp(self, value: int) -> None:
-        self.shield.shield = value
-
-    def __iadd__(self, other: int) -> None:
-        self.shield.shield += other
+        self._hp = min(100, max(0, value))

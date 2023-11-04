@@ -27,14 +27,14 @@ class Conflict():
 
     @classmethod
     def hit_ss_and_enemy(cls, s_ship: StarShip, enemies: list[Enemy], effects: list[Effect]) -> None:
-        if s_ship.shield.muteki > 0:
-            s_ship.shield.muteki -= 1
+        if s_ship.muteki > 0:
+            s_ship.muteki -= 1
             return
         hitten: list[Enemy] = pygame.sprite.spritecollide(sprite=s_ship.craft, group=pygame.sprite.Group(enemies), dokill=False)
         if hitten == []: return
-        s_ship.shield.muteki = 60 if s_ship.shield.muteki == 0 else s_ship.shield.muteki
+        s_ship.muteki = 60 if s_ship.muteki == 0 else s_ship.muteki
         for enemy in hitten[:]:
             effects.append(Effect(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=effects))
             SE_DAMAGE.play()
-            s_ship.hp = max(0, s_ship.hp-10)
+            s_ship.hp -= 10
             enemy.hldgs.remove(enemy)
