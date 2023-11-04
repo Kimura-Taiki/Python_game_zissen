@@ -27,12 +27,13 @@ class StarShip():
     DEFAULT_Y: int = 600
     MOVE_MAPPING = (0, -V, V, 0)
     ROLL_MAPPING = (0,  1, 2, 0)
+    MAX_HP = 100
 
     def __init__(self) -> None:
         self.group: Any = pygame.sprite.Group()
         self.craft: Sprite = Sprite(group=self.group, image=self.IMG_SSHIP[0], cx=self.DEFAULT_X, cy=self.DEFAULT_Y)
         self.burner: Sprite = Sprite(group=self.group, image=self.IMG_SSHIP[3], cx=self.DEFAULT_X, cy=self.DEFAULT_Y+56)
-        self._hp: int = 100
+        self._hp: int = self.MAX_HP
         self.muteki: int = 0
 
     def move(self, key: pygame.key.ScancodeWrapper) -> None: # 自機の移動
@@ -48,7 +49,7 @@ class StarShip():
     def reset(self) -> None:
         self.craft.rect.center = (self.DEFAULT_X, self.DEFAULT_Y)
         self.burner.rect.center = (self.DEFAULT_X, self.DEFAULT_Y)
-        self.hp = 100
+        self.hp = self.MAX_HP
         self.muteki = 0
     
     def shield_draw(self, screen: pygame.surface.Surface) -> None:
@@ -61,4 +62,4 @@ class StarShip():
 
     @hp.setter
     def hp(self, value: int) -> None:
-        self._hp = min(100, max(0, value))
+        self._hp = min(self.MAX_HP, max(0, value))
