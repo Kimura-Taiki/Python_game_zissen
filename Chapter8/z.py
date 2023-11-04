@@ -10,8 +10,11 @@ class Coord:
         return self._x
 
     @x.setter
-    def x(self, value: int) -> None: self._x = max(0, min(100, value)); print("Xは{}だよ".format(self._x))
-    # def __iadd__(self, value: int) -> None: self._x = max(0, min(100, self._x+value)); print("Xは{}だよ".format(self._x))
+    def x(self, value: int) -> None:
+        '''バリデーションです。xが0から100の間に収まるように、
+        maxとmin関数を噛ませています。
+        ついでにprint命令も噛ませて処理を命じさせています。'''
+        self._x = max(0, min(100, value)); print("Xは{}だよ".format(self._x))
 
     @property
     def y(self) -> int:
