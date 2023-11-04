@@ -1,54 +1,33 @@
-# from typing import Callable, Any
+# 以下のpythonのコードでCoord.xの代入(=)と加減算(+=,-=)にmax(0, min(100, self._x))のバリデーションが正しく掛かっていますか？
 
-# class MyClass:
-#     def __init__(self, value: int):
-#         self.value = value
+class Coord:
+    def __init__(self, x: int, y: int):
+        self._x = x
+        self._y = y
 
-# # クラスの外部で定義した関数
-# def my_function(self: MyClass, new_value: int) -> None:
-#     self.value = new_value
+    @property
+    def x(self) -> int:
+        return self._x
 
-# # クラスにバインドした関数を持つクラスを作成
-# class BoundMethods:
-#     my_method: Callable[..., Any] = my_function
+    @x.setter
+    def x(self, value: int) -> None: self._x = max(0, min(100, value)); print("Xは{}だよ".format(self._x))
+    # def __iadd__(self, value: int) -> None: self._x = max(0, min(100, self._x+value)); print("Xは{}だよ".format(self._x))
 
-# # BoundMethodsクラスのインスタンスを作成
-# bound_obj = BoundMethods()
+    @property
+    def y(self) -> int:
+        return self._y
 
-# # インスタンスを作成してメソッドを呼び出す
-# obj = MyClass(42)
-# print(obj.value)  # 42
-# bound_obj.my_method(obj, 99)  # インスタンスメソッドを呼び出す
-# print(obj.value)  # 99
+    @y.setter
+    def y(self, value: int) -> None:
+        self._y = value
 
-
-from typing import Callable, Any
-
-class MyClass:
-    def __init__(self, value: int):
-        self.value = value
-    
-    def _raise_nie(self, value: int) -> None: raise NotImplementedError()
-
-    my_method: Callable[[Any, int], None] = _raise_nie
-
-# クラスの外部で定義した関数
-def my_function(self: MyClass, new_value: int) -> None:
-    self.value = new_value
-
-# 関数をインスタンスメソッドとしてクラスにバインド
-# MyClass.my_method: Callable[[MyClass, int], None] = my_function
-MyClass.my_method: Callable[[MyClass, int], None] = my_function
-
-# インスタンスを作成してメソッドを呼び出す
-obj = MyClass(42)
-print(obj.value)  # 42
-obj.my_method(99)  # インスタンスメソッドを呼び出す
-print(obj.value)  # 99
-
-# 以上のpythonコードをmypyへ通すと
-# z.py:14: error: Type cannot be declared in assignment to non-self attribute  [misc]
-# z.py:14: error: Cannot assign to a method  [method-assign]
-# z.py:14: error: Incompatible types in assignment (expression has type "Callable[[Arg(MyClass, 'self'), Arg(int, 'new_value')], None]", variable has type "Callable[[Arg(MyClass, 'self'), Arg(int, 'value')], None]")  [assignment]
-# Found 3 errors in 1 file (checked 1 source file)
-# とエラーが返ってきます。
+# クラスのインスタンスを作成
+coord = Coord(50, 60)
+# x属性に値を代入
+coord.x = 80
+coord.x = 120
+coord.x = 0
+coord.x += 55
+coord.x += 40
+coord.x -= 70
+coord.x -= 9999
