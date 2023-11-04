@@ -1,7 +1,7 @@
 import pygame
 pygame.init()
 from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
-from typing import Any, NamedTuple
+from typing import Any
 
 from os.path import dirname
 import sys
@@ -26,12 +26,8 @@ class StarShip():
     V = 20
     DEFAULT_X: int = 480
     DEFAULT_Y: int = 600
-    class _KM(NamedTuple):
-        key: int; dx:int; dy:int; roll:int
-    KEY_MAPPING = (_KM(K_UP,    0,  -V, 0),
-                   _KM(K_DOWN,  0,  V,  0),
-                   _KM(K_LEFT,  -V, 0,  1),
-                   _KM(K_RIGHT, V,  0,  2))
+    MOVE_MAPPING = (0, -V, V, 0)
+    ROLL_MAPPING = (0,  1, 2, 0)
     
     def __init__(self) -> None:
         self.group: Any = pygame.sprite.Group()
@@ -40,15 +36,9 @@ class StarShip():
         self.shield: Shield = Shield()
 
     def move(self, key: pygame.key.ScancodeWrapper) -> None: # 自機の移動
-        roll = 0
-        x, y = self.craft.rect.center
-        for map in self.KEY_MAPPING:
-            if key[map.key] == False: continue
-            x += map.dx
-            y += map.dy
-            roll = map.roll
-        self.craft.image = self.IMG_SSHIP[roll]
-        self.craft.rect.center = (min(max(x, 40), 920), min(max(y, 80), 640))
+        self.craft.image = self.IMG_SSHIP[self.ROLL_MAPPING[key[K_LEFT]+key[K_RIGHT]*2]]
+        self.craft.rect.centerx = min(max(self.craft.rect.centerx+self.MOVE_MAPPING[key[K_LEFT]+key[K_RIGHT]*2], 40), 920)
+        self.craft.rect.centery = min(max(self.craft.rect.centery+self.MOVE_MAPPING[key[K_UP]+key[K_DOWN]*2], 80), 640)
         self.burner.rect.center = self.craft.rect.centerx, self.craft.rect.centery+56
 
     def draw(self, screen: pygame.surface.Surface, tmr: int=0) -> None:
