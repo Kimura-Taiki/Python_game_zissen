@@ -1,37 +1,54 @@
-class MyClass():
-    my_function = lambda: None
+# from typing import Callable, Any
 
-    def do_something(self):
-        self.my_function()
+# class MyClass:
+#     def __init__(self, value: int):
+#         self.value = value
 
-def my_dependent_function(self):
-    return "依存関数が実行されました"
+# # クラスの外部で定義した関数
+# def my_function(self: MyClass, new_value: int) -> None:
+#     self.value = new_value
 
-my_instance = MyClass()
+# # クラスにバインドした関数を持つクラスを作成
+# class BoundMethods:
+#     my_method: Callable[..., Any] = my_function
 
-print(MyClass.my_function)
-MyClass.my_function = my_dependent_function
-print(MyClass.my_function)
-my_instance.do_something()
+# # BoundMethodsクラスのインスタンスを作成
+# bound_obj = BoundMethods()
 
-exit()
-from typing import NamedTuple, Optional
+# # インスタンスを作成してメソッドを呼び出す
+# obj = MyClass(42)
+# print(obj.value)  # 42
+# bound_obj.my_method(obj, 99)  # インスタンスメソッドを呼び出す
+# print(obj.value)  # 99
 
-def five(i:int) -> Optional[int]:
-    return None
-    return i if i%5==0 else None
 
-def nono(i:int) -> Optional[bool]:
-    return None
+from typing import Callable, Any
 
-class Color(NamedTuple):
-    r: int
-    g: int
-    b: int
+class MyClass:
+    def __init__(self, value: int):
+        self.value = value
+    
+    def _raise_nie(self, value: int) -> None: raise NotImplementedError()
 
-g1 = {Color(255, 0, 0), Color(255, 255, 0), Color(255, 0, 0)}
+    my_method: Callable[[Any, int], None] = _raise_nie
 
-print(g1, type(g1))
+# クラスの外部で定義した関数
+def my_function(self: MyClass, new_value: int) -> None:
+    self.value = new_value
 
-print([five(i) for i in range(10)])
-print([nono(i) for i in range(10)])
+# 関数をインスタンスメソッドとしてクラスにバインド
+# MyClass.my_method: Callable[[MyClass, int], None] = my_function
+MyClass.my_method: Callable[[MyClass, int], None] = my_function
+
+# インスタンスを作成してメソッドを呼び出す
+obj = MyClass(42)
+print(obj.value)  # 42
+obj.my_method(99)  # インスタンスメソッドを呼び出す
+print(obj.value)  # 99
+
+# 以上のpythonコードをmypyへ通すと
+# z.py:14: error: Type cannot be declared in assignment to non-self attribute  [misc]
+# z.py:14: error: Cannot assign to a method  [method-assign]
+# z.py:14: error: Incompatible types in assignment (expression has type "Callable[[Arg(MyClass, 'self'), Arg(int, 'new_value')], None]", variable has type "Callable[[Arg(MyClass, 'self'), Arg(int, 'value')], None]")  [assignment]
+# Found 3 errors in 1 file (checked 1 source file)
+# とエラーが返ってきます。

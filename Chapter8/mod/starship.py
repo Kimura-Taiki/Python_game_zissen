@@ -8,8 +8,6 @@ import sys
 if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 from mod.sprite import Sprite
 from mod.shield import Shield
-from mod.enemy import Enemy
-from mod.effect import Effect
 
 class StarShip():
     # 画像の読み込み
@@ -28,6 +26,11 @@ class StarShip():
     DEFAULT_Y: int = 600
     MOVE_MAPPING = (0, -V, V, 0)
     ROLL_MAPPING = (0,  1, 2, 0)
+
+    # hit_enemy = lambda: None
+    # '''hit_ss_and_enemyを外部から注入する為の変数。
+    
+    # 空のラムダ関数が入っているので、そのままだとエラーを起こす。'''
     
     def __init__(self) -> None:
         self.group: Any = pygame.sprite.Group()
@@ -52,9 +55,6 @@ class StarShip():
     
     def recover(self, rec: int) -> None:
         self.shield.recover(rec=rec)
-
-    def hit_ss_and_enemy(self, enemies: list[Enemy], effects: list[Effect]) -> None:
-        self.shield.hit_ss_and_enemy(enemies=enemies, craft=self.craft, effects=effects)
 
     def shield_draw(self, screen: pygame.surface.Surface) -> None:
         self.shield.draw(screen=screen)

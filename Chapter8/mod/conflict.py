@@ -25,15 +25,16 @@ class Conflict():
                 break
         return shots_down
 
-def hit_ss_and_enemy(self: StarShip, enemies: list[Enemy], effects: list[Effect]) -> None:
-    if self.shield.muteki > 0:
-        self.shield.muteki -= 1
-        return
-    hitten: list[Enemy] = pygame.sprite.spritecollide(sprite=self.craft, group=pygame.sprite.Group(enemies), dokill=False)
-    if hitten == []: return
-    self.shield.muteki = 60 if self.shield.muteki == 0 else self.shield.muteki
-    for enemy in hitten[:]:
-        effects.append(Effect(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=effects))
-        SE_DAMAGE.play()
-        self.hp = max(0, self.hp-10)
-        enemy.hldgs.remove(enemy)
+    @classmethod
+    def hit_ss_and_enemy(cls, s_ship: StarShip, enemies: list[Enemy], effects: list[Effect]) -> None:
+        if s_ship.shield.muteki > 0:
+            s_ship.shield.muteki -= 1
+            return
+        hitten: list[Enemy] = pygame.sprite.spritecollide(sprite=s_ship.craft, group=pygame.sprite.Group(enemies), dokill=False)
+        if hitten == []: return
+        s_ship.shield.muteki = 60 if s_ship.shield.muteki == 0 else s_ship.shield.muteki
+        for enemy in hitten[:]:
+            effects.append(Effect(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=effects))
+            SE_DAMAGE.play()
+            s_ship.hp = max(0, s_ship.hp-10)
+            enemy.hldgs.remove(enemy)

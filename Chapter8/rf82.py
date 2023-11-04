@@ -129,7 +129,7 @@ def main() -> None: # メインループ
         score += shots_down*100
 
         # 敵機と自期の衝突判定
-        s_ship.hit_ss_and_enemy(enemies=enemies, effects=effects)
+        Conflict.hit_ss_and_enemy(s_ship=s_ship, enemies=enemies, effects=effects)
         if s_ship.hp <= 0 and idx == 1:
             idx = 2
             tmr = 0

@@ -23,19 +23,6 @@ class Shield():
         screen.blit(source=self.IMG_SHIELD, dest=(40, 680))
         pygame.draw.rect(surface=screen, color=(64,32,32), rect=[40+self.shield*4, 680, (100-self.shield)*4, 12])
     
-    def hit_ss_and_enemy(self, enemies: list[Enemy], craft: Sprite, effects: list[Effect]) -> None:
-        if self.muteki > 0:
-            self.muteki -= 1
-            return
-        hitten: list[Enemy] = pygame.sprite.spritecollide(sprite=craft, group=pygame.sprite.Group(enemies), dokill=False)
-        if hitten == []: return
-        self.muteki = 60 if self.muteki == 0 else self.muteki
-        for enemy in hitten[:]:
-            effects.append(Effect(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=effects))
-            SE_DAMAGE.play()
-            self.shield = max(0, self.shield-10)
-            enemy.hldgs.remove(enemy)
-
     def recover(self, rec: int) -> None:
         self.shield = min(100, self.shield+rec)
 
