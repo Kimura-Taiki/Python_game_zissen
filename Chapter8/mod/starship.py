@@ -7,7 +7,6 @@ from os.path import dirname
 import sys
 if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 from mod.sprite import Sprite
-from mod.shield import Shield
 
 class StarShip():
     # 画像の読み込み
@@ -18,13 +17,9 @@ class StarShip():
         pygame.image.load("image_gl/starship_burner.png")
     ]
     IMG_SHIELD: pygame.surface.Surface = pygame.image.load("image_gl/shield.png")
-    WIDTH: int = IMG_SSHIP[0].get_width()
-    HEIGHT: int = IMG_SSHIP[0].get_height()
-    BURNER_WIDTH: int = IMG_SSHIP[3].get_width()
-    BURNER_HEIGTH: int = IMG_SSHIP[3].get_height()
-    V = 20
     DEFAULT_X: int = 480
     DEFAULT_Y: int = 600
+    V = 20
     MOVE_MAPPING = (0, -V, V, 0)
     ROLL_MAPPING = (0,  1, 2, 0)
     MAX_HP = 100
