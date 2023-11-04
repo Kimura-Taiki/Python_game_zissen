@@ -1,5 +1,18 @@
-d = (0, 1, 4)
-print(d[0], d[1], d[2])
+class MyClass():
+    my_function = lambda: None
+
+    def do_something(self):
+        self.my_function()
+
+def my_dependent_function(self):
+    return "依存関数が実行されました"
+
+my_instance = MyClass()
+
+print(MyClass.my_function)
+MyClass.my_function = my_dependent_function
+print(MyClass.my_function)
+my_instance.do_something()
 
 exit()
 from typing import NamedTuple, Optional
