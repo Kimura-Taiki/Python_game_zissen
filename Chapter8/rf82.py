@@ -37,7 +37,11 @@ def main() -> None: # メインループ
     enemies: list[Enemy] = []
     effects: list[Effect] = []
     s_ship = StarShip()
-    print(s_ship)
+
+    def index_shift(new_idx :int=0, new_tmr :int=0) -> None:
+        '''idxとtmrを動かす際に引数や依存性を減らす為の命令です。'''
+        nonlocal idx, tmr
+        idx, tmr = new_idx, new_tmr
 
     while True:
         tmr += 1
@@ -78,13 +82,9 @@ def main() -> None: # メインループ
                     idx = 3
                     tmr = 0
             case 2: # ゲームオーバー
-                if game_over(screen=screen, effects=effects, s_ship=s_ship, tmr=tmr):
-                    idx = 0
-                    tmr = 0
+                game_over(screen=screen, effects=effects, s_ship=s_ship, tmr=tmr, call=index_shift)
             case 3: # ゲームクリア
-                if game_clear(screen=screen, key=key, s_ship=s_ship, tmr=tmr):
-                    idx = 0
-                    tmr = 0
+                game_clear(screen=screen, key=key, s_ship=s_ship, tmr=tmr, call=index_shift)
         
         main_elapse(screen=screen, bullets=bullets, enemies=enemies, effects=effects)
 

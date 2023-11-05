@@ -1,10 +1,16 @@
 import pygame
+from typing import Callable
+
+from os.path import dirname
+import sys
+if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
+# from mod.sprite import Sprite
 from mod.starship import StarShip
 from mod.effect import Effect
 from mod.sound import SE_DAMAGE, adjusted_bgm
 from mod.title import draw_text, RED, SILVER
 
-def game_over(screen: pygame.surface.Surface, effects: list[Effect], s_ship: StarShip, tmr: int) -> bool:
+def game_over(screen: pygame.surface.Surface, effects: list[Effect], s_ship: StarShip, tmr: int, call: Callable[[], None]) -> None:
     match tmr:
         case 1:
             pygame.mixer.music.stop()
@@ -18,13 +24,14 @@ def game_over(screen: pygame.surface.Surface, effects: list[Effect], s_ship: Sta
         case n if 120 < n and n < 300:
             draw_text(screen, "GAME OVER", 480, 300, 80, RED)
         case 300:
-            return True
-    return False
+            call()
+    #         return True
+    # return False
 
-def game_clear(screen: pygame.surface.Surface, key: pygame.key.ScancodeWrapper, s_ship: StarShip, tmr: int) -> bool:
+def game_clear(screen: pygame.surface.Surface, key: pygame.key.ScancodeWrapper, s_ship: StarShip, tmr: int, call: Callable[[], None]) -> None:
     '''mainのwhileループが肥大化していたのでgame_clearの特有処理部分を切り出し。
     
-    idxとtmrの書き換えの為にbool値を返す。Trueならば十分に時間が経過した事を示す。'''
+    クリア描画が終わった際にidxとtmrを書き換える為にcall関数を受け取る。'''
     # 自機の移動と描画
     s_ship.move(key=key)
     s_ship.draw(screen=screen, tmr=tmr)
@@ -36,6 +43,5 @@ def game_clear(screen: pygame.surface.Surface, key: pygame.key.ScancodeWrapper, 
         case n if 20 < n and n < 300:
             draw_text(screen, "GAME CLEAR", 480, 300, 80, SILVER)
         case 300:
-            return True
-    return False
+            call()
 
