@@ -2,6 +2,7 @@
 # import sys
 # if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 
+
 import pygame
 pygame.init()
 from pygame.locals import K_SPACE
