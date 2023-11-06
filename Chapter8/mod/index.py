@@ -5,16 +5,39 @@ from os.path import dirname
 import sys
 if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 from mod.starship import StarShip
+from mod.bullet import Bullet
+from mod.enemy import Enemy
 from mod.effect import Effect
 from mod.sound import SE_DAMAGE, adjusted_bgm
 from mod.title import draw_text, RED, SILVER
+from mod.enemy_factory import EnemyFactory
+from mod.shoot_bullet import ShootBullet
 
 def nie_return_title() -> None: raise NotImplementedError("タイトル復帰用の命令が設定されていません")
+def nie_clear_game() -> None: raise NotImplementedError("ゲームクリア用の命令が設定されていません")
+
 
 class SceneIndex():
     '''ゲームシーン毎の処理を担うクラスです。
-    現在はゲームオーバーとゲームクリアの処理を有しています。'''
+    ゲーム中、ゲームオーバー、ゲームクリアの３種類を備えています。'''
     return_title: Callable[[], None] = nie_return_title
+    clear_game: Callable[[], None] = nie_clear_game
+
+    @classmethod
+    def during_game(cls, screen: pygame.surface.Surface, key: pygame.key.ScancodeWrapper, s_ship: StarShip, bullets: list[Bullet], enemies: list[Enemy], tmr: int) -> None:
+        # 自機の移動と描画
+        s_ship.move(key=key)
+        s_ship.draw(screen=screen, tmr=tmr)
+
+        # 弾の生成
+        ShootBullet.single_shot(key=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery)
+        ShootBullet.diffusion_shot(key=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery)
+
+        # 敵の生成
+        EnemyFactory.bring_enemy(enemies=enemies, tmr=tmr)
+
+        if tmr == 30*15:
+            cls.clear_game()
 
     @classmethod
     def game_over(cls, screen: pygame.surface.Surface, effects: list[Effect], s_ship: StarShip, tmr: int) -> None:

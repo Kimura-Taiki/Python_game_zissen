@@ -5,6 +5,7 @@
 import pygame
 pygame.init()
 from pygame.locals import K_SPACE
+from functools import partial
 from typing import Callable
 
 from mod.solve_event import event_mapping, solve_event # 解決すべきpygameイベントを定義
@@ -20,12 +21,6 @@ from mod.title import Title, draw_text, SILVER # タイトル画面他ゲーム�
 from mod.sound import adjusted_bgm
 from mod.index import SceneIndex
 from mod.shoot_bullet import ShootBullet # 自弾を発射する機能を提供
-
-def main_elapse(screen: pygame.surface.Surface, bullets: list[Bullet], enemies: list[Enemy], effects: list[Effect]) -> None:
-    '''メイン画面で操作に関係無く時間経過で動いていく処理。
-    主にスプライトの移動と描画、消滅を担う。'''
-    [sprite.elapse() for sprite in bullets+enemies+effects]
-    pygame.sprite.Group(bullets,enemies,effects).draw(surface=screen)
 
 def main() -> None: # メインループ
     global screen, event_mapping
@@ -44,6 +39,7 @@ def main() -> None: # メインループ
         nonlocal idx, tmr
         idx, tmr = new_idx, new_tmr
     SceneIndex.return_title = index_shift
+    SceneIndex.clear_game = partial(index_shift, new_idx=3)
 
     def shot_down_enemy() -> None:
         nonlocal score
@@ -51,8 +47,8 @@ def main() -> None: # メインループ
         score += 100
     Conflict.shoot_down_func = shot_down_enemy
 
-    ShootBullet.is_diffusion: Callable[[], bool] = lambda: s_ship.hp > 10
-    ShootBullet.consume_diffusion: Callable[[], None] = lambda: setattr(s_ship, 'hp', s_ship.hp - 10)
+    ShootBullet.is_diffusion = lambda: s_ship.hp > 10
+    ShootBullet.consume_diffusion = lambda: setattr(s_ship, 'hp', s_ship.hp - 10)
 
     while True:
         tmr += 1
@@ -78,26 +74,15 @@ def main() -> None: # メインループ
                     effects.clear()
                     adjusted_bgm(file="sound_gl/bgm.ogg", loops=-1)
             case 1: # ゲームプレイ中
-                # 自機の移動と描画
-                s_ship.move(key=key)
-                s_ship.draw(screen=screen, tmr=tmr)
-
-                # 弾の生成
-                ShootBullet.single_shot(key=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery)
-                ShootBullet.diffusion_shot(key=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery)
-
-                # 敵の生成
-                EnemyFactory.bring_enemy(enemies=enemies, tmr=tmr)
-
-                if tmr == 30*15:
-                    idx = 3
-                    tmr = 0
+                SceneIndex.during_game(screen=screen, key=key, s_ship=s_ship, bullets=bullets, enemies=enemies, tmr=tmr)
             case 2: # ゲームオーバー
                 SceneIndex.game_over(screen=screen, effects=effects, s_ship=s_ship, tmr=tmr)
             case 3: # ゲームクリア
                 SceneIndex.game_clear(screen=screen, key=key, s_ship=s_ship, tmr=tmr)
         
-        main_elapse(screen=screen, bullets=bullets, enemies=enemies, effects=effects)
+        # 弾・敵機・爆風の経過と描画
+        [sprite.elapse() for sprite in bullets+enemies+effects]
+        pygame.sprite.Group(bullets,enemies,effects).draw(surface=screen)
 
         # 敵機と自弾の衝突判定
         Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
