@@ -49,6 +49,12 @@ def main() -> None: # メインループ
         score += 100
     Conflict.shoot_down_func = shot_down_enemy
 
+    from mod.shoot_bullet import ShootBullet
+    def is_diffusion() -> bool: return s_ship.hp > 10
+    def consume_diffusion() -> None: s_ship.hp -= 10
+    ShootBullet.is_diffusion = is_diffusion
+    ShootBullet.consume_diffusion = consume_diffusion
+
     while True:
         tmr += 1
         # pygameのイベントを解決
@@ -78,8 +84,8 @@ def main() -> None: # メインループ
                 s_ship.draw(screen=screen, tmr=tmr)
 
                 # 弾の生成
-                do_z = bullet_set(key=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery, may_z=s_ship.hp>10)
-                s_ship.hp -= do_z*10
+                ShootBullet.single_shot(key=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery)
+                ShootBullet.diffusion_shot(key=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery)
 
                 # 敵の生成
                 EnemyFactory.bring_enemy(enemies=enemies, tmr=tmr)
@@ -96,9 +102,6 @@ def main() -> None: # メインループ
 
         # 敵機と自弾の衝突判定
         Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
-        # shots_down = Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
-        # s_ship.hp += shots_down
-        # score += shots_down*100
 
         # 敵機と自期の衝突判定
         Conflict.hit_ss_and_enemy(s_ship=s_ship, enemies=enemies, effects=effects)
@@ -108,6 +111,7 @@ def main() -> None: # メインループ
 
         draw_text(screen, "Score "+str(score), 200, 30, 50, SILVER)
         draw_text(screen, "Timer "+str(tmr), 200, 30+40, 50, SILVER)
+        draw_text(screen, "is_Diffusion "+str(ShootBullet.is_diffusion()), 200, 30+40*2, 50, SILVER)
         # シールドの描画
         if idx != 0:
             s_ship.shield_draw(screen=screen)
