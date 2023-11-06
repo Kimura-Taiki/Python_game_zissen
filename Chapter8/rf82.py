@@ -47,6 +47,17 @@ def main() -> None: # メインループ
         score += 100
     Conflict.shoot_down_func = shot_down_enemy
 
+    def start_game() -> None:
+        global score
+        index_shift(new_idx=1)
+        score = 0
+        s_ship.reset()
+        bullets.clear()
+        enemies.clear()
+        effects.clear()
+        adjusted_bgm(file="sound_gl/bgm.ogg", loops=-1)
+    Title.start_game = start_game
+
     ShootBullet.is_diffusion = lambda: s_ship.hp > 10
     ShootBullet.consume_diffusion = lambda: setattr(s_ship, 'hp', s_ship.hp - 10)
 
@@ -63,16 +74,7 @@ def main() -> None: # メインループ
         key = pygame.key.get_pressed()
         match idx:
             case 0: # タイトル
-                Title.draw(screen=screen, key=key, tmr=tmr)
-                if key[K_SPACE] == 1:
-                    idx = 1
-                    tmr = 0
-                    score = 0
-                    s_ship.reset()
-                    bullets.clear()
-                    enemies.clear()
-                    effects.clear()
-                    adjusted_bgm(file="sound_gl/bgm.ogg", loops=-1)
+                Title.title(screen=screen, key=key, tmr=tmr)
             case 1: # ゲームプレイ中
                 SceneIndex.during_game(screen=screen, key=key, s_ship=s_ship, bullets=bullets, enemies=enemies, tmr=tmr)
             case 2: # ゲームオーバー

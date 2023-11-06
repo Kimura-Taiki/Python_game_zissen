@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+from typing import Callable
 
 from os.path import dirname
 import sys
@@ -10,18 +11,24 @@ SILVER= (192, 208, 224)
 RED   = (255,   0,   0)
 CYAN  = (  0, 224, 255)
 
+def nie_start_game() -> None: raise NotImplementedError("スタート時の初期化命令が設定されていません")
+
 class Title():
+    start_game: Callable[[], None] = nie_start_game
+
     IMG_TITLE = [
         pygame.image.load("image_gl/nebula.png"),
         pygame.image.load("image_gl/logo.png")
     ]
 
     @classmethod
-    def draw(cls, screen :pygame.surface.Surface, key :pygame.key.ScancodeWrapper, tmr: int) -> None:
+    def title(cls, screen :pygame.surface.Surface, key :pygame.key.ScancodeWrapper, tmr: int) -> None:
         img_rz = pygame.transform.rotozoom(cls.IMG_TITLE[0], -tmr%360, 1.0)
         screen.blit(img_rz, [480-img_rz.get_width()/2, 280-img_rz.get_height()/2])
         screen.blit(cls.IMG_TITLE[1], [70, 160])
         draw_text(screen, "Press [SPACE] to start!", 480, 600, 50, SILVER)
+        if key[K_SPACE] == True:
+            cls.start_game()
 
 def draw_text(screen: pygame.surface.Surface,
               text: str, x: int, y: int, size: int, col: tuple[int, int, int]) -> None:
