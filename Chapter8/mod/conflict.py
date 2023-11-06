@@ -24,13 +24,12 @@ class Conflict():
         for enemy in [enemy for enemy in enemies if enemy.breakable == True][:]:
             hitten: list[Bullet] = pygame.sprite.spritecollide(sprite=enemy, group=pygame.sprite.Group(bullets), dokill=False)
             for bullet in hitten:
-                shots_down += 1
+                cls.shoot_down_func()
                 effects.append(Effect(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=effects))
                 SE_EXPLOSION.play()
                 bullet.hldgs.remove(bullet)
                 enemy.hldgs.remove(enemy)
                 break
-        return shots_down
 
     @classmethod
     def hit_ss_and_enemy(cls, s_ship: StarShip, enemies: list[Enemy], effects: list[Effect]) -> None:

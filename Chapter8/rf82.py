@@ -47,6 +47,7 @@ def main() -> None: # メインループ
         nonlocal score
         s_ship.hp += 1
         score += 100
+    Conflict.shoot_down_func = shot_down_enemy
 
     while True:
         tmr += 1
@@ -94,9 +95,10 @@ def main() -> None: # メインループ
         main_elapse(screen=screen, bullets=bullets, enemies=enemies, effects=effects)
 
         # 敵機と自弾の衝突判定
-        shots_down = Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
-        s_ship.hp += shots_down
-        score += shots_down*100
+        Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
+        # shots_down = Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
+        # s_ship.hp += shots_down
+        # score += shots_down*100
 
         # 敵機と自期の衝突判定
         Conflict.hit_ss_and_enemy(s_ship=s_ship, enemies=enemies, effects=effects)
