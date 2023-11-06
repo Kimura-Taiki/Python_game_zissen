@@ -18,7 +18,7 @@ from mod.enemy_factory import EnemyFactory # 敵の生成クラスを提供
 from mod.effect import Effect # 爆風のエフェクトを提供
 from mod.title import Title, draw_text, SILVER # タイトル画面他ゲームの外枠を提供
 from mod.sound import adjusted_bgm
-from mod.index import game_over, game_clear
+from mod.index import SceneIndex
 from mod.shoot_bullet import ShootBullet # 自弾を発射する機能を提供
 
 def main_elapse(screen: pygame.surface.Surface, bullets: list[Bullet], enemies: list[Enemy], effects: list[Effect]) -> None:
@@ -43,7 +43,8 @@ def main() -> None: # メインループ
         '''idxとtmrを動かす際に引数や依存性を減らす為の命令です。'''
         nonlocal idx, tmr
         idx, tmr = new_idx, new_tmr
-    
+    SceneIndex.return_title = index_shift
+
     def shot_down_enemy() -> None:
         nonlocal score
         s_ship.hp += 1
@@ -92,9 +93,9 @@ def main() -> None: # メインループ
                     idx = 3
                     tmr = 0
             case 2: # ゲームオーバー
-                game_over(screen=screen, effects=effects, s_ship=s_ship, tmr=tmr, call=index_shift)
+                SceneIndex.game_over(screen=screen, effects=effects, s_ship=s_ship, tmr=tmr)
             case 3: # ゲームクリア
-                game_clear(screen=screen, key=key, s_ship=s_ship, tmr=tmr, call=index_shift)
+                SceneIndex.game_clear(screen=screen, key=key, s_ship=s_ship, tmr=tmr)
         
         main_elapse(screen=screen, bullets=bullets, enemies=enemies, effects=effects)
 
