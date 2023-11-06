@@ -1,5 +1,6 @@
 import pygame
 pygame.init()
+from typing import Callable
 
 from os.path import dirname
 import sys
@@ -10,7 +11,13 @@ from mod.effect import Effect
 from mod.sound import SE_EXPLOSION, SE_DAMAGE
 from mod.starship import StarShip
 
+def nie_shoot_down() -> None: raise NotImplementedError("敵機撃墜時の命令が設定されていません")
+def nie_damaged() -> None: raise NotImplementedError("自機被弾時の命令が設定されていません")
+
 class Conflict():
+    shoot_down_func: Callable[[], None] = nie_shoot_down
+    damaged_func: Callable[[], None] = nie_damaged
+
     @classmethod
     def hit_bullet_and_enemy(cls, bullets: list[Bullet], enemies: list[Enemy], effects: list[Effect]) -> int:
         shots_down: int = 0

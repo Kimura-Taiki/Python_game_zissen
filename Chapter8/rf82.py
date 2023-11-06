@@ -2,10 +2,10 @@
 # import sys
 # if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 
-
 import pygame
 pygame.init()
 from pygame.locals import K_SPACE
+from typing import NamedTuple
 
 from mod.solve_event import event_mapping, solve_event # 解決すべきpygameイベントを定義
 from mod.screen import screen # ウィンドウを作成
@@ -26,7 +26,6 @@ def main_elapse(screen: pygame.surface.Surface, bullets: list[Bullet], enemies: 
     [sprite.elapse() for sprite in bullets+enemies+effects]
     pygame.sprite.Group(bullets,enemies,effects).draw(surface=screen)
 
-
 def main() -> None: # メインループ
     global screen, event_mapping
 
@@ -43,6 +42,11 @@ def main() -> None: # メインループ
         '''idxとtmrを動かす際に引数や依存性を減らす為の命令です。'''
         nonlocal idx, tmr
         idx, tmr = new_idx, new_tmr
+    
+    def shot_down_enemy() -> None:
+        nonlocal score
+        s_ship.hp += 1
+        score += 100
 
     while True:
         tmr += 1
