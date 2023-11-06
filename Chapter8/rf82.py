@@ -39,6 +39,7 @@ def main() -> None: # メインループ
         nonlocal idx, tmr
         idx, tmr = new_idx, new_tmr
     SceneIndex.return_title = index_shift
+    SceneIndex.lose_game = partial(index_shift, new_idx=2)
     SceneIndex.clear_game = partial(index_shift, new_idx=3)
 
     def shot_down_enemy() -> None:
@@ -48,7 +49,7 @@ def main() -> None: # メインループ
     Conflict.shoot_down_func = shot_down_enemy
 
     def start_game() -> None:
-        global score
+        nonlocal score
         index_shift(new_idx=1)
         score = 0
         s_ship.reset()
@@ -76,7 +77,7 @@ def main() -> None: # メインループ
             case 0: # タイトル
                 Title.title(screen=screen, key=key, tmr=tmr)
             case 1: # ゲームプレイ中
-                SceneIndex.during_game(screen=screen, key=key, s_ship=s_ship, bullets=bullets, enemies=enemies, tmr=tmr)
+                SceneIndex.during_game(screen=screen, key=key, s_ship=s_ship, bullets=bullets, enemies=enemies, effects=effects, tmr=tmr)
             case 2: # ゲームオーバー
                 SceneIndex.game_over(screen=screen, effects=effects, s_ship=s_ship, tmr=tmr)
             case 3: # ゲームクリア
@@ -85,15 +86,6 @@ def main() -> None: # メインループ
         # 弾・敵機・爆風の経過と描画
         [sprite.elapse() for sprite in bullets+enemies+effects]
         pygame.sprite.Group(bullets,enemies,effects).draw(surface=screen)
-
-        # 敵機と自弾の衝突判定
-        Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
-
-        # 敵機と自期の衝突判定
-        Conflict.hit_ss_and_enemy(s_ship=s_ship, enemies=enemies, effects=effects)
-        if s_ship.hp <= 0 and idx == 1:
-            idx = 2
-            tmr = 0
 
         draw_text(screen, "Score "+str(score), 200, 30, 50, SILVER)
         draw_text(screen, "Timer "+str(tmr), 200, 30+40, 50, SILVER)

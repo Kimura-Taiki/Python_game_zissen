@@ -12,9 +12,11 @@ from mod.sound import SE_DAMAGE, adjusted_bgm
 from mod.title import draw_text, RED, SILVER
 from mod.enemy_factory import EnemyFactory
 from mod.shoot_bullet import ShootBullet
+from mod.conflict import Conflict
 
 def nie_return_title() -> None: raise NotImplementedError("タイトル復帰用の命令が設定されていません")
 def nie_clear_game() -> None: raise NotImplementedError("ゲームクリア用の命令が設定されていません")
+def nie_lose_game() -> None: raise NotImplementedError("ゲームオーバー用の命令が設定されていません")
 
 
 class SceneIndex():
@@ -22,9 +24,10 @@ class SceneIndex():
     ゲーム中、ゲームオーバー、ゲームクリアの３種類を備えています。'''
     return_title: Callable[[], None] = nie_return_title
     clear_game: Callable[[], None] = nie_clear_game
+    lose_game: Callable[[], None] = nie_lose_game
 
     @classmethod
-    def during_game(cls, screen: pygame.surface.Surface, key: pygame.key.ScancodeWrapper, s_ship: StarShip, bullets: list[Bullet], enemies: list[Enemy], tmr: int) -> None:
+    def during_game(cls, screen: pygame.surface.Surface, key: pygame.key.ScancodeWrapper, s_ship: StarShip, bullets: list[Bullet], enemies: list[Enemy], effects: list[Effect], tmr: int) -> None:
         # 自機の移動と描画
         s_ship.move(key=key)
         s_ship.draw(screen=screen, tmr=tmr)
@@ -35,6 +38,14 @@ class SceneIndex():
 
         # 敵の生成
         EnemyFactory.bring_enemy(enemies=enemies, tmr=tmr)
+
+        # 敵機と自弾の衝突判定
+        Conflict.hit_bullet_and_enemy(bullets=bullets, enemies=enemies, effects=effects)
+
+        # 敵機と自期の衝突判定
+        Conflict.hit_ss_and_enemy(s_ship=s_ship, enemies=enemies, effects=effects)
+        if s_ship.hp <= 0:
+            cls.lose_game()
 
         if tmr == 30*15:
             cls.clear_game()
