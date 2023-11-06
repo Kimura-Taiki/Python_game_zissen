@@ -5,13 +5,13 @@
 import pygame
 pygame.init()
 from pygame.locals import K_SPACE
-from typing import NamedTuple
+from typing import Callable
 
 from mod.solve_event import event_mapping, solve_event # 解決すべきpygameイベントを定義
 from mod.screen import screen # ウィンドウを作成
 from mod.background import BackGround # 背景を流して描画する命令を提供
 from mod.starship import StarShip # 自機関連のクラスを提供
-from mod.bullet import Bullet, bullet_set # 自機ビーム弾関連のクラスを提供
+from mod.bullet import Bullet # 自機ビーム弾関連のクラスを提供
 from mod.enemy import Enemy # 敵関連のクラスを提供
 from mod.conflict import Conflict # 接触時判定の命令を提供
 from mod.enemy_factory import EnemyFactory # 敵の生成クラスを提供
@@ -19,6 +19,7 @@ from mod.effect import Effect # 爆風のエフェクトを提供
 from mod.title import Title, draw_text, SILVER # タイトル画面他ゲームの外枠を提供
 from mod.sound import adjusted_bgm
 from mod.index import game_over, game_clear
+from mod.shoot_bullet import ShootBullet # 自弾を発射する機能を提供
 
 def main_elapse(screen: pygame.surface.Surface, bullets: list[Bullet], enemies: list[Enemy], effects: list[Effect]) -> None:
     '''メイン画面で操作に関係無く時間経過で動いていく処理。
@@ -49,11 +50,8 @@ def main() -> None: # メインループ
         score += 100
     Conflict.shoot_down_func = shot_down_enemy
 
-    from mod.shoot_bullet import ShootBullet
-    def is_diffusion() -> bool: return s_ship.hp > 10
-    def consume_diffusion() -> None: s_ship.hp -= 10
-    ShootBullet.is_diffusion = is_diffusion
-    ShootBullet.consume_diffusion = consume_diffusion
+    ShootBullet.is_diffusion: Callable[[], bool] = lambda: s_ship.hp > 10
+    ShootBullet.consume_diffusion: Callable[[], None] = lambda: setattr(s_ship, 'hp', s_ship.hp - 10)
 
     while True:
         tmr += 1

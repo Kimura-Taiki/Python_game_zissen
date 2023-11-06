@@ -4,7 +4,6 @@ from typing import Callable
 from os.path import dirname
 import sys
 if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
-# from mod.sprite import Sprite
 from mod.starship import StarShip
 from mod.effect import Effect
 from mod.sound import SE_DAMAGE, adjusted_bgm
@@ -25,8 +24,6 @@ def game_over(screen: pygame.surface.Surface, effects: list[Effect], s_ship: Sta
             draw_text(screen, "GAME OVER", 480, 300, 80, RED)
         case 300:
             call()
-    #         return True
-    # return False
 
 def game_clear(screen: pygame.surface.Surface, key: pygame.key.ScancodeWrapper, s_ship: StarShip, tmr: int, call: Callable[[], None]) -> None:
     '''mainのwhileループが肥大化していたのでgame_clearの特有処理部分を切り出し。
