@@ -31,7 +31,8 @@ class EnemyFactory():
         match tmr:
             case _ if tmr < 450: enemies.append(RED_CRAFT.make(x=randint(20, 940), y=Enemy.LINE_T, hldgs=enemies))
             case _ if tmr < 900: enemies.append(BLUE_CRAFT.make(x=randint(20, 940), y=Enemy.LINE_T, hldgs=enemies))
-            case _ if tmr < 1350: enemies.append(ABATIS.make(x=randint(20, 940), y=Enemy.LINE_T, hldgs=enemies))
+            case _ if tmr < 1350: enemies.append(ABATIS.make(x=randint(100, 860), y=Enemy.LINE_T, hldgs=enemies,
+                                                             add_diffs={'angle':randint(60, 120)}))
             case _ if tmr < 1800: enemies.append(PILLBOX.make(x=randint(20, 940), y=Enemy.LINE_T, hldgs=enemies))
     
 # def torpedo_run(enemy: Enemy) -> None: # 弾を発射する、母機の処理にのみ弾の発射機構を追加する
@@ -43,6 +44,10 @@ class EnemyFactory():
 
 # TORPEDO =   EnemyFactory({'nega':pygame.image.load("image_gl/enemy0.png"),   'name':"Torpedo",   'speed':10, 'breakable':False})
 # TORPEDOER = EnemyFactory({'nega':pygame.image.load("image_gl/enemy1.png"),   'name':"Torpedoer", 'fire':torpedo_run})
+
+
+def abatis_angle() -> int: return randint(60, 120)
+def const(a: Any) -> Any: return a
 
 BULLET =    EnemyFactory({'nega':pygame.image.load("image_gl/enemy0.png"),  'name':"Bullet",    'speed':10, 'breakable':False})
 RED_CRAFT = EnemyFactory({'nega':pygame.image.load("image_gl/enemy1.png"),  'name':"RedCraft",  'speed': 8})
