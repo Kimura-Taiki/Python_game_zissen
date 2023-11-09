@@ -47,7 +47,7 @@ class SceneIndex():
         if s_ship.hp <= 0:
             cls.lose_game()
 
-        if tmr == 30*15:
+        if tmr == 30*60:
             cls.clear_game()
 
     @classmethod
