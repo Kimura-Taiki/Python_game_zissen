@@ -14,17 +14,17 @@ from mod.enemy_factory import EnemyFactory
 from mod.shoot_bullet import ShootBullet
 from mod.conflict import Conflict
 
-def nie_return_title() -> None: raise NotImplementedError("タイトル復帰用の命令が設定されていません")
-def nie_clear_game() -> None: raise NotImplementedError("ゲームクリア用の命令が設定されていません")
-def nie_lose_game() -> None: raise NotImplementedError("ゲームオーバー用の命令が設定されていません")
 
 
 class SceneIndex():
     '''ゲームシーン毎の処理を担うクラスです。
     ゲーム中、ゲームオーバー、ゲームクリアの３種類を備えています。'''
-    return_title: Callable[[], None] = nie_return_title
-    clear_game: Callable[[], None] = nie_clear_game
-    lose_game: Callable[[], None] = nie_lose_game
+    def __nie_return_title() -> None: raise NotImplementedError("タイトル復帰用の命令が設定されていません")
+    def __nie_clear_game() -> None: raise NotImplementedError("ゲームクリア用の命令が設定されていません")
+    def __nie_lose_game() -> None: raise NotImplementedError("ゲームオーバー用の命令が設定されていません")
+    return_title: Callable[[], None] = __nie_return_title
+    clear_game: Callable[[], None] = __nie_clear_game
+    lose_game: Callable[[], None] = __nie_lose_game
 
     @classmethod
     def during_game(cls, screen: pygame.surface.Surface, key: pygame.key.ScancodeWrapper, s_ship: StarShip, bullets: list[Bullet], enemies: list[Enemy], effects: list[Effect], tmr: int) -> None:

@@ -9,16 +9,15 @@ if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 from mod.bullet import Bullet
 from mod.sound import SE_SHOT, SE_BARRAGE
 
-def nie_is_diffusion() -> bool: raise NotImplementedError("拡散弾発射条件が設定されていません")
-def nie_consume_diffusion() -> None: raise NotImplementedError("拡散弾発射時の消費が設定されていません")
-
 class ShootBullet():
     '''弾の生成と発射を担うクラスです。
     現時点では単発弾(Single)と拡散弾(Diffusion)が発射できます。
     
     拡散弾には消費コストが必要なので事前に発射条件とコストを指定してください。'''
-    is_diffusion: Callable[[], bool]= nie_is_diffusion
-    consume_diffusion: Callable[[], None]= nie_consume_diffusion
+    def __nie_is_diffusion() -> bool: raise NotImplementedError("拡散弾発射条件が設定されていません")
+    def __nie_consume_diffusion() -> None: raise NotImplementedError("拡散弾発射時の消費が設定されていません")
+    is_diffusion: Callable[[], bool]= __nie_is_diffusion
+    consume_diffusion: Callable[[], None]= __nie_consume_diffusion
     key_space: int= 0
     key_z: int = 0
 

@@ -11,10 +11,10 @@ SILVER= (192, 208, 224)
 RED   = (255,   0,   0)
 CYAN  = (  0, 224, 255)
 
-def nie_start_game() -> None: raise NotImplementedError("スタート時の初期化命令が設定されていません")
 
 class Title():
-    start_game: Callable[[], None] = nie_start_game
+    def __nie_start_game() -> None: raise NotImplementedError("スタート時の初期化命令が設定されていません")
+    start_game: Callable[[], None] = __nie_start_game
 
     IMG_TITLE = [
         pygame.image.load("image_gl/nebula.png"),

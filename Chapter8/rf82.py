@@ -34,6 +34,7 @@ def main() -> None: # メインループ
     effects: list[Effect] = []
     s_ship = StarShip()
 
+
     def index_shift(new_idx :int=0, new_tmr :int=0) -> None:
         '''idxとtmrを動かす際に引数や依存性を減らす為の命令です。'''
         nonlocal idx, tmr
