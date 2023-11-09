@@ -27,6 +27,7 @@ class Enemy(Sprite):
         self.speed: int = 6
         self.angle: int = 90
         self.breakable: bool = True
+        self.hp: int = 1
         self.fire: Callable[[Enemy], None] = self.pass_func
     
     def elapse(self) -> Literal[False]: # 敵オブジェクトの移動

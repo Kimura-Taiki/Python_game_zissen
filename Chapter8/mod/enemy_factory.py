@@ -52,5 +52,5 @@ def const(a: Any) -> Any: return a
 BULLET =    EnemyFactory({'nega':pygame.image.load("image_gl/enemy0.png"),  'name':"Bullet",    'speed':10, 'breakable':False})
 RED_CRAFT = EnemyFactory({'nega':pygame.image.load("image_gl/enemy1.png"),  'name':"RedCraft",  'speed': 8})
 BLUE_CRAFT =EnemyFactory({'nega':pygame.image.load("image_gl/enemy2.png"),  'name':"BlueCraft", 'speed':12})
-ABATIS =    EnemyFactory({'nega':pygame.image.load("image_gl/enemy3.png"),  'name':"Abatis",    'speed': 6})
+ABATIS =    EnemyFactory({'nega':pygame.image.load("image_gl/enemy3.png"),  'name':"Abatis",    'speed': 6, 'hp':3})
 PILLBOX =   EnemyFactory({'nega':pygame.image.load("image_gl/enemy4.png"),  'name':"Pillbox",   'speed':12})

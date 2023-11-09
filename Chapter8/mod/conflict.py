@@ -23,11 +23,13 @@ class Conflict():
         for enemy in [enemy for enemy in enemies if enemy.breakable == True][:]:
             hitten: list[Bullet] = pygame.sprite.spritecollide(sprite=enemy, group=pygame.sprite.Group(bullets), dokill=False)
             for bullet in hitten:
-                cls.shoot_down_func()
                 effects.append(Effect(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=effects))
                 SE_EXPLOSION.play()
                 bullet.hldgs.remove(bullet)
-                enemy.hldgs.remove(enemy)
+                enemy.hp -= 1
+                if enemy.hp == 0:
+                    cls.shoot_down_func()
+                    enemy.hldgs.remove(enemy)
                 break
 
     @classmethod
