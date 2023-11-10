@@ -33,7 +33,7 @@ class EnemyFactory():
             case _ if tmr < 900: enemies.append(BLUE_CRAFT.make(x=randint(20, 940), y=Enemy.LINE_T, hldgs=enemies))
             case _ if tmr < 1350: enemies.append(ABATIS.make(x=randint(100, 860), y=Enemy.LINE_T, hldgs=enemies,
                                                              add_diffs={'angle':randint(60, 120)}))
-            case _ if tmr < 1800: enemies.append(PILLBOX.make(x=randint(20, 940), y=Enemy.LINE_T, hldgs=enemies))
+            case _ if tmr < 1800: enemies.append(PILLBOX.make(x=randint(100, 860), y=Enemy.LINE_T, hldgs=enemies))
     
 # def torpedo_run(enemy: Enemy) -> None: # 弾を発射する、母機の処理にのみ弾の発射機構を追加する
 #     if enemy.rect.centery > 360:
@@ -53,4 +53,4 @@ BULLET =    EnemyFactory({'nega':pygame.image.load("image_gl/enemy0.png"),  'nam
 RED_CRAFT = EnemyFactory({'nega':pygame.image.load("image_gl/enemy1.png"),  'name':"RedCraft",  'speed': 8})
 BLUE_CRAFT =EnemyFactory({'nega':pygame.image.load("image_gl/enemy2.png"),  'name':"BlueCraft", 'speed':12})
 ABATIS =    EnemyFactory({'nega':pygame.image.load("image_gl/enemy3.png"),  'name':"Abatis",    'speed': 6, 'hp':3})
-PILLBOX =   EnemyFactory({'nega':pygame.image.load("image_gl/enemy4.png"),  'name':"Pillbox",   'speed':12})
+PILLBOX =   EnemyFactory({'nega':pygame.image.load("image_gl/enemy4.png"),  'name':"Pillbox",   'speed':12, 'hp':2})

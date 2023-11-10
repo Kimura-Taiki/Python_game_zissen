@@ -52,7 +52,7 @@ def main() -> None: # メインループ
     def start_game() -> None:
         nonlocal score
         # index_shift(new_idx=1)
-        index_shift(new_idx=1, new_tmr=900) # ３つ目の敵機の確認用ね
+        index_shift(new_idx=1, new_tmr=1350) # ３つ目の敵機の確認用ね
         score = 0
         s_ship.reset()
         bullets.clear()
