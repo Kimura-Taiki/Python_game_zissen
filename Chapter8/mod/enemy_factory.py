@@ -1,6 +1,7 @@
 import pygame
 pygame.init()
-from random import randint
+from random import randint, choice
+from math import cos, sin, radians
 from typing import Any
 
 from os.path import dirname
@@ -46,11 +47,22 @@ class EnemyFactory():
 # TORPEDOER = EnemyFactory({'nega':pygame.image.load("image_gl/enemy1.png"),   'name':"Torpedoer", 'fire':torpedo_run})
 
 
-def abatis_angle() -> int: return randint(60, 120)
-def const(a: Any) -> Any: return a
+# def abatis_angle() -> int: return randint(60, 120)
+# def const(a: Any) -> Any: return a
 
-BULLET =    EnemyFactory({'nega':pygame.image.load("image_gl/enemy0.png"),  'name':"Bullet",    'speed':10, 'breakable':False})
+def elapse_pillbox(enemy: Enemy) -> None:
+    enemy.timer += 1
+    if enemy.rect.centery > 240 and enemy.angle == 90:
+        enemy.angle = choice([50, 70, 110, 130])
+        enemy.hldgs.append(BULLET.make(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=enemy.hldgs))
+    Enemy.move_linearly(enemy=enemy)
+    angle = enemy.angle
+    enemy.angle = 90+enemy.timer*10
+    enemy.roll_image()
+    enemy.angle = angle
+
+BULLET =    EnemyFactory({'nega':pygame.image.load("image_gl/enemy0.png"),  'name':"Bullet",    'speed': 6, 'breakable':False})
 RED_CRAFT = EnemyFactory({'nega':pygame.image.load("image_gl/enemy1.png"),  'name':"RedCraft",  'speed': 8})
 BLUE_CRAFT =EnemyFactory({'nega':pygame.image.load("image_gl/enemy2.png"),  'name':"BlueCraft", 'speed':12})
 ABATIS =    EnemyFactory({'nega':pygame.image.load("image_gl/enemy3.png"),  'name':"Abatis",    'speed': 6, 'hp':3})
-PILLBOX =   EnemyFactory({'nega':pygame.image.load("image_gl/enemy4.png"),  'name':"Pillbox",   'speed':12, 'hp':2})
+PILLBOX =   EnemyFactory({'nega':pygame.image.load("image_gl/enemy4.png"),  'name':"Pillbox",   'speed':12, 'hp':2, 'elapse_func':elapse_pillbox})
