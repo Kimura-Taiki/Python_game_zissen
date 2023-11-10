@@ -19,11 +19,14 @@ from mod.conflict import Conflict
 class SceneIndex():
     '''ゲームシーン毎の処理を担うクラスです。
     ゲーム中、ゲームオーバー、ゲームクリアの３種類を備えています。'''
-    def __nie_return_title() -> None: raise NotImplementedError("タイトル復帰用の命令が設定されていません")
-    def __nie_clear_game() -> None: raise NotImplementedError("ゲームクリア用の命令が設定されていません")
-    def __nie_lose_game() -> None: raise NotImplementedError("ゲームオーバー用の命令が設定されていません")
+    @staticmethod
+    def __nie_return_title() -> None: raise NotImplementedError("SceneIndex.return_titleが未実装\nタイトル復帰用の命令が設定されていません")
     return_title: Callable[[], None] = __nie_return_title
+    @staticmethod
+    def __nie_clear_game() -> None: raise NotImplementedError("SceneIndex.clear_gameが未実装\nゲームクリア用の命令が設定されていません")
     clear_game: Callable[[], None] = __nie_clear_game
+    @staticmethod
+    def __nie_lose_game() -> None: raise NotImplementedError("SceneIndex.lose_gameが未実装\nゲームオーバー用の命令が設定されていません")
     lose_game: Callable[[], None] = __nie_lose_game
 
     @classmethod

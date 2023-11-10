@@ -13,10 +13,12 @@ from mod.starship import StarShip
 
 
 class Conflict():
-    def __nie_shoot_down() -> None: raise NotImplementedError("敵機撃墜時の命令が設定されていません")
-    def __nie_damaged() -> None: raise NotImplementedError("自機被弾時の命令が設定されていません")
+    @staticmethod
+    def __nie_shoot_down() -> None: raise NotImplementedError("Conflict.shoot_down_funcが未実装\n敵機撃墜時の命令が設定されていません")
     shoot_down_func: Callable[[], None] = __nie_shoot_down
-    damaged_func: Callable[[], None] = __nie_damaged
+    # @staticmethod
+    # def __nie_damaged() -> None: raise NotImplementedError("Conflict.damaged_funcが未実装\n自機被弾時の命令が設定されていません")
+    # damaged_func: Callable[[], None] = __nie_damaged
 
     @classmethod
     def hit_bullet_and_enemy(cls, bullets: list[Bullet], enemies: list[Enemy], effects: list[Effect]) -> None:

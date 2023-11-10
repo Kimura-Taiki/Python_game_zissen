@@ -14,9 +14,11 @@ class ShootBullet():
     現時点では単発弾(Single)と拡散弾(Diffusion)が発射できます。
     
     拡散弾には消費コストが必要なので事前に発射条件とコストを指定してください。'''
-    def __nie_is_diffusion() -> bool: raise NotImplementedError("拡散弾発射条件が設定されていません")
-    def __nie_consume_diffusion() -> None: raise NotImplementedError("拡散弾発射時の消費が設定されていません")
+    @staticmethod
+    def __nie_is_diffusion() -> bool: raise NotImplementedError("ShootBullet.is_diffusionが未実装\n拡散弾発射条件が設定されていません")
     is_diffusion: Callable[[], bool]= __nie_is_diffusion
+    @staticmethod
+    def __nie_consume_diffusion() -> None: raise NotImplementedError("ShootBullet.cosume_diffusionが未実装\n拡散弾発射時の消費が設定されていません")
     consume_diffusion: Callable[[], None]= __nie_consume_diffusion
     key_space: int= 0
     key_z: int = 0

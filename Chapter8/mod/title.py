@@ -13,7 +13,8 @@ CYAN  = (  0, 224, 255)
 
 
 class Title():
-    def __nie_start_game() -> None: raise NotImplementedError("スタート時の初期化命令が設定されていません")
+    @staticmethod
+    def __nie_start_game() -> None: raise NotImplementedError("Title.start_gameが未実装\nスタート時の初期化命令が設定されていません")
     start_game: Callable[[], None] = __nie_start_game
 
     IMG_TITLE = [
