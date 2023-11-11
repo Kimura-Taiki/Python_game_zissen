@@ -1,3 +1,6 @@
-print("AAA\nBBBB")
-print(range(160,200,10))
-print(type(range(160,200,10)))
+def kw(**kwargs):
+    print(type(kwargs), kwargs)
+
+
+kw(**{"a":100, "b":200})
+kw(a=100, b=200)
