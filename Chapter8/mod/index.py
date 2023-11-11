@@ -36,8 +36,8 @@ class SceneIndex():
         s_ship.draw(screen=screen, tmr=tmr)
 
         # 弾の生成
-        ShootBullet.single_shot(key=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery)
-        ShootBullet.diffusion_shot(key=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery)
+        ShootBullet.single_shot(pressed_keys=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery)
+        ShootBullet.diffusion_shot(pressed_keys=key, bullets=bullets, x=s_ship.craft.rect.centerx, y=s_ship.craft.rect.centery)
 
         # 敵の生成
         EnemyFactory.bring_enemy(enemies=enemies, tmr=tmr)
