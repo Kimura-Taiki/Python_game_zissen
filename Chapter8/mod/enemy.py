@@ -48,10 +48,7 @@ class Enemy(Sprite):
             self.flash_duration -= 1
             if self.flash_duration == 0:
                 self.image = self.nega
-                angle = self.angle
-                self.angle = 90
-                self.roll_image()
-                self.angle = angle
+                self.roll_image(angle=90)
         (self.fire)(self)
         if self.rect.centerx < self.LINE_L or self.LINE_R < self.rect.centerx or self.rect.centery < self.LINE_T or self.LINE_B < self.rect.centery:
             self.hldgs.remove(self)

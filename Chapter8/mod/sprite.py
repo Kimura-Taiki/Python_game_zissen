@@ -20,11 +20,11 @@ class Sprite(pygame.sprite.Sprite):
             cx-int(self.image.get_width()/2), cy-int(self.image.get_height()/2),
             self.image.get_width(), self.image.get_height())
 
-    def roll_image(self) -> None:
+    def roll_image(self, angle: int|None=None) -> None:
         '''画像をangleに応じて回転'''
         x = self.rect.centerx
         y = self.rect.centery
-        self.image = pygame.transform.rotozoom(surface=self.nega, angle=-90-self.angle, scale=1.0)
+        self.image = pygame.transform.rotozoom(surface=self.nega, angle=-90-self.angle if angle == None else -90-angle, scale=1.0)
         self.rect = self.image.get_rect()
         self.rect.center = x, y
 

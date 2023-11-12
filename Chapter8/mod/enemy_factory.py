@@ -48,10 +48,7 @@ def elapse_pillbox(enemy: Enemy) -> None:
         enemy.angle = choice([50, 70, 110, 130])
         enemy.hldgs.append(BULLET.make(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=enemy.hldgs))
     Enemy.move_linearly(enemy=enemy)
-    angle = enemy.angle
-    enemy.angle = 90+enemy.timer*10
-    enemy.roll_image()
-    enemy.angle = angle
+    enemy.roll_image(angle=90+enemy.timer*10)
 
 def elapse_boss(enemy: Enemy) -> None:
     enemy.timer += 1
