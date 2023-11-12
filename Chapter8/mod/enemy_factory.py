@@ -59,4 +59,4 @@ RED_CRAFT = EnemyFactory(nega=pygame.image.load("image_gl/enemy1.png"), name="Re
 BLUE_CRAFT = EnemyFactory(nega=pygame.image.load("image_gl/enemy2.png"), name="BlueCraft", speed=12)
 ABATIS = EnemyFactory(nega=pygame.image.load("image_gl/enemy3.png"), name="Abatis", speed=6, hp=3)
 PILLBOX = EnemyFactory(nega=pygame.image.load("image_gl/enemy4.png"), name="Pillbox", speed=12, hp=2, elapse_func=elapse_pillbox)
-BOSS = EnemyFactory(nega=pygame.image.load("image_gl/enemy_boss.png"), name="Boss", speed=4, hp=200)
+BOSS = EnemyFactory(nega=pygame.image.load("image_gl/enemy_boss.png"), name="Boss", speed=4, hp=200, is_boss=True)

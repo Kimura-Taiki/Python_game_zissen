@@ -46,4 +46,5 @@ class Conflict():
             effects.append(Effect(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=effects))
             SE_DAMAGE.play()
             s_ship.hp -= 10
-            enemy.hldgs.remove(enemy)
+            if not enemy.is_boss:
+                enemy.hldgs.remove(enemy)

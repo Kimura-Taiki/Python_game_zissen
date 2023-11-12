@@ -27,6 +27,7 @@ class Enemy(Sprite):
         self.speed: int = 6
         self.angle: int = 90
         self.breakable: bool = True
+        self.is_boss: bool = False
         self.hp: int = 1
         self.timer: int = 0
         self.elapse_func: Callable[[Enemy], None] = self.move_linearly
