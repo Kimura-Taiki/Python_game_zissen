@@ -2,11 +2,14 @@ import pygame
 pygame.init()
 from math import cos, sin, radians
 from typing import Any, Callable, Literal
+from random import randint
 
 from os.path import dirname
 import sys
 if __name__ == '__main__': sys.path.append(dirname(dirname(__file__)))
 from mod.sprite import Sprite
+from mod.effect import Effect
+from mod.sound import SE_EXPLOSION
 
 class Enemy(Sprite):
     LINE_T: int = -80
@@ -46,11 +49,14 @@ class Enemy(Sprite):
             self.hldgs.remove(self)
         return False
     
-    def damaged(self, damage: int, shoot_down_func: Callable[[], None]) -> None:
+    def damaged(self, damage: int, effects: list[Effect], shoot_down_func: Callable[[], None]) -> None:
         '''Enemyの被弾時処理です。
         
         Conflict側で抱えてしまうと被弾時処理が嵩張りがち且つ敵個体毎に処理が変わる為、
         Enemyクラスに被弾時処理を委譲しています。'''
+        dx, dy = int(self.rect.w/2), int(self.rect.h/2)
+        effects.append(Effect(x=self.rect.centerx+randint(-dx, dx), y=self.rect.centery+randint(-dy, dy), hldgs=effects))
+        SE_EXPLOSION.play()
         self.hp -= damage
         if self.hp <= 0:
             shoot_down_func()
