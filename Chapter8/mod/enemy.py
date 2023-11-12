@@ -44,6 +44,14 @@ class Enemy(Sprite):
         リスト内包表記で繰り返し処理する際に戻り値が無いとエラーを起こす為、
         戻り値にFalseを与えてあります。'''
         (self.elapse_func)(self)
+        if self.flash_duration > 0:
+            self.flash_duration -= 1
+            if self.flash_duration == 0:
+                self.image = self.nega
+                angle = self.angle
+                self.angle = 90
+                self.roll_image()
+                self.angle = angle
         (self.fire)(self)
         if self.rect.centerx < self.LINE_L or self.LINE_R < self.rect.centerx or self.rect.centery < self.LINE_T or self.LINE_B < self.rect.centery:
             self.hldgs.remove(self)
@@ -57,6 +65,9 @@ class Enemy(Sprite):
         dx, dy = int(self.rect.w/2), int(self.rect.h/2)
         effects.append(Effect(x=self.rect.centerx+randint(-dx, dx), y=self.rect.centery+randint(-dy, dy), hldgs=effects))
         SE_EXPLOSION.play()
+        if self.is_boss:
+            self.flash_duration = 3
+            self.image = pygame.transform.rotozoom(surface=pygame.image.load("image_gl/enemy_boss_f.png"), angle=180, scale=1.0)
         self.hp -= damage
         if self.hp <= 0:
             shoot_down_func()

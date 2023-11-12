@@ -25,14 +25,8 @@ class Conflict():
         for enemy in [enemy for enemy in enemies if enemy.breakable == True][:]:
             hitten: list[Bullet] = pygame.sprite.spritecollide(sprite=enemy, group=pygame.sprite.Group(bullets), dokill=False)
             for bullet in hitten:
-                # effects.append(Effect(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=effects))
-                # SE_EXPLOSION.play()
                 bullet.hldgs.remove(bullet)
                 enemy.damaged(damage=1, effects=effects, shoot_down_func=cls.shoot_down_func)
-                # enemy.hp -= 1
-                # if enemy.hp == 0:
-                #     cls.shoot_down_func()
-                #     enemy.hldgs.remove(enemy)
                 break
 
     @classmethod
