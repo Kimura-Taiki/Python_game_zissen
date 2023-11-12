@@ -28,12 +28,14 @@ class Enemy(Sprite):
         self.angle: int = 90
         self.breakable: bool = True
         self.is_boss: bool = False
+        self.flash_duration: int = 0
         self.hp: int = 1
         self.timer: int = 0
+        self.mode: int = 0
         self.elapse_func: Callable[[Enemy], None] = self.move_linearly
         self.fire: Callable[[Enemy], None] = self.pass_func
     
-    def elapse(self) -> Literal[False]: # 敵オブジェクトの移動
+    def elapse(self) -> Literal[False]:
         '''Enemyをangleに従って直線運動させます。
 
         リスト内包表記で繰り返し処理する際に戻り値が無いとエラーを起こす為、
@@ -44,6 +46,16 @@ class Enemy(Sprite):
             self.hldgs.remove(self)
         return False
     
+    def damaged(self, damage: int, shoot_down_func: Callable[[], None]) -> None:
+        '''Enemyの被弾時処理です。
+        
+        Conflict側で抱えてしまうと被弾時処理が嵩張りがち且つ敵個体毎に処理が変わる為、
+        Enemyクラスに被弾時処理を委譲しています。'''
+        self.hp -= damage
+        if self.hp <= 0:
+            shoot_down_func()
+            self.hldgs.remove(self)
+
     @classmethod
     def move_linearly(cls, enemy: 'Enemy') -> None:
         '''デフォルトの敵機運動としてself.elapseへ代入されている命令です。

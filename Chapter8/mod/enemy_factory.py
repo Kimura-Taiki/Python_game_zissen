@@ -53,10 +53,27 @@ def elapse_pillbox(enemy: Enemy) -> None:
     enemy.roll_image()
     enemy.angle = angle
 
+def elapse_boss(enemy: Enemy) -> None:
+    enemy.timer += 1
+    Enemy.move_linearly(enemy=enemy)
+    match enemy.mode:
+        case 0:
+            if enemy.rect.centery >= 200: enemy.mode, enemy.angle = 1, 180
+        case 1:
+            if enemy.rect.centerx < 200:
+                enemy.hldgs.extend(BULLET.make(x=enemy.rect.centerx, y=enemy.rect.centery+80, hldgs=enemy.hldgs, angle=i*20) for i in range(0, 10))
+                enemy.mode, enemy.angle = 2, 0
+        case 2:
+            if enemy.rect.centerx > 760:
+                enemy.hldgs.extend(BULLET.make(x=enemy.rect.centerx, y=enemy.rect.centery+80, hldgs=enemy.hldgs, angle=i*20) for i in range(0, 10))
+                enemy.mode, enemy.angle = 1, 180
+    if enemy.hp < 100 and enemy.timer % 30 == 0: enemy.hldgs.append(BULLET.make(x=enemy.rect.centerx, y=enemy.rect.centery+80, hldgs=enemy.hldgs, angle=randint(60, 120)))
+        
+
 
 BULLET = EnemyFactory(nega=pygame.image.load("image_gl/enemy0.png"), name="Bullet", speed=6, breakable=False)
 RED_CRAFT = EnemyFactory(nega=pygame.image.load("image_gl/enemy1.png"), name="RedCraft", speed=8)
 BLUE_CRAFT = EnemyFactory(nega=pygame.image.load("image_gl/enemy2.png"), name="BlueCraft", speed=12)
 ABATIS = EnemyFactory(nega=pygame.image.load("image_gl/enemy3.png"), name="Abatis", speed=6, hp=3)
 PILLBOX = EnemyFactory(nega=pygame.image.load("image_gl/enemy4.png"), name="Pillbox", speed=12, hp=2, elapse_func=elapse_pillbox)
-BOSS = EnemyFactory(nega=pygame.image.load("image_gl/enemy_boss.png"), name="Boss", speed=4, hp=200, is_boss=True)
+BOSS = EnemyFactory(nega=pygame.image.load("image_gl/enemy_boss.png"), name="Boss", speed=4, hp=200, elapse_func=elapse_boss, is_boss=True)

@@ -28,10 +28,11 @@ class Conflict():
                 effects.append(Effect(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=effects))
                 SE_EXPLOSION.play()
                 bullet.hldgs.remove(bullet)
-                enemy.hp -= 1
-                if enemy.hp == 0:
-                    cls.shoot_down_func()
-                    enemy.hldgs.remove(enemy)
+                enemy.damaged(damage=1, shoot_down_func=cls.shoot_down_func)
+                # enemy.hp -= 1
+                # if enemy.hp == 0:
+                #     cls.shoot_down_func()
+                #     enemy.hldgs.remove(enemy)
                 break
 
     @classmethod
