@@ -1,5 +1,5 @@
 import pygame
-from pygame.locals import *
+from pygame.locals import K_SPACE
 from typing import Callable
 
 from os.path import dirname
