@@ -34,6 +34,8 @@ class Title():
 def draw_text(screen: pygame.surface.Surface,
               text: str, x: int, y: int, size: int, col: tuple[int, int, int]) -> None:
     '''文字を表示する命令です。'''
-    sur = pygame.font.Font(None, size=size).render(text, True, col)
-    screen.blit(source=sur, dest=[x-sur.get_width()/2, y-sur.get_height()/2])
-
+    font = pygame.font.Font(None, size)
+    cx, cy = int(x-font.render(text, True, col).get_width()/2), int(y-font.render(text, True, col).get_height()/2)
+    screen.blit(source=font.render(text, True, [int(i/2) for i in col]), dest=[cx+1, cy+1])
+    screen.blit(source=font.render(text, True, [i+128 if i < 128 else 255 for i in col]), dest=[cx-1, cy-1])
+    screen.blit(source=font.render(text, True, col), dest=[cx, cy])
