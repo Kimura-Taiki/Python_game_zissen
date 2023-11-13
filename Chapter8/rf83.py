@@ -56,8 +56,8 @@ def main() -> None: # メインループ
 
     def start_game() -> None:
         nonlocal score
-        # index_shift(new_idx=1)
-        index_shift(new_idx=1, new_tmr=590) # ボスの確認用ね
+        index_shift(new_idx=1)
+        # index_shift(new_idx=1, new_tmr=590) # ボスの確認用ね
         score = 0
         s_ship.reset()
         bullets.clear()

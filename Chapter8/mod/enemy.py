@@ -1,7 +1,7 @@
 import pygame
 pygame.init()
 from math import cos, sin, radians
-from typing import Any, Callable, Literal
+from typing import Any, Callable, Literal, ClassVar
 from random import randint
 
 from os.path import dirname
@@ -24,7 +24,7 @@ class Enemy(Sprite):
         pass
 
     def _not_implemented_shot_down(self) -> None: raise NotImplementedError("Enemy.shot_down_funcが未実装\n被撃墜時の命令が設定されていません")
-    shot_down_func: Callable[['Enemy'], None] = _not_implemented_shot_down
+    shot_down_func: ClassVar[Callable[['Enemy'], None]] = _not_implemented_shot_down
 
     def __init__(self, x: int, y: int, hldgs: Any=None) -> None:
         super().__init__(group=[], image=self.DEFAULT_IMG, cx=x, cy=y)
@@ -81,5 +81,7 @@ class Enemy(Sprite):
     def move_linearly(cls, enemy: 'Enemy') -> None:
         '''デフォルトの敵機運動としてself.elapseへ代入されている命令です。
         単純な等速直線運動を行います。'''
-        enemy.x += int(enemy.speed*cos(radians(enemy.angle)))
-        enemy.y += int(enemy.speed*sin(radians(enemy.angle)))
+        enemy.x += enemy.speed*cos(radians(enemy.angle))
+        enemy.y += enemy.speed*sin(radians(enemy.angle))
+        # enemy.x += int(enemy.speed*cos(radians(enemy.angle)))
+        # enemy.y += int(enemy.speed*sin(radians(enemy.angle)))

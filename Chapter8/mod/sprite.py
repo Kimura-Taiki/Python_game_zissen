@@ -28,7 +28,7 @@ class Sprite(pygame.sprite.Sprite):
         self.rect.center = x, y
 
     @property
-    def x(self) -> int:
+    def x(self) -> Any:
         return self.rect.centerx
 
     @x.setter
@@ -36,7 +36,7 @@ class Sprite(pygame.sprite.Sprite):
         self.rect.centerx = value
 
     @property
-    def y(self) -> int:
+    def y(self) -> Any:
         return self.rect.centery
 
     @y.setter
