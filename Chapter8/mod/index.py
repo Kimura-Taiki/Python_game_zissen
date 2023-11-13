@@ -50,9 +50,6 @@ class SceneIndex():
         if s_ship.hp <= 0:
             cls.lose_game()
 
-        if tmr == 30*60:
-            cls.clear_game()
-
     @classmethod
     def game_over(cls, screen: pygame.surface.Surface, effects: list[Effect], s_ship: StarShip, tmr: int) -> None:
         match tmr:

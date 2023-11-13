@@ -25,21 +25,34 @@ class EnemyFactory():
 
     @classmethod
     def bring_enemy(cls, enemies: list[Enemy], tmr: int) -> None:
-        if tmr % 20 != 0: return
         match tmr:
-            case _ if tmr < 450: 
+            case _ if 0 < tmr and tmr < 25*30 and tmr % 15 == 0:
+                enemies.append(RED_CRAFT.make(x=randint(20, 940), y=Enemy.LINE_T, hldgs=enemies))
+            case _ if 30*30 < tmr and tmr < 55*30 and tmr % 10 == 0:
+                enemies.append(BLUE_CRAFT.make(x=randint(20, 940), y=Enemy.LINE_T, hldgs=enemies))
+            case _ if 60*30 < tmr and tmr < 85*30 and tmr % 15 == 0:
+                enemies.append(ABATIS.make(x=randint(100, 860), y=Enemy.LINE_T, hldgs=enemies, angle=randint(60, 120)))
+            case _ if 90*30 < tmr and tmr < 115*30 and tmr % 20 == 0:
+                enemies.append(PILLBOX.make(x=randint(100, 860), y=Enemy.LINE_T, hldgs=enemies))
+            case _ if 120*30 < tmr and tmr < 145*30 and tmr % 20 == 0:
+                enemies.append(RED_CRAFT.make(x=randint(20, 940), y=Enemy.LINE_T, hldgs=enemies))
+                enemies.append(ABATIS.make(x=randint(100, 860), y=Enemy.LINE_T, hldgs=enemies, angle=randint(60, 120)))
+            case _ if 150*30 < tmr and tmr < 175*30 and tmr % 20 == 0:
+                enemies.append(RED_CRAFT.make(x=randint(20, 940), y=Enemy.LINE_B, hldgs=enemies, angle=270))
+                enemies.append(BLUE_CRAFT.make(x=randint(20, 940), y=Enemy.LINE_T, hldgs=enemies, angle=randint(70, 110)))
+            case _ if 180*30 < tmr and tmr < 205*30 and tmr % 20 == 0:
+                enemies.append(ABATIS.make(x=randint(100, 860), y=Enemy.LINE_T, hldgs=enemies, angle=randint(60, 120)))
+                enemies.append(PILLBOX.make(x=randint(100, 860), y=Enemy.LINE_T, hldgs=enemies))
+            case _ if 210*30 < tmr and tmr < 235*30 and tmr % 20 == 0:
+                enemies.append(RED_CRAFT.make(x=Enemy.LINE_L, y=randint(40, 680), hldgs=enemies, angle=0))
+                enemies.append(BLUE_CRAFT.make(x=Enemy.LINE_R, y=randint(40, 680), hldgs=enemies, angle=180))
+            case _ if 240*30 < tmr and tmr < 265*30 and tmr % 30 == 0:
                 enemies.append(RED_CRAFT.make(x=randint(20, 940), y=Enemy.LINE_T, hldgs=enemies))
                 enemies.append(BLUE_CRAFT.make(x=randint(20, 940), y=Enemy.LINE_T, hldgs=enemies))
                 enemies.append(ABATIS.make(x=randint(100, 860), y=Enemy.LINE_T, hldgs=enemies, angle=randint(60, 120)))
                 enemies.append(PILLBOX.make(x=randint(100, 860), y=Enemy.LINE_T, hldgs=enemies))
-            case 600:
+            case _ if tmr == 270*30:
                 enemies.append(BOSS.make(x=480, y=int(Enemy.LINE_T/2), hldgs=enemies))
-        # if tmr % 10 != 0: return
-        # match tmr:
-        #     case _ if tmr < 450: enemies.append(RED_CRAFT.make(x=randint(20, 940), y=Enemy.LINE_T, hldgs=enemies))
-        #     case _ if tmr < 900: enemies.append(BLUE_CRAFT.make(x=randint(20, 940), y=Enemy.LINE_T, hldgs=enemies))
-        #     case _ if tmr < 1350: enemies.append(ABATIS.make(x=randint(100, 860), y=Enemy.LINE_T, hldgs=enemies, angle=randint(60, 120)))
-        #     case _ if tmr < 1800: enemies.append(PILLBOX.make(x=randint(100, 860), y=Enemy.LINE_T, hldgs=enemies))
 
 
 def elapse_pillbox(enemy: Enemy) -> None:
@@ -72,4 +85,4 @@ RED_CRAFT = EnemyFactory(nega=pygame.image.load("image_gl/enemy1.png"), name="Re
 BLUE_CRAFT = EnemyFactory(nega=pygame.image.load("image_gl/enemy2.png"), name="BlueCraft", speed=12)
 ABATIS = EnemyFactory(nega=pygame.image.load("image_gl/enemy3.png"), name="Abatis", speed=6, hp=3)
 PILLBOX = EnemyFactory(nega=pygame.image.load("image_gl/enemy4.png"), name="Pillbox", speed=12, hp=2, elapse_func=elapse_pillbox)
-BOSS = EnemyFactory(nega=pygame.image.load("image_gl/enemy_boss.png"), name="Boss", speed=4, hp=50, elapse_func=elapse_boss, is_boss=True)
+BOSS = EnemyFactory(nega=pygame.image.load("image_gl/enemy_boss.png"), name="Boss", speed=4, hp=200, elapse_func=elapse_boss, is_boss=True)
