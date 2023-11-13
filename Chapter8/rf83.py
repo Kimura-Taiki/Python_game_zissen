@@ -49,8 +49,7 @@ def main() -> None: # メインループ
         s_ship.hp += 1
         score += 100
         if enemy.is_boss:
-            dx, dy = int(enemy.rect.w/2), int(enemy.rect.h/2)
-            effects.extend(Effect(x=enemy.x+randint(-dx, dx), y=enemy.y+randint(-dy, dy), hldgs=effects) for i in range(10))
+            effects.extend(enemy.internal_explosion(effects=effects) for i in range(10))
             SE_EXPLOSION.play()
             index_shift(new_idx=3)
     Enemy.shot_down_func = shot_down_enemy

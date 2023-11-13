@@ -62,8 +62,7 @@ class Enemy(Sprite):
         
         Conflict側で抱えてしまうと被弾時処理が嵩張りがち且つ敵個体毎に処理が変わる為、
         Enemyクラスに被弾時処理を委譲しています。'''
-        dx, dy = int(self.rect.w/2), int(self.rect.h/2)
-        effects.append(Effect(x=self.x+randint(-dx, dx), y=self.y+randint(-dy, dy), hldgs=effects))
+        effects.append(self.internal_explosion(effects=effects))
         SE_EXPLOSION.play()
         if self.is_boss:
             self.flash_duration = 3
@@ -72,6 +71,11 @@ class Enemy(Sprite):
         if self.hp <= 0:
             self.shot_down_func()
             self.hldgs.remove(self)
+
+    def internal_explosion(self, effects: list[Effect]) -> Effect:
+        '''敵機のランダム位置で発生する爆風を返します。'''
+        dx, dy = int(self.rect.w/2), int(self.rect.h/2)
+        return Effect(x=self.x+randint(-dx, dx), y=self.y+randint(-dy, dy), hldgs=effects)
 
     @classmethod
     def move_linearly(cls, enemy: 'Enemy') -> None:
