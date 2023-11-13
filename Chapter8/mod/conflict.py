@@ -13,20 +13,13 @@ from mod.starship import StarShip
 
 
 class Conflict():
-    @staticmethod
-    def __nie_shoot_down() -> None: raise NotImplementedError("Conflict.shoot_down_funcが未実装\n敵機撃墜時の命令が設定されていません")
-    shoot_down_func: Callable[[], None] = __nie_shoot_down
-    # @staticmethod
-    # def __nie_damaged() -> None: raise NotImplementedError("Conflict.damaged_funcが未実装\n自機被弾時の命令が設定されていません")
-    # damaged_func: Callable[[], None] = __nie_damaged
-
     @classmethod
     def hit_bullet_and_enemy(cls, bullets: list[Bullet], enemies: list[Enemy], effects: list[Effect]) -> None:
         for enemy in [enemy for enemy in enemies if enemy.breakable == True][:]:
             hitten: list[Bullet] = pygame.sprite.spritecollide(sprite=enemy, group=pygame.sprite.Group(bullets), dokill=False)
             for bullet in hitten:
                 bullet.hldgs.remove(bullet)
-                enemy.damaged(damage=1, effects=effects, shoot_down_func=cls.shoot_down_func)
+                enemy.damaged(damage=1, effects=effects)
                 break
 
     @classmethod

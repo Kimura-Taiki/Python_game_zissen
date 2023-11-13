@@ -23,6 +23,9 @@ class Enemy(Sprite):
     def pass_func(enemy: Any=None) -> None:
         pass
 
+    def _not_implemented_shot_down(self) -> None: raise NotImplementedError("Enemy.shot_down_funcが未実装\n被撃墜時の命令が設定されていません")
+    shot_down_func: Callable[['Enemy'], None] = _not_implemented_shot_down
+
     def __init__(self, x: int, y: int, hldgs: Any=None) -> None:
         super().__init__(group=[], image=self.DEFAULT_IMG, cx=x, cy=y)
         self.hldgs: list[Enemy] = hldgs
@@ -54,7 +57,7 @@ class Enemy(Sprite):
             self.hldgs.remove(self)
         return False
 
-    def damaged(self, damage: int, effects: list[Effect], shoot_down_func: Callable[[], None]) -> None:
+    def damaged(self, damage: int, effects: list[Effect]) -> None:
         '''Enemyの被弾時処理です。
         
         Conflict側で抱えてしまうと被弾時処理が嵩張りがち且つ敵個体毎に処理が変わる為、
@@ -67,7 +70,7 @@ class Enemy(Sprite):
             self.image = pygame.transform.rotozoom(surface=pygame.image.load("image_gl/enemy_boss_f.png"), angle=180, scale=1.0)
         self.hp -= damage
         if self.hp <= 0:
-            shoot_down_func()
+            self.shot_down_func()
             self.hldgs.remove(self)
 
     @classmethod

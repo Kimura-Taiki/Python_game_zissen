@@ -43,16 +43,16 @@ def main() -> None: # メインループ
     SceneIndex.lose_game = partial(index_shift, new_idx=2)
     SceneIndex.clear_game = partial(index_shift, new_idx=3)
 
-    def shot_down_enemy() -> None:
+    def shot_down_enemy(enemy: Enemy) -> None:
         nonlocal score
         s_ship.hp += 1
         score += 100
-    Conflict.shoot_down_func = shot_down_enemy
+    Enemy.shot_down_func = shot_down_enemy
 
     def start_game() -> None:
         nonlocal score
-        # index_shift(new_idx=1)
-        index_shift(new_idx=1, new_tmr=590) # ボスの確認用ね
+        index_shift(new_idx=1)
+        # index_shift(new_idx=1, new_tmr=590) # ボスの確認用ね
         score = 0
         s_ship.reset()
         bullets.clear()
