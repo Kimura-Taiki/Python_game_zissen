@@ -37,7 +37,7 @@ class Enemy(Sprite):
         self.mode: int = 0
         self.elapse_func: Callable[[Enemy], None] = self.move_linearly
         self.fire: Callable[[Enemy], None] = self.pass_func
-    
+
     def elapse(self) -> Literal[False]:
         '''Enemyをangleに従って直線運動させます。
 
@@ -50,17 +50,17 @@ class Enemy(Sprite):
                 self.image = self.nega
                 self.roll_image(angle=90)
         (self.fire)(self)
-        if self.rect.centerx < self.LINE_L or self.LINE_R < self.rect.centerx or self.rect.centery < self.LINE_T or self.LINE_B < self.rect.centery:
+        if self.x < self.LINE_L or self.LINE_R < self.x or self.y < self.LINE_T or self.LINE_B < self.y:
             self.hldgs.remove(self)
         return False
-    
+
     def damaged(self, damage: int, effects: list[Effect], shoot_down_func: Callable[[], None]) -> None:
         '''Enemyの被弾時処理です。
         
         Conflict側で抱えてしまうと被弾時処理が嵩張りがち且つ敵個体毎に処理が変わる為、
         Enemyクラスに被弾時処理を委譲しています。'''
         dx, dy = int(self.rect.w/2), int(self.rect.h/2)
-        effects.append(Effect(x=self.rect.centerx+randint(-dx, dx), y=self.rect.centery+randint(-dy, dy), hldgs=effects))
+        effects.append(Effect(x=self.x+randint(-dx, dx), y=self.y+randint(-dy, dy), hldgs=effects))
         SE_EXPLOSION.play()
         if self.is_boss:
             self.flash_duration = 3
@@ -74,5 +74,5 @@ class Enemy(Sprite):
     def move_linearly(cls, enemy: 'Enemy') -> None:
         '''デフォルトの敵機運動としてself.elapseへ代入されている命令です。
         単純な等速直線運動を行います。'''
-        enemy.rect.centerx += int(enemy.speed*cos(radians(enemy.angle)))
-        enemy.rect.centery += int(enemy.speed*sin(radians(enemy.angle)))
+        enemy.x += int(enemy.speed*cos(radians(enemy.angle)))
+        enemy.y += int(enemy.speed*sin(radians(enemy.angle)))

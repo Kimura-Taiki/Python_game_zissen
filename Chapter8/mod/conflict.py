@@ -38,7 +38,7 @@ class Conflict():
         if hitten == []: return
         s_ship.muteki = 60 if s_ship.muteki == 0 else s_ship.muteki
         for enemy in hitten[:]:
-            effects.append(Effect(x=enemy.rect.centerx, y=enemy.rect.centery, hldgs=effects))
+            effects.append(Effect(x=enemy.x, y=enemy.y, hldgs=effects))
             SE_DAMAGE.play()
             s_ship.hp -= 10
             if not enemy.is_boss:

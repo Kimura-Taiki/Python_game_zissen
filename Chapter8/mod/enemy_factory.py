@@ -33,7 +33,7 @@ class EnemyFactory():
                 enemies.append(ABATIS.make(x=randint(100, 860), y=Enemy.LINE_T, hldgs=enemies, angle=randint(60, 120)))
                 enemies.append(PILLBOX.make(x=randint(100, 860), y=Enemy.LINE_T, hldgs=enemies))
             case 600:
-                enemies.append(BOSS.make(x=480, y=Enemy.LINE_T/2, hldgs=enemies))
+                enemies.append(BOSS.make(x=480, y=int(Enemy.LINE_T/2), hldgs=enemies))
         # if tmr % 10 != 0: return
         # match tmr:
         #     case _ if tmr < 450: enemies.append(RED_CRAFT.make(x=randint(20, 940), y=Enemy.LINE_T, hldgs=enemies))
@@ -55,17 +55,16 @@ def elapse_boss(enemy: Enemy) -> None:
     Enemy.move_linearly(enemy=enemy)
     match enemy.mode:
         case 0:
-            if enemy.rect.centery >= 200: enemy.mode, enemy.angle = 1, 180
+            if enemy.y >= 200: enemy.mode, enemy.angle = 1, 180
         case 1:
-            if enemy.rect.centerx < 200:
-                enemy.hldgs.extend(BULLET.make(x=enemy.rect.centerx, y=enemy.rect.centery+80, hldgs=enemy.hldgs, angle=i*20) for i in range(0, 10))
+            if enemy.x < 200:
+                enemy.hldgs.extend(BULLET.make(x=enemy.x, y=enemy.y+80, hldgs=enemy.hldgs, angle=i*20) for i in range(0, 10))
                 enemy.mode, enemy.angle = 2, 0
         case 2:
-            if enemy.rect.centerx > 760:
-                enemy.hldgs.extend(BULLET.make(x=enemy.rect.centerx, y=enemy.rect.centery+80, hldgs=enemy.hldgs, angle=i*20) for i in range(0, 10))
+            if enemy.x > 760:
+                enemy.hldgs.extend(BULLET.make(x=enemy.x, y=enemy.y+80, hldgs=enemy.hldgs, angle=i*20) for i in range(0, 10))
                 enemy.mode, enemy.angle = 1, 180
-    if enemy.hp < 100 and enemy.timer % 30 == 0: enemy.hldgs.append(BULLET.make(x=enemy.rect.centerx, y=enemy.rect.centery+80, hldgs=enemy.hldgs, angle=randint(60, 120)))
-        
+    if enemy.hp < 100 and enemy.timer % 30 == 0: enemy.hldgs.append(BULLET.make(x=enemy.x, y=enemy.y+80, hldgs=enemy.hldgs, angle=randint(60, 120)))
 
 
 BULLET = EnemyFactory(nega=pygame.image.load("image_gl/enemy0.png"), name="Bullet", speed=6, breakable=False)
