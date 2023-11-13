@@ -7,6 +7,7 @@ pygame.init()
 from pygame.locals import K_SPACE
 from functools import partial
 from typing import Callable
+from random import randint
 
 from mod.solve_event import event_mapping, solve_event # 解決すべきpygameイベントを定義
 from mod.screen import screen # ウィンドウを作成
@@ -18,7 +19,7 @@ from mod.conflict import Conflict # 接触時判定の命令を提供
 from mod.enemy_factory import EnemyFactory # 敵の生成クラスを提供
 from mod.effect import Effect # 爆風のエフェクトを提供
 from mod.title import Title, draw_text, SILVER # タイトル画面他ゲームの外枠を提供
-from mod.sound import adjusted_bgm
+from mod.sound import adjusted_bgm, SE_EXPLOSION
 from mod.index import SceneIndex
 from mod.shoot_bullet import ShootBullet # 自弾を発射する機能を提供
 
@@ -47,13 +48,17 @@ def main() -> None: # メインループ
         nonlocal score, effects
         s_ship.hp += 1
         score += 100
-        if enemy.is_boss: index_shift(new_idx=3)
+        if enemy.is_boss:
+            dx, dy = int(enemy.rect.w/2), int(enemy.rect.h/2)
+            effects.extend(Effect(x=enemy.x+randint(-dx, dx), y=enemy.y+randint(-dy, dy), hldgs=effects) for i in range(10))
+            SE_EXPLOSION.play()
+            index_shift(new_idx=3)
     Enemy.shot_down_func = shot_down_enemy
 
     def start_game() -> None:
         nonlocal score
-        index_shift(new_idx=1)
-        # index_shift(new_idx=1, new_tmr=590) # ボスの確認用ね
+        # index_shift(new_idx=1)
+        index_shift(new_idx=1, new_tmr=590) # ボスの確認用ね
         score = 0
         s_ship.reset()
         bullets.clear()
