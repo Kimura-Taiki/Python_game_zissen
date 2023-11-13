@@ -44,9 +44,10 @@ def main() -> None: # メインループ
     SceneIndex.clear_game = partial(index_shift, new_idx=3)
 
     def shot_down_enemy(enemy: Enemy) -> None:
-        nonlocal score
+        nonlocal score, effects
         s_ship.hp += 1
         score += 100
+        if enemy.is_boss: index_shift(new_idx=3)
     Enemy.shot_down_func = shot_down_enemy
 
     def start_game() -> None:
