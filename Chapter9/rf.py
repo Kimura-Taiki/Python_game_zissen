@@ -11,10 +11,12 @@ BORD_COL = ["white", "silver", "gray"]
 h = 2
 y = 300
 for i in range(1, 24):
-    w = i*i*1.5
-    x = 400 - w/2
+    uw = i*i*1.5
+    ux = 400 - uw/2
+    bw = (i+1)*(i+1)*1.5
+    bx = 400-bw/2
     col = BORD_COL[i % 3]
-    canvas.create_rectangle(x, y, x+w, y+h, fill=col)
+    canvas.create_polygon(ux, y, ux+uw, y, bx+bw, y+h, bx, y+h, fill=col)
     y = y + h
     h = h + 1
 
