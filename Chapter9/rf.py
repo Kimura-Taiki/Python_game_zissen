@@ -13,7 +13,7 @@ y = 300
 for i in range(1, 24):
     w = i*i*1.5
     x = 400 - w/2
-    col = BORD_COL[i%3]
+    col = BORD_COL[i % 3]
     canvas.create_rectangle(x, y, x+w, y+h, fill=col)
     y = y + h
     h = h + 1
