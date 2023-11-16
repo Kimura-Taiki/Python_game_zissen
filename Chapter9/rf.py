@@ -8,12 +8,14 @@ canvas.pack()
 canvas.create_rectangle(0, 300, 800, 600, fill="green")
 
 BORD_COL = ["white", "silver", "gray"]
-for i in range(1, 25):
-    w = i*33
-    h = 12
+h = 2
+y = 300
+for i in range(1, 24):
+    w = i*i*1.5
     x = 400 - w/2
-    y = 288 + i*h
     col = BORD_COL[i%3]
     canvas.create_rectangle(x, y, x+w, y+h, fill=col)
+    y = y + h
+    h = h + 1
 
 root.mainloop()
