@@ -1,21 +1,15 @@
 import pygame
 import sys
-import math
+from math import sin, radians
 from pygame.locals import *
 
 BOARD = 120
 '''描画する板の枚数'''
-CMAX = BOARD*4
-'''コースの全長、板の枚数で定義されている。１周するとまた最初から数える。'''
-curve = [0]*CMAX
-'''コースの該当地点での見え方の曲率。'''
 
 
-def make_course():
+def make_course() -> list[float]:
     '''コースの曲率を作る関数。'''
-    for i in range(360):
-        curve[BOARD+i] = int(5*math.sin(math.radians(i)))
-
+    return [5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)]
 
 def main(): # メイン処理
     pygame.init()
@@ -26,13 +20,16 @@ def main(): # メイン処理
     img_bg = pygame.image.load("image_pr/bg.png").convert()
 
     # 道路の板の基本形状を計算
-    BOARD_W = [0]*BOARD
-    BOARD_H = [0]*BOARD
-    for i in range(BOARD):
-        BOARD_W[i] = 10+(BOARD-i)*(BOARD-i)/12
-        BOARD_H[i] = 3.4*(BOARD-i)/BOARD
+    BOARD_W = [10+(BOARD-i)**2/12 for i in range(BOARD)]
+    '''板の横幅です。0が手前、BOARD-1が最遠です。'''
+    BOARD_H = [3.4*(BOARD-i)/BOARD for i in range(BOARD)]
+    '''板の縦幅です。0が手前、BOARD-1が最遠です。'''
 
-    make_course()
+    curve = make_course()
+    '''コースの該当地点での曲率です。実際に描画する際には視点位置からの曲率積分を使います。'''
+    CMAX = len(curve)
+    '''コースの全長、板の枚数で定義されている。１周するとまた最初から数える。'''
+
 
     car_y = 0
 
@@ -47,11 +44,11 @@ def main(): # メイン処理
             car_y = (car_y+1)%CMAX
 
         # 描画用の道路のX座標を計算
-        di = 0
-        board_x = [0]*BOARD
-        for i in range(BOARD):
-            di += curve[(car_y+i)%CMAX]
-            board_x[i] = 400 - BOARD_W[i]/2 + di/2
+        di: float = 0.0
+        '''視点位置からの曲率積分です。'''
+        board_x: list[float] = [400-BOARD_W[i]/2+(di := di+curve[(car_y+1) % CMAX])/2 for i in range(BOARD)]
+        '''板の左下X座標です。左上X座標はboard_x[i-1]で求めます。'''
+        
 
         sy = 400 # 道路を描き始める位置
 
@@ -69,7 +66,12 @@ def main(): # メイン処理
             col = (160,160,160)
             if (car_y+i)%12 == 0:
                 col = (255,255,255)
-            pygame.draw.polygon(screen, col, [[ux, uy], [ux+uw, uy], [bx+bw, by], [bx, by]])
+            match car_y+i:
+                case 480: col = (0, 0, 0)
+                case 120: col = (255, 0, 0)
+                case 240: col = (0, 128, 0)
+                case 360: col = (0, 0, 255)
+            pygame.draw.polygon(surface=screen, color=col, points=[[ux, uy], [ux+uw, uy], [bx+bw, by], [bx, by]])
 
         pygame.display.update()
         clock.tick(60)
