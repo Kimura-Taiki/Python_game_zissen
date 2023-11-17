@@ -1,34 +1,56 @@
 import tkinter
+import math
+
+curve = 0
+undulation = 0
 
 def key_down(e):
+    global curve, undulation
     key = e.keysym
     if key == "Up":
-        draw_road(0)
+        undulation = undulation - 20
+    if key == "Down":
+        undulation = undulation + 20
     if key == "Left":
-        draw_road(-10)
+        curve = curve - 5
     if key == "Right":
-        draw_road(10)
+        curve = curve + 5
+    draw_road(curve, undulation)
 
-BORD_COL = ["white", "silver", "gray"]
-def draw_road(di):
+updown = [0]*24
+for i in range(23, -1, -1):
+    updown[i] = math.sin(math.radians(180*i/23))
+
+BORD_COL = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"]
+def draw_road(di, ud):
     canvas.delete("ROAD")
     h = 24
     y = 600 - h
     for i in range(23, 0, -1):
         uw = (i-1)*(i-1)*1.5
         ux = 400 - uw/2 + di*(23-(i-1))
+        uy = y + int(updown[i-1]*ud)
         bw = i*i*1.5
         bx = 400 - bw/2 + di*(23-i)
-        col = BORD_COL[i%3]
-        canvas.create_polygon(ux, y, ux+uw, y, bx+bw, y+h, bx, y+h, fill=col, tag="ROAD")
+        by = y + h + int(updown[i]*ud)
+        col = BORD_COL[(6-tmr%7+i)%7]
+        canvas.create_polygon(ux, uy, ux+uw, uy, bx+bw, by, bx, by, fill=col, tag="ROAD")
         h = h - 1
         y = y - h
+
+tmr = 0
+def main():
+    global tmr
+    tmr = tmr + 1
+    draw_road(curve, undulation)
+    root.after(200, main)
 
 root = tkinter.Tk()
 root.title("道路を描く")
 root.bind("<Key>", key_down)
-canvas = tkinter.Canvas(width=800, height=600, bg="blue")
+canvas = tkinter.Canvas(width=800, height=600, bg="black")
 canvas.pack()
-canvas.create_rectangle(0, 300, 800, 600, fill="green")
-canvas.create_text(400, 100, text="カーソルキーの上、左、右を押してください", fill="white")
+canvas.create_rectangle(0, 300, 800, 600, fill="gray")
+canvas.create_text(400, 100, text="カーソルキーで道路を変化させます", fill="white")
+main()
 root.mainloop()
