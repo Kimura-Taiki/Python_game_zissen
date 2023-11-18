@@ -19,10 +19,18 @@ def process_input_events(move_forward: Callable[[], None]) -> None:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-
     key = pygame.key.get_pressed()
     if key[K_UP]:
         move_forward()
+
+def trapezoid_color(course_point: int) -> tuple[int, int, int]:
+    match course_point:
+        case 480: return (0, 0, 0)
+        case 120: return (255, 0, 0)
+        case 240: return (0, 128, 0)
+        case 360: return (0, 0, 255)
+        case _ if (course_point) % 12 == 0: return (255, 255, 255)
+        case _: return (160, 160, 160)
 
 
 def main(): # メイン処理
@@ -66,16 +74,7 @@ def main(): # メイン処理
 
         # 描画用データをもとに道路を描く
         for i in range(BOARD-1, 0, -1):
-            col = (160,160,160)
-            if (car_y+i)%12 == 0:
-                col = (255,255,255)
-            match car_y+i:
-                case 480: col = (0, 0, 0)
-                case 120: col = (255, 0, 0)
-                case 240: col = (0, 128, 0)
-                case 360: col = (0, 0, 255)
-                # case _ if (car_y+i) % 12 == 0:
-            pygame.draw.polygon(surface=screen, color=col, 
+            pygame.draw.polygon(surface=screen, color=trapezoid_color(course_point=car_y+i),
                                 points=[[board_lx[i  ], board_by[i  ]], [board_rx[i  ], board_by[i  ]],
                                         [board_rx[i-1], board_by[i-1]], [board_lx[i-1], board_by[i-1]]])
 
