@@ -2,19 +2,33 @@ import pygame
 import sys
 from math import sin, radians
 from pygame.locals import *
+from typing import Callable
 
 BOARD = 120
 '''描画する板の枚数'''
+WX = 800
+WY = 600
 
 
 def make_course() -> list[float]:
     '''コースの曲率を作る関数。'''
     return [5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)]
 
+def process_input_events(move_forward: Callable[[], None]) -> None:
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+
+    key = pygame.key.get_pressed()
+    if key[K_UP]:
+        move_forward()
+
+
 def main(): # メイン処理
     pygame.init()
     pygame.display.set_caption("Python Racer")
-    screen = pygame.display.set_mode((800, 600))
+    screen = pygame.display.set_mode((WX, WY))
     clock = pygame.time.Clock()
 
     img_bg = pygame.image.load("image_pr/bg.png").convert()
@@ -34,20 +48,19 @@ def main(): # メイン処理
     car_y = 0
 
     while True:
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
+        def move_forward() -> None:
+            nonlocal car_y, CMAX
+            car_y = (car_y+1) % CMAX
+        process_input_events(move_forward=move_forward)
 
-        key = pygame.key.get_pressed()
-        if key[K_UP]:
-            car_y = (car_y+1)%CMAX
 
         # 描画用の道路のX座標を計算
         di: float = 0.0
         '''視点位置からの曲率積分です。'''
-        board_x: list[float] = [400-BOARD_W[i]/2+(di := di+curve[(car_y+1) % CMAX])/2 for i in range(BOARD)]
+        board_x: list[float] = [WX/2-BOARD_W[i]/2+(di := di+curve[(car_y+1) % CMAX])/2 for i in range(BOARD)]
         '''板の左下X座標です。左上X座標はboard_x[i-1]で求めます。'''
+        board_lx: list[float] = [WX/2-BOARD_W[i]/2+(di := di+curve[(car_y+1) % CMAX])/2 for i in range(BOARD)]
+        board_rx: list[float] = [WX-board_lx[i] for i in range(BOARD)]
         
 
         sy = 400 # 道路を描き始める位置
