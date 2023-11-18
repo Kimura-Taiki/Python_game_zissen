@@ -54,28 +54,18 @@ def main(): # メイン処理
         process_input_events(move_forward=move_forward)
 
 
-        # 描画用の道路のX座標を計算
         di: float = 0.0
-        '''視点位置からの曲率積分です。'''
-        board_x: list[float] = [WX/2-BOARD_W[i]/2+(di := di+curve[(car_y+1) % CMAX])/2 for i in range(BOARD)]
-        '''板の左下X座標です。左上X座標はboard_x[i-1]で求めます。'''
-        board_lx: list[float] = [WX/2-BOARD_W[i]/2+(di := di+curve[(car_y+1) % CMAX])/2 for i in range(BOARD)]
-        board_rx: list[float] = [WX-board_lx[i] for i in range(BOARD)]
-        
+        board_lx: list[float] = [WX/2-BOARD_W[i]/2+(di := di+curve[(car_y+i) % CMAX])/2 for i in range(BOARD)]
+        di: float = 0.0
+        board_rx: list[float] = [WX/2+BOARD_W[i]/2+(di := di+curve[(car_y+i) % CMAX])/2 for i in range(BOARD)]
+        di: float = 400.0
+        board_by: list[float] = [(di := di+3.4*i/BOARD) for i in range(BOARD)][::-1]
 
-        sy = 400 # 道路を描き始める位置
 
         screen.blit(img_bg, [0, 0])
 
         # 描画用データをもとに道路を描く
         for i in range(BOARD-1, 0, -1):
-            ux = board_x[i]
-            uy = sy
-            uw = BOARD_W[i]
-            sy = sy + BOARD_H[i]
-            bx = board_x[i-1]
-            by = sy
-            bw = BOARD_W[i-1]
             col = (160,160,160)
             if (car_y+i)%12 == 0:
                 col = (255,255,255)
@@ -84,7 +74,10 @@ def main(): # メイン処理
                 case 120: col = (255, 0, 0)
                 case 240: col = (0, 128, 0)
                 case 360: col = (0, 0, 255)
-            pygame.draw.polygon(surface=screen, color=col, points=[[ux, uy], [ux+uw, uy], [bx+bw, by], [bx, by]])
+                # case _ if (car_y+i) % 12 == 0:
+            pygame.draw.polygon(surface=screen, color=col, 
+                                points=[[board_lx[i  ], board_by[i  ]], [board_rx[i  ], board_by[i  ]],
+                                        [board_rx[i-1], board_by[i-1]], [board_lx[i-1], board_by[i-1]]])
 
         pygame.display.update()
         clock.tick(60)
