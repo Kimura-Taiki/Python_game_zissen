@@ -3,30 +3,7 @@ import sys
 from math import sin, radians
 from pygame.locals import K_UP, QUIT
 from typing import Callable
-
-BOARD = 120
-'''描画する板の枚数'''
-WX = 800
-WY = 600
-# 道路の板の基本形状を計算
-BOARD_W = [10+(BOARD-i)**2/12 for i in range(BOARD)]
-'''板の横幅です。0が手前、BOARD-1が最遠です。'''
-BOARD_H = [3.4*(BOARD-i)/BOARD for i in range(BOARD)]
-'''板の縦幅です。0が手前、BOARD-1が最遠です。'''
-di: float = 400.0
-BOARD_BY: list[float] = [(di := di+3.4*i/BOARD) for i in range(BOARD)][::-1]
-'''板の描画Y座標です。0が手前、BOARD-1が最遠です。'''
-O1ST_QUARTER = 120
-O2ND_QUARTER = 240
-O3RD_QUARTER = 360
-O4TH_QUARTER = 480
-RED = (255, 0, 0)
-GREEN = (0, 128, 0)
-BLUE = (0, 0, 255)
-BLACK = (0, 0,0)
-WHITE = (255, 255, 255)
-GRAY = (160, 160, 160)
-PNG_BG = "image_pr/bg.png"
+from mod.const import *
 
 def process_input_events(move_forward: Callable[[], None]) -> None:
     '''キー入力に対応した処理を行います。実処理は関数として注入してもらいます。'''
@@ -38,7 +15,7 @@ def process_input_events(move_forward: Callable[[], None]) -> None:
     if key[K_UP]:
         move_forward()
 
-def trapezoid_color(course_point: int) -> tuple[int, int, int]:
+def trapezoid_color(course_point: int) -> pygame.Color:
     '''道路ポリゴンの色を作ります。スタートからの絶対距離で色分けします。'''
     if course_point == O1ST_QUARTER: return RED
     elif course_point == O2ND_QUARTER: return GREEN
@@ -48,20 +25,37 @@ def trapezoid_color(course_point: int) -> tuple[int, int, int]:
     return GRAY
 
 
-def main(): # メイン処理
+# class RacerGame():
+#     pygame.init()
+#     pygame.display.set_caption("Python Racer")
+#     screen = pygame.display.set_mode((WX, WY))
+#     '''pygame.surface.Surface : ゲーム画面となるウィンドウです。'''
+#     clock = pygame.time.Clock()
+#     '''pygame.time.Clock : Clock.tick命令用に抱えているClockインスタンスです。'''
+#     IMG_BG = pygame.image.load(PNG_BG).convert()
+
+#     CURVE = [5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)]
+#     '''コースの該当地点での曲率です。実際に描画する際には視点位置からの曲率積分を使います。'''
+#     CMAX = len(CURVE)
+#     '''コースの全長、板の枚数で定義されている。１周するとまた最初から数える。'''
+#     car_y = 0
+#     '''コース上でのスタート地点からの距離を板の枚数で指定しています。'''
+
+
+
+
+def main() -> None: # メイン処理
     pygame.init()
     pygame.display.set_caption("Python Racer")
     screen = pygame.display.set_mode((WX, WY))
     clock = pygame.time.Clock()
     IMG_BG = pygame.image.load(PNG_BG).convert()
-
     curve = [5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)]
     '''コースの該当地点での曲率です。実際に描画する際には視点位置からの曲率積分を使います。'''
     CMAX = len(curve)
     '''コースの全長、板の枚数で定義されている。１周するとまた最初から数える。'''
-
-
     car_y = 0
+    '''コース上でのスタート地点からの距離を板の枚数で指定しています。'''
 
     while True:
         def move_forward() -> None:
