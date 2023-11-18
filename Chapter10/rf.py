@@ -1,7 +1,7 @@
 import pygame
 import sys
 from math import sin, radians
-from pygame.locals import *
+from pygame.locals import K_UP, QUIT
 from typing import Callable
 
 BOARD = 120
@@ -16,12 +16,20 @@ BOARD_H = [3.4*(BOARD-i)/BOARD for i in range(BOARD)]
 di: float = 400.0
 BOARD_BY: list[float] = [(di := di+3.4*i/BOARD) for i in range(BOARD)][::-1]
 '''板の描画Y座標です。0が手前、BOARD-1が最遠です。'''
-
-def make_course() -> list[float]:
-    '''コースの曲率を作る関数。'''
-    return [5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)]
+O1ST_QUARTER = 120
+O2ND_QUARTER = 240
+O3RD_QUARTER = 360
+O4TH_QUARTER = 480
+RED = (255, 0, 0)
+GREEN = (0, 128, 0)
+BLUE = (0, 0, 255)
+BLACK = (0, 0,0)
+WHITE = (255, 255, 255)
+GRAY = (160, 160, 160)
+PNG_BG = "image_pr/bg.png"
 
 def process_input_events(move_forward: Callable[[], None]) -> None:
+    '''キー入力に対応した処理を行います。実処理は関数として注入してもらいます。'''
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
@@ -31,13 +39,13 @@ def process_input_events(move_forward: Callable[[], None]) -> None:
         move_forward()
 
 def trapezoid_color(course_point: int) -> tuple[int, int, int]:
-    match course_point:
-        case 480: return (0, 0, 0)
-        case 120: return (255, 0, 0)
-        case 240: return (0, 128, 0)
-        case 360: return (0, 0, 255)
-        case _ if (course_point) % 12 == 0: return (255, 255, 255)
-        case _: return (160, 160, 160)
+    '''道路ポリゴンの色を作ります。スタートからの絶対距離で色分けします。'''
+    if course_point == O1ST_QUARTER: return RED
+    elif course_point == O2ND_QUARTER: return GREEN
+    elif course_point == O3RD_QUARTER: return BLUE
+    elif course_point == O4TH_QUARTER: return BLACK
+    elif course_point%12 == 0: return WHITE
+    return GRAY
 
 
 def main(): # メイン処理
@@ -45,10 +53,9 @@ def main(): # メイン処理
     pygame.display.set_caption("Python Racer")
     screen = pygame.display.set_mode((WX, WY))
     clock = pygame.time.Clock()
+    IMG_BG = pygame.image.load(PNG_BG).convert()
 
-    img_bg = pygame.image.load("image_pr/bg.png").convert()
-
-    curve = make_course()
+    curve = [5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)]
     '''コースの該当地点での曲率です。実際に描画する際には視点位置からの曲率積分を使います。'''
     CMAX = len(curve)
     '''コースの全長、板の枚数で定義されている。１周するとまた最初から数える。'''
@@ -67,7 +74,7 @@ def main(): # メイン処理
         di: float = 0.0
         board_rx: list[float] = [WX/2+BOARD_W[i]/2+(di := di+curve[(car_y+i) % CMAX])/2 for i in range(BOARD)]
 
-        screen.blit(img_bg, [0, 0])
+        screen.blit(IMG_BG, [0, 0])
 
         # 描画用データをもとに道路を描く
         for i in range(BOARD-1, 0, -1):
