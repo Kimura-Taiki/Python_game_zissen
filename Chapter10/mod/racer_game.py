@@ -5,6 +5,7 @@ from pygame.locals import K_UP, QUIT
 from typing import Callable
 from mod.const import *
 
+
 def process_input_events(move_forward: Callable[[], None]) -> None:
     '''キー入力に対応した処理を行います。実処理は関数として注入してもらいます。'''
     for event in pygame.event.get():
@@ -14,6 +15,7 @@ def process_input_events(move_forward: Callable[[], None]) -> None:
     key = pygame.key.get_pressed()
     if key[K_UP]:
         move_forward()
+
 
 def trapezoid_color(course_point: int) -> pygame.Color:
     '''道路ポリゴンの色を作ります。スタートからの絶対距離で色分けします。'''
@@ -47,7 +49,7 @@ class RacerGame():
 
     def _move_forward(self) -> None:
         self.car_y = (self.car_y+1) % self.CMAX
-        self.vertical = (self.vertical-sum(self.CURVE[(self.car_y+i) % self.CMAX] for i in range(BOARD))/30+800) % 800
+        self.vertical = (self.vertical-sum(self.CURVE[(self.car_y+i) % self.CMAX] for i in range(BOARD))/30+WX) % WX
 
     def mainloop(self) -> None:
         process_input_events(move_forward=self._move_forward)
@@ -57,7 +59,7 @@ class RacerGame():
         di2: float = 0.0
         board_rx: list[float] = [WX/2+BOARD_W[i]/2+(di2 := di2+self.CURVE[(self.car_y+i) % self.CMAX])/2 for i in range(BOARD)]
 
-        self.screen.blit(self.IMG_BG, [self.vertical-800, 0])
+        self.screen.blit(self.IMG_BG, [self.vertical-WX, 0])
         self.screen.blit(self.IMG_BG, [self.vertical, 0])
 
         # 描画用データをもとに道路を描く

@@ -18,7 +18,8 @@ BOARD_H: Final = [3.4 * (BOARD - i) / BOARD for i in range(BOARD)]
 
 di: float
 di = 400.0
-BOARD_BY: Final[list[float]] = [(di := di + 3.4 * i / BOARD) for i in range(BOARD)][::-1]
+BOARD_BY: Final[
+  list[float]] = [(di := di + 3.4 * i / BOARD) for i in range(BOARD)][::-1]
 '''板の描画Y座標です。0が手前、BOARD-1が最遠です。'''
 
 O1ST_QUARTER: Final = 120
