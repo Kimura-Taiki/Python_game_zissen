@@ -56,16 +56,6 @@ class RacerGame():
         self.clock = pygame.time.Clock()
         '''pygame.time.Clock : ゲームループのフレームレートを制御するためのClockインスタンスです。
         このクロックは主に `Clock.tick` メソッドを使用して一定のフレームレートを維持します。'''
-        # self.IMG_BG = pygame.image.load(PNG_BG).convert()
-        # '''pygame.surface.Surface : 背景の複製元となる面です。'''
-        # self.CURVE = [5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)]
-        # '''コースの該当地点での曲率です。実際に描画する際には視点位置からの曲率積分を使います。'''
-        # self.CURVE = [0.0 for i in range(480)]
-        # '''コースの該当地点での曲率です。今回は直線コースなので、曲率は常時0です。'''
-        # self.UPDOWN = [5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)]
-        # '''コースの該当地点での仰角です。実際に描画する際には視点位置からの仰角積分を使います。'''
-        # self.CMAX = len(self.CURVE)
-        # '''コースの全長、板の枚数で定義されている。１周するとまた最初から数える。'''
         self.COURSE = Course.updown_course()
         '''現在走っているコースです。変更を想定していないので現時点では定数です。
         本来ならRacerGameインスタンス生成時に注入すべき値ですが、今回は面倒なので直埋めします。'''
@@ -76,19 +66,20 @@ class RacerGame():
 
     def _move_forward(self) -> None:
         '''_move_forward: 車を前進させ、背景の横方向の位置を更新します。'''
-        self.car_y = (self.car_y+1) % self.COURSE.CMAX
-        self.vertical = (self.vertical-sum(self.COURSE.CURVE[(self.car_y+i) % self.COURSE.CMAX] for i in range(BOARD))/30+WX) % WX
+        self.car_y = self._mod_car_y(dy=1)
+        self.vertical = (self.vertical-sum(self.COURSE.CURVE[self._mod_car_y(dy=i)] for i in range(BOARD))/30+WX) % WX
 
     def mainloop(self) -> None:
         process_input_events(move_forward=self._move_forward)
 
         di1: float = 0.0
-        board_lx: list[float] = [WX/2-BOARD_W[i]/2+(di1 := di1+self.COURSE.CURVE[(self.car_y+i) % self.COURSE.CMAX])/2 for i in range(BOARD)]
+        # board_lx: list[float] = [WX/2-BOARD_W[i]/2+(di1 := di1+self.COURSE.CURVE[(self.car_y+i) % self.COURSE.CMAX])/2 for i in range(BOARD)]
+        board_lx: list[float] = [WX/2-BOARD_W[i]/2+(di1 := di1+self.COURSE.CURVE[self._mod_car_y(dy=i)])/2 for i in range(BOARD)]
         di2: float = 0.0
-        board_rx: list[float] = [WX/2+BOARD_W[i]/2+(di2 := di2+self.COURSE.CURVE[(self.car_y+i) % self.COURSE.CMAX])/2 for i in range(BOARD)]
+        board_rx: list[float] = [WX/2+BOARD_W[i]/2+(di2 := di2+self.COURSE.CURVE[self._mod_car_y(dy=i)])/2 for i in range(BOARD)]
         ud: float = 0.0
-        board_ud: list[float] = [(ud := ud+self.COURSE.UPDOWN[(self.car_y+i) % self.COURSE.CMAX])/30 for i in range(BOARD)]
-        horizon: int = Y_AT_0_DEGREES+int(sum(self.COURSE.UPDOWN[(self.car_y+i) % self.COURSE.CMAX] for i in range(BOARD))/3)
+        board_ud: list[float] = [(ud := ud+self.COURSE.UPDOWN[self._mod_car_y(dy=i)])/30 for i in range(BOARD)]
+        horizon: int = Y_AT_0_DEGREES+int(sum(self.COURSE.UPDOWN[self._mod_car_y(dy=i)] for i in range(BOARD))/3)
         sy: float = float(horizon)
         board_by: list[float] = [(sy := sy+BOARD_H[BOARD-1-i]*(WY-horizon)/200)-BOARD_UD[BOARD-1-i]*board_ud[BOARD-1-i] for i in range(BOARD)][::-1]
 
@@ -101,8 +92,10 @@ class RacerGame():
             pygame.draw.polygon(surface=self.screen, color=trapezoid_color(course_point=self.car_y+i),
                                 points=[[board_lx[i  ], board_by[i  ]], [board_rx[i  ], board_by[i  ]],
                                         [board_rx[i-1], board_by[i-1]], [board_lx[i-1], board_by[i-1]]])
-                                # points=[[board_lx[i  ], BOARD_BY[i  ]], [board_rx[i  ], BOARD_BY[i  ]],
-                                #         [board_rx[i-1], BOARD_BY[i-1]], [board_lx[i-1], BOARD_BY[i-1]]])
 
         pygame.display.update()
         self.clock.tick(60)
+
+    def _mod_car_y(self, dy: int) -> int:
+        '''car_yをコース全長で循環させる処理をこの関数で統一して字数も減らします。'''
+        return (self.car_y+dy) % self.COURSE.CMAX
