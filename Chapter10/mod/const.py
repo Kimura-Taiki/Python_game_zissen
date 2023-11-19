@@ -1,5 +1,6 @@
 from typing import Final
 from pygame import Color
+from math import sin, radians
 
 BOARD: Final = 120
 '''描画する板の枚数'''
@@ -16,11 +17,14 @@ BOARD_W: Final = [10 + (BOARD - i) ** 2 / 12 for i in range(BOARD)]
 BOARD_H: Final = [3.4 * (BOARD - i) / BOARD for i in range(BOARD)]
 '''板の縦幅です。0が手前、BOARD-1が最遠です。'''
 
-di: float
-di = 400.0
-BOARD_BY: Final[
-  list[float]] = [(di := di + 3.4 * i / BOARD) for i in range(BOARD)][::-1]
-'''板の描画Y座標です。0が手前、BOARD-1が最遠です。'''
+BOARD_UD: Final = [2*sin(radians(i*1.5)) for i in range(BOARD)]
+'''板の起伏です。0が手前、BOARD-1が最遠です。正弦曲線の半周期×2に相当します。'''
+
+# di: float
+# di = 400.0
+# BOARD_BY: Final[
+#   list[float]] = [(di := di + 3.4 * i / BOARD) for i in range(BOARD)][::-1]
+# '''板の描画Y座標です。0が手前、BOARD-1が最遠です。'''
 
 O1ST_QUARTER: Final = 120
 '''コースの第１四半距離です。'''
@@ -46,6 +50,8 @@ WHITE: Final[Color] = Color(255, 255, 255)
 '''#FFFFFF'''
 GRAY: Final[Color] = Color(160, 160, 160)
 '''#A0A0A0'''
+SEA_BLUE: Final[Color] = Color(0, 56, 255)
+'''#0038FF'''
 
 PNG_BG: Final[str] = "image_pr/bg.png"
 '''ゲーム背景の画像アドレス'''

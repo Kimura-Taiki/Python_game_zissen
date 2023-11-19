@@ -38,8 +38,12 @@ class RacerGame():
         このクロックは主に `Clock.tick` メソッドを使用して一定のフレームレートを維持します。'''
         self.IMG_BG = pygame.image.load(PNG_BG).convert()
         '''pygame.surface.Surface : 背景の複製元となる面です。'''
-        self.CURVE = [5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)]
-        '''コースの該当地点での曲率です。実際に描画する際には視点位置からの曲率積分を使います。'''
+        # self.CURVE = [5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)]
+        # '''コースの該当地点での曲率です。実際に描画する際には視点位置からの曲率積分を使います。'''
+        self.CURVE = [0.0 for i in range(360)]
+        '''コースの該当地点での曲率です。今回は直線コースなので、曲率は常時0です。'''
+        self.UPDOWN = [5*sin(radians(i)) for i in range(360)]
+        '''コースの全長、板の枚数で定義されている。１周するとまた最初から数える。'''
         self.CMAX = len(self.CURVE)
         '''コースの全長、板の枚数で定義されている。１周するとまた最初から数える。'''
         self.car_y = 0
@@ -59,15 +63,23 @@ class RacerGame():
         board_lx: list[float] = [WX/2-BOARD_W[i]/2+(di1 := di1+self.CURVE[(self.car_y+i) % self.CMAX])/2 for i in range(BOARD)]
         di2: float = 0.0
         board_rx: list[float] = [WX/2+BOARD_W[i]/2+(di2 := di2+self.CURVE[(self.car_y+i) % self.CMAX])/2 for i in range(BOARD)]
+        ud: float = 0.0
+        board_ud: list[float] = [(ud := ud+self.UPDOWN[(self.car_y+i) % self.CMAX])/30 for i in range(BOARD)]
+        horizon: int = 400+int(sum(self.UPDOWN[(self.car_y+i) % self.CMAX] for i in range(BOARD))/3)
+        sy: float = float(horizon)
+        board_by: list[float] = [(sy := sy+BOARD_H[BOARD-1-i]*(WY-horizon)/200)-BOARD_UD[BOARD-1-i]*board_ud[BOARD-1-i] for i in range(BOARD)][::-1]
 
-        self.screen.blit(self.IMG_BG, [self.vertical-WX, 0])
-        self.screen.blit(self.IMG_BG, [self.vertical, 0])
+        self.screen.fill(color=SEA_BLUE)
+        self.screen.blit(self.IMG_BG, [self.vertical-WX, horizon-400])
+        self.screen.blit(self.IMG_BG, [self.vertical, horizon-400])
 
         # 描画用データをもとに道路を描く
         for i in range(BOARD-1, 0, -1):
             pygame.draw.polygon(surface=self.screen, color=trapezoid_color(course_point=self.car_y+i),
-                                points=[[board_lx[i  ], BOARD_BY[i  ]], [board_rx[i  ], BOARD_BY[i  ]],
-                                        [board_rx[i-1], BOARD_BY[i-1]], [board_lx[i-1], BOARD_BY[i-1]]])
+                                points=[[board_lx[i  ], board_by[i  ]], [board_rx[i  ], board_by[i  ]],
+                                        [board_rx[i-1], board_by[i-1]], [board_lx[i-1], board_by[i-1]]])
+                                # points=[[board_lx[i  ], BOARD_BY[i  ]], [board_rx[i  ], BOARD_BY[i  ]],
+                                #         [board_rx[i-1], BOARD_BY[i-1]], [board_lx[i-1], BOARD_BY[i-1]]])
 
         pygame.display.update()
         self.clock.tick(60)
