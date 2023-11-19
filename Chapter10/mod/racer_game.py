@@ -42,9 +42,12 @@ class RacerGame():
         '''コースの全長、板の枚数で定義されている。１周するとまた最初から数える。'''
         self.car_y = 0
         '''コース上でのスタート地点からの距離を板の枚数で指定しています。'''
+        self.vertical = 0.0
+        '''背景の横方向の位置を管理する変数'''
 
     def _move_forward(self) -> None:
         self.car_y = (self.car_y+1) % self.CMAX
+        self.vertical = (self.vertical-sum(self.CURVE[(self.car_y+i) % self.CMAX] for i in range(BOARD))/30+800) % 800
 
     def mainloop(self) -> None:
         process_input_events(move_forward=self._move_forward)
@@ -54,7 +57,8 @@ class RacerGame():
         di2: float = 0.0
         board_rx: list[float] = [WX/2+BOARD_W[i]/2+(di2 := di2+self.CURVE[(self.car_y+i) % self.CMAX])/2 for i in range(BOARD)]
 
-        self.screen.blit(self.IMG_BG, [0, 0])
+        self.screen.blit(self.IMG_BG, [self.vertical-800, 0])
+        self.screen.blit(self.IMG_BG, [self.vertical, 0])
 
         # 描画用データをもとに道路を描く
         for i in range(BOARD-1, 0, -1):
