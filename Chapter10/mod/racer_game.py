@@ -56,16 +56,19 @@ class RacerGame():
         self.clock = pygame.time.Clock()
         '''pygame.time.Clock : ゲームループのフレームレートを制御するためのClockインスタンスです。
         このクロックは主に `Clock.tick` メソッドを使用して一定のフレームレートを維持します。'''
-        self.IMG_BG = pygame.image.load(PNG_BG).convert()
-        '''pygame.surface.Surface : 背景の複製元となる面です。'''
+        # self.IMG_BG = pygame.image.load(PNG_BG).convert()
+        # '''pygame.surface.Surface : 背景の複製元となる面です。'''
         # self.CURVE = [5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)]
         # '''コースの該当地点での曲率です。実際に描画する際には視点位置からの曲率積分を使います。'''
-        self.CURVE = [0.0 for i in range(480)]
-        '''コースの該当地点での曲率です。今回は直線コースなので、曲率は常時0です。'''
-        self.UPDOWN = [5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)]
-        '''コースの該当地点での仰角です。実際に描画する際には視点位置からの仰角積分を使います。'''
-        self.CMAX = len(self.CURVE)
-        '''コースの全長、板の枚数で定義されている。１周するとまた最初から数える。'''
+        # self.CURVE = [0.0 for i in range(480)]
+        # '''コースの該当地点での曲率です。今回は直線コースなので、曲率は常時0です。'''
+        # self.UPDOWN = [5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)]
+        # '''コースの該当地点での仰角です。実際に描画する際には視点位置からの仰角積分を使います。'''
+        # self.CMAX = len(self.CURVE)
+        # '''コースの全長、板の枚数で定義されている。１周するとまた最初から数える。'''
+        self.COURSE = Course.updown_course()
+        '''現在走っているコースです。変更を想定していないので現時点では定数です。
+        本来ならRacerGameインスタンス生成時に注入すべき値ですが、今回は面倒なので直埋めします。'''
         self.car_y = 0
         '''コース上でのスタート地点からの距離を板の枚数で指定しています。'''
         self.vertical = 0.0
@@ -73,25 +76,25 @@ class RacerGame():
 
     def _move_forward(self) -> None:
         '''_move_forward: 車を前進させ、背景の横方向の位置を更新します。'''
-        self.car_y = (self.car_y+1) % self.CMAX
-        self.vertical = (self.vertical-sum(self.CURVE[(self.car_y+i) % self.CMAX] for i in range(BOARD))/30+WX) % WX
+        self.car_y = (self.car_y+1) % self.COURSE.CMAX
+        self.vertical = (self.vertical-sum(self.COURSE.CURVE[(self.car_y+i) % self.COURSE.CMAX] for i in range(BOARD))/30+WX) % WX
 
     def mainloop(self) -> None:
         process_input_events(move_forward=self._move_forward)
 
         di1: float = 0.0
-        board_lx: list[float] = [WX/2-BOARD_W[i]/2+(di1 := di1+self.CURVE[(self.car_y+i) % self.CMAX])/2 for i in range(BOARD)]
+        board_lx: list[float] = [WX/2-BOARD_W[i]/2+(di1 := di1+self.COURSE.CURVE[(self.car_y+i) % self.COURSE.CMAX])/2 for i in range(BOARD)]
         di2: float = 0.0
-        board_rx: list[float] = [WX/2+BOARD_W[i]/2+(di2 := di2+self.CURVE[(self.car_y+i) % self.CMAX])/2 for i in range(BOARD)]
+        board_rx: list[float] = [WX/2+BOARD_W[i]/2+(di2 := di2+self.COURSE.CURVE[(self.car_y+i) % self.COURSE.CMAX])/2 for i in range(BOARD)]
         ud: float = 0.0
-        board_ud: list[float] = [(ud := ud+self.UPDOWN[(self.car_y+i) % self.CMAX])/30 for i in range(BOARD)]
-        horizon: int = Y_AT_0_DEGREES+int(sum(self.UPDOWN[(self.car_y+i) % self.CMAX] for i in range(BOARD))/3)
+        board_ud: list[float] = [(ud := ud+self.COURSE.UPDOWN[(self.car_y+i) % self.COURSE.CMAX])/30 for i in range(BOARD)]
+        horizon: int = Y_AT_0_DEGREES+int(sum(self.COURSE.UPDOWN[(self.car_y+i) % self.COURSE.CMAX] for i in range(BOARD))/3)
         sy: float = float(horizon)
         board_by: list[float] = [(sy := sy+BOARD_H[BOARD-1-i]*(WY-horizon)/200)-BOARD_UD[BOARD-1-i]*board_ud[BOARD-1-i] for i in range(BOARD)][::-1]
 
         self.screen.fill(color=SEA_BLUE)
-        self.screen.blit(self.IMG_BG, [self.vertical-WX, horizon-Y_AT_0_DEGREES])
-        self.screen.blit(self.IMG_BG, [self.vertical, horizon-Y_AT_0_DEGREES])
+        self.screen.blit(self.COURSE.IMG_BG, [self.vertical-WX, horizon-Y_AT_0_DEGREES])
+        self.screen.blit(self.COURSE.IMG_BG, [self.vertical, horizon-Y_AT_0_DEGREES])
 
         # 描画用データをもとに道路を描く
         for i in range(BOARD-1, 0, -1):
