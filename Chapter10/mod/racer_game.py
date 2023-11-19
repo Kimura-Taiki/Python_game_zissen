@@ -48,6 +48,7 @@ class RacerGame():
         '''背景の横方向の位置を管理する変数'''
 
     def _move_forward(self) -> None:
+        '''_move_forward: 車を前進させ、背景の横方向の位置を更新します。'''
         self.car_y = (self.car_y+1) % self.CMAX
         self.vertical = (self.vertical-sum(self.CURVE[(self.car_y+i) % self.CMAX] for i in range(BOARD))/30+WX) % WX
 
