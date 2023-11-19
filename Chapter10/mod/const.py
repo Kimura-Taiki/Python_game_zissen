@@ -20,6 +20,8 @@ BOARD_H: Final = [3.4 * (BOARD - i) / BOARD for i in range(BOARD)]
 BOARD_UD: Final = [2*sin(radians(i*1.5)) for i in range(BOARD)]
 '''板の起伏です。0が手前、BOARD-1が最遠です。正弦曲線の半周期×2に相当します。'''
 
+Y_AT_0_DEGREES: Final = 400
+
 # di: float
 # di = 400.0
 # BOARD_BY: Final[
