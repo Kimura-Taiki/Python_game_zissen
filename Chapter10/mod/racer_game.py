@@ -2,7 +2,7 @@ import pygame
 import sys
 from math import sin, radians
 from pygame.locals import K_UP, QUIT
-from typing import Callable
+from typing import Callable, Final
 from mod.const import *
 
 
