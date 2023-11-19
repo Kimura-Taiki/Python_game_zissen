@@ -27,6 +27,26 @@ def trapezoid_color(course_point: int) -> pygame.Color:
     return GRAY
 
 
+class Course():
+    '''レースで使うコース情報を保持するクラスです。'''
+    def __init__(self, img_bg: pygame.surface.Surface, cmax: int, curve: list[float], updown: list[float]) -> None:
+        self.IMG_BG: Final = img_bg
+        '''pygame.surface.Surface : コースの背景の複製元となる面です。'''
+        self.CMAX: Final = cmax
+        '''コースの全長、板の枚数で定義されています。１周するとまた最初から数えます。'''
+        self.CURVE: Final = curve
+        '''コースの該当地点での曲率です。実際に描画する際には視点位置からの曲率積分を使います。'''
+        self.UPDOWN: Final = updown
+        '''コースの該当地点での仰角です。実際に描画する際には視点位置からの仰角積分を使います。'''
+
+    @classmethod
+    def updown_course(cls) -> 'Course':
+        '''list1003_1.pyで用いられているアップダウンのみのコースを返す関数です。'''
+        return Course(img_bg=pygame.image.load(PNG_BG).convert(), cmax=480,
+                      curve=[0.0 for _ in range(480)],
+                      updown=[5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)])
+
+
 class RacerGame():
     def __init__(self) -> None:
         pygame.init()
@@ -43,7 +63,7 @@ class RacerGame():
         self.CURVE = [0.0 for i in range(480)]
         '''コースの該当地点での曲率です。今回は直線コースなので、曲率は常時0です。'''
         self.UPDOWN = [5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)]
-        '''コースの全長、板の枚数で定義されている。１周するとまた最初から数える。'''
+        '''コースの該当地点での仰角です。実際に描画する際には視点位置からの仰角積分を使います。'''
         self.CMAX = len(self.CURVE)
         '''コースの全長、板の枚数で定義されている。１周するとまた最初から数える。'''
         self.car_y = 0
