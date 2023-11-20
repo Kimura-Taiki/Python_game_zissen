@@ -2,7 +2,7 @@ import pygame
 import sys
 from math import sin, radians
 from pygame.locals import K_UP, QUIT
-from typing import Callable, Final
+from typing import Callable, Final, Optional
 from mod.const import *
 
 
@@ -29,7 +29,8 @@ def trapezoid_color(course_point: int) -> pygame.Color:
 
 class Course():
     '''レースで使うコース情報を保持するクラスです。'''
-    def __init__(self, img_bg: pygame.surface.Surface, cmax: int, curve: list[float], updown: list[float]) -> None:
+    def __init__(self, img_bg: pygame.surface.Surface, cmax: int, curve: list[float], updown: list[float],
+                 object_left: Optional[list[int]]=None, object_right: Optional[list[int]]=None) -> None:
         self.IMG_BG: Final = img_bg
         '''pygame.surface.Surface : コースの背景の複製元となる面です。'''
         self.CMAX: Final = cmax
@@ -38,6 +39,11 @@ class Course():
         '''コースの該当地点での曲率です。実際に描画する際には視点位置からの曲率積分を使います。'''
         self.UPDOWN: Final = updown
         '''コースの該当地点での仰角です。実際に描画する際には視点位置からの仰角積分を使います。'''
+        self.object_left: Final = object_left if object_left else [0]*cmax
+        '''コース左側に置いてある設置物番号です。インデックス値はスタート地点からの距離を示しています。'''
+        self.object_right: Final = object_right if object_right else [0]*cmax
+        '''コース右側に置いてある設置物番号です。インデックス値はスタート地点からの距離を示しています。'''
+        
 
     @classmethod
     def updown_course(cls) -> 'Course':

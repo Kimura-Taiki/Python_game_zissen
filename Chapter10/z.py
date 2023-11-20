@@ -1,1 +1,3 @@
-[print(i, j) for i in range(5) for j in range(5)]
+a = "he-yi"
+
+print(a if a else "No---!")

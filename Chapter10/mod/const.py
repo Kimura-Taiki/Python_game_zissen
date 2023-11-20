@@ -29,6 +29,24 @@ DATA_UD: Final = [0,-2,-4,-6,-4,-2, 2, 4, 2]
 CLEN: Final = len(DATA_LR)
 '''len(DATA_LR)です。'''
 
+NO_OBJECT: Final = 0
+'''オブジェクトが無い事を示すオブジェクト番号です。'''
+OBJECT_BIKINI_BILLBOARD: Final = 1
+'''ビキニ広告看板のオブジェクト番号です。'''
+OBJECT_PALM_TREE: Final = 2
+'''椰子の木のオブジェクト番号です。'''
+OBJECT_YACHT: Final = 3
+'''ヨットのオブジェクト番号です。'''
+OBJECT_SEA: Final = 9
+'''海岸のオブジェクト番号です。'''
+
+BOARD_LEFT_OBJECT: Final = [OBJECT_PALM_TREE if i % 12 == 0 else
+                            OBJECT_YACHT if i % 20 == 0 else
+                            OBJECT_SEA if i % 12 == 6 else NO_OBJECT for i in range(CLEN*BOARD)]
+'''コース左側の設置物設定です。インデックス値はスタート地点からの距離を示しています。'''
+BOARD_RIGHT_OBJECT: Final = [OBJECT_BIKINI_BILLBOARD if i % BOARD == 60 else NO_OBJECT for i in range(CLEN*BOARD)]
+'''コース右側の設置物設定です。インデックス値はスタート地点からの距離を示しています。'''
+
 Y_AT_0_DEGREES: Final = 400
 
 # di: float
