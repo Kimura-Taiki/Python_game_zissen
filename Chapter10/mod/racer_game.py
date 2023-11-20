@@ -54,6 +54,15 @@ class Course():
         return Course(img_bg=pygame.image.load(PNG_BG), cmax=BOARD*CLEN,
                       curve=[DATA_LR[i]*(BOARD-j)/BOARD+DATA_LR[(i+1) % CLEN]*j/BOARD for i in range(CLEN) for j in range(BOARD)],
                       updown=[0.0 for _ in range(BOARD*CLEN)])
+    
+    @classmethod
+    def lrud_list_course(cls) -> 'Course':
+        '''list1007_1.pyで用いられているDATA_LRとDATA_UDからコースを生成する関数です。
+        DATA_LRを曲率の極値として、DATA_UDを仰角の極値として、隣接極値間では一次関数で補完します。
+        各極値間はBOARD枚分の距離があります。'''
+        return Course(img_bg=pygame.image.load(PNG_BG), cmax=BOARD*CLEN,
+                      curve=[DATA_LR[i]*(BOARD-j)/BOARD+DATA_LR[(i+1) % CLEN]*j/BOARD for i in range(CLEN) for j in range(BOARD)],
+                      updown=[DATA_UD[i]*(BOARD-j)/BOARD+DATA_UD[(i+1) % CLEN]*j/BOARD for i in range(CLEN) for j in range(BOARD)])
 
 
 class RacerGame():
@@ -65,7 +74,7 @@ class RacerGame():
         self.clock = pygame.time.Clock()
         '''pygame.time.Clock : ゲームループのフレームレートを制御するためのClockインスタンスです。
         このクロックは主に `Clock.tick` メソッドを使用して一定のフレームレートを維持します。'''
-        self.COURSE = Course.lr_list_course()
+        self.COURSE = Course.lrud_list_course()
         '''現在走っているコースです。変更を想定していないので現時点では定数です。
         本来ならRacerGameインスタンス生成時に注入すべき値ですが、今回は面倒なので直埋めします。'''
         self.car_y = 0

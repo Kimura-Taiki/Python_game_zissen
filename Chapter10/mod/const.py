@@ -20,6 +20,15 @@ BOARD_H: Final = [3.4 * (BOARD - i) / BOARD for i in range(BOARD)]
 BOARD_UD: Final = [2*sin(radians(i*1.5)) for i in range(BOARD)]
 '''板の起伏です。0が手前、BOARD-1が最遠です。正弦曲線の半周期×2に相当します。'''
 
+DATA_LR: Final = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+'''コースのBOARD枚毎の極値曲率です。曲率は各極値から次の極値へ一次関数的に遷移します。'''
+
+DATA_UD: Final = [0,-2,-4,-6,-4,-2, 2, 4, 2]
+'''コースのBOARD枚毎の極値仰角です。仰角は各極値から次の極値へ一次関数的に遷移します。'''
+
+CLEN: Final = len(DATA_LR)
+'''len(DATA_LR)です。'''
+
 Y_AT_0_DEGREES: Final = 400
 
 # di: float
@@ -59,9 +68,3 @@ YELLOW: Final[Color] = Color(255, 224, 0)
 
 PNG_BG: Final[str] = "image_pr/bg.png"
 '''ゲーム背景の画像アドレス'''
-
-DATA_LR: Final = [0, 0, 1, 0, 6, -6, -4, -2, 0]
-'''コースのBOARD枚毎の極値曲率です。曲率は各極値から次の極値へ一次関数的に遷移します。'''
-
-CLEN: Final = len(DATA_LR)
-'''len(DATA_LR)です。'''
