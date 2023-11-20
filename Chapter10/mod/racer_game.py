@@ -73,7 +73,6 @@ class RacerGame():
         process_input_events(move_forward=self._move_forward)
 
         di1: float = 0.0
-        # board_lx: list[float] = [WX/2-BOARD_W[i]/2+(di1 := di1+self.COURSE.CURVE[(self.car_y+i) % self.COURSE.CMAX])/2 for i in range(BOARD)]
         board_lx: list[float] = [WX/2-BOARD_W[i]/2+(di1 := di1+self.COURSE.CURVE[self._mod_car_y(dy=i)])/2 for i in range(BOARD)]
         di2: float = 0.0
         board_rx: list[float] = [WX/2+BOARD_W[i]/2+(di2 := di2+self.COURSE.CURVE[self._mod_car_y(dy=i)])/2 for i in range(BOARD)]
@@ -92,6 +91,17 @@ class RacerGame():
             pygame.draw.polygon(surface=self.screen, color=trapezoid_color(course_point=self.car_y+i),
                                 points=[[board_lx[i  ], board_by[i  ]], [board_rx[i  ], board_by[i  ]],
                                         [board_rx[i-1], board_by[i-1]], [board_lx[i-1], board_by[i-1]]])
+            if int(self.car_y+i)%10 <= 4: # 左右の黄色線
+                pygame.draw.polygon(surface=self.screen, color=YELLOW,
+                                    points=[[board_lx[i  ],                   board_by[i  ]], [board_lx[i  ]+BOARD_W[i]*0.02, board_by[i  ]],
+                                            [board_lx[i-1]+BOARD_W[i-1]*0.02, board_by[i-1]], [board_lx[i-1],                 board_by[i-1]]])
+                pygame.draw.polygon(surface=self.screen, color=YELLOW,
+                                    points=[[board_rx[i  ]-BOARD_W[i]*0.02, board_by[i  ]], [board_rx[i  ],                   board_by[i  ]],
+                                            [board_rx[i-1],                 board_by[i-1]], [board_rx[i-1]-BOARD_W[i-1]*0.02, board_by[i-1]]])
+            # if int(self.car_y+i)%20 <= 10: # 白線
+            #     pygame.draw.polygon(screen, WHITE, [[ux+uw*0.24, uy], [ux+uw*0.26, uy], [bx+bw*0.26, by], [bx+bw*0.24, by]])
+            #     pygame.draw.polygon(screen, WHITE, [[ux+uw*0.49, uy], [ux+uw*0.51, uy], [bx+bw*0.51, by], [bx+bw*0.49, by]])
+            #     pygame.draw.polygon(screen, WHITE, [[ux+uw*0.74, uy], [ux+uw*0.76, uy], [bx+bw*0.76, by], [bx+bw*0.74, by]])
 
         pygame.display.update()
         self.clock.tick(60)

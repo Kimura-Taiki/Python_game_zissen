@@ -54,6 +54,8 @@ GRAY: Final[Color] = Color(160, 160, 160)
 '''#A0A0A0'''
 SEA_BLUE: Final[Color] = Color(0, 56, 255)
 '''#0038FF'''
+YELLOW: Final[Color] = Color(255, 224, 0)
+'''#FFE000'''
 
 PNG_BG: Final[str] = "image_pr/bg.png"
 '''ゲーム背景の画像アドレス'''
