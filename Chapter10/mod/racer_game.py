@@ -55,16 +55,11 @@ class Course():
 
     @classmethod
     def lr_list_course(cls) -> 'Course':
-        '''list1006_1.pyで用いられているDATA_LRからコースを生成する関数です。'''
-        curve = [0.0 for _ in range(BOARD*CLEN)]
-        for i in range(CLEN):
-            lr1 = DATA_LR[i]
-            lr2 = DATA_LR[(i+1)%CLEN]
-            for j in range(BOARD):
-                pos = j+BOARD*i
-                curve[pos] = lr1*(BOARD-j)/BOARD + lr2*j/BOARD
-        return Course(img_bg=pygame.image.load(PNG_BG).convert(), cmax=BOARD*CLEN,
-                      curve=curve,
+        '''list1006_1.pyで用いられているDATA_LRからコースを生成する関数です。
+        DATA_LRで示される各値を曲率の極値として、隣接極値間では一次関数で補完します。
+        各極値間はBOARD枚分の距離があります。'''
+        return Course(img_bg=pygame.image.load(PNG_BG), cmax=BOARD*CLEN,
+                      curve=[DATA_LR[i]*(BOARD-j)/BOARD+DATA_LR[(i+1) % CLEN]*j/BOARD for i in range(CLEN) for j in range(BOARD)],
                       updown=[0.0 for _ in range(BOARD*CLEN)])
 
 
