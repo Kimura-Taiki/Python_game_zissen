@@ -59,3 +59,6 @@ YELLOW: Final[Color] = Color(255, 224, 0)
 
 PNG_BG: Final[str] = "image_pr/bg.png"
 '''ゲーム背景の画像アドレス'''
+
+DATA_LR = [0, 0, 1, 0, 6, -6, -4, -2, 0]
+CLEN = len(DATA_LR)

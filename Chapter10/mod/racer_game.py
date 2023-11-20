@@ -27,6 +27,12 @@ def trapezoid_color(course_point: int) -> pygame.Color:
     return GRAY
 
 
+def trapezoid_points(i: int, lf: Callable[[int], float], rf: Callable[[int], float], bf: Callable[[int], float]) -> tuple[
+    tuple[float, float], tuple[float, float], tuple[float, float], tuple[float, float]]:
+    '''矩形を描画する四点を返す為の関数です。左X座標、右X座標、下Y座標を板番号iで返す関数を3つ引数に取ります。'''
+    return ((lf(i), bf(i)), (rf(i), bf(i)), (rf(i-1), bf(i-1)), (lf(i-1), bf(i-1)))
+
+
 class Course():
     '''レースで使うコース情報を保持するクラスです。'''
     def __init__(self, img_bg: pygame.surface.Surface, cmax: int, curve: list[float], updown: list[float]) -> None:
@@ -47,6 +53,21 @@ class Course():
                       updown=[5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)])
 
 
+    @classmethod
+    def lr_list_course(cls) -> 'Course':
+        '''list1006_1.pyで用いられているDATA_LRからコースを生成する関数です。'''
+        curve = [0.0 for _ in range(BOARD*CLEN)]
+        for i in range(CLEN):
+            lr1 = DATA_LR[i]
+            lr2 = DATA_LR[(i+1)%CLEN]
+            for j in range(BOARD):
+                pos = j+BOARD*i
+                curve[pos] = lr1*(BOARD-j)/BOARD + lr2*j/BOARD
+        return Course(img_bg=pygame.image.load(PNG_BG).convert(), cmax=BOARD*CLEN,
+                      curve=curve,
+                      updown=[0.0 for _ in range(BOARD*CLEN)])
+
+
 class RacerGame():
     def __init__(self) -> None:
         pygame.init()
@@ -56,7 +77,7 @@ class RacerGame():
         self.clock = pygame.time.Clock()
         '''pygame.time.Clock : ゲームループのフレームレートを制御するためのClockインスタンスです。
         このクロックは主に `Clock.tick` メソッドを使用して一定のフレームレートを維持します。'''
-        self.COURSE = Course.updown_course()
+        self.COURSE = Course.lr_list_course()
         '''現在走っているコースです。変更を想定していないので現時点では定数です。
         本来ならRacerGameインスタンス生成時に注入すべき値ですが、今回は面倒なので直埋めします。'''
         self.car_y = 0
@@ -86,9 +107,6 @@ class RacerGame():
         self.screen.blit(self.COURSE.IMG_BG, [self.vertical-WX, horizon-Y_AT_0_DEGREES])
         self.screen.blit(self.COURSE.IMG_BG, [self.vertical, horizon-Y_AT_0_DEGREES])
 
-        def trapezoid_points(i: int, lf: Callable[[int], float], rf: Callable[[int], float], bf: Callable[[int], float]) -> tuple[
-            tuple[float, float], tuple[float, float], tuple[float, float], tuple[float, float]]:
-            return ((lf(i), bf(i)), (rf(i), bf(i)), (rf(i-1), bf(i-1)), (lf(i-1), bf(i-1)))
         # 描画用データをもとに道路を描く
         for i in range(BOARD-1, 0, -1):
             pygame.draw.polygon(surface=self.screen, color=trapezoid_color(course_point=self.car_y+i),points=trapezoid_points
