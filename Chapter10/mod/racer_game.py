@@ -27,12 +27,6 @@ def trapezoid_color(course_point: int) -> pygame.Color:
     return GRAY
 
 
-def trapezoid_points(i: int, lf: Callable[[int], float], rf: Callable[[int], float], bf: Callable[[int], float]) -> tuple[
-    tuple[float, float], tuple[float, float], tuple[float, float], tuple[float, float]]:
-    '''矩形を描画する四点を返す為の関数です。左X座標、右X座標、下Y座標を板番号iで返す関数を3つ引数に取ります。'''
-    return ((lf(i), bf(i)), (rf(i), bf(i)), (rf(i-1), bf(i-1)), (lf(i-1), bf(i-1)))
-
-
 class Course():
     '''レースで使うコース情報を保持するクラスです。'''
     def __init__(self, img_bg: pygame.surface.Surface, cmax: int, curve: list[float], updown: list[float]) -> None:
@@ -51,7 +45,6 @@ class Course():
         return Course(img_bg=pygame.image.load(PNG_BG).convert(), cmax=480,
                       curve=[0.0 for _ in range(480)],
                       updown=[5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)])
-
 
     @classmethod
     def lr_list_course(cls) -> 'Course':
@@ -104,20 +97,15 @@ class RacerGame():
 
         # 描画用データをもとに道路を描く
         for i in range(BOARD-1, 0, -1):
-            pygame.draw.polygon(surface=self.screen, color=trapezoid_color(course_point=self.car_y+i),points=trapezoid_points
-                                (i=i, lf=lambda i: board_lx[i], rf=lambda i: board_rx[i], bf=lambda i: board_by[i]))
+            self._draw_trapezoid(color=trapezoid_color(course_point=self.car_y+i), i=i,
+                                 lf=lambda i: board_lx[i], rf=lambda i: board_rx[i], bf=lambda i: board_by[i])
             if int(self.car_y+i)%10 <= 4: # 左右の黄色線
-                pygame.draw.polygon(surface=self.screen, color=YELLOW, points=trapezoid_points
-                                    (i=i, lf=lambda i: board_lx[i], rf=lambda i: board_lx[i]+BOARD_W[i]*0.02, bf=lambda i: board_by[i]))
-                pygame.draw.polygon(surface=self.screen, color=YELLOW, points=trapezoid_points
-                                    (i=i, lf=lambda i: board_rx[i]-BOARD_W[i]*0.02, rf=lambda i: board_rx[i], bf=lambda i: board_by[i]))
+                self._draw_trapezoid(color=YELLOW, i=i, lf=lambda i: board_lx[i], rf=lambda i: board_lx[i]+BOARD_W[i]*0.02, bf=lambda i: board_by[i])
+                self._draw_trapezoid(color=YELLOW, i=i, lf=lambda i: board_rx[i]-BOARD_W[i]*0.02, rf=lambda i: board_rx[i], bf=lambda i: board_by[i])
             if int(self.car_y+i)%20 <= 10: # 白線
-                pygame.draw.polygon(surface=self.screen, color=WHITE, points=trapezoid_points
-                                    (i=i, lf=lambda i: board_lx[i]+BOARD_W[i]*0.24, rf=lambda i: board_lx[i]+BOARD_W[i]*0.26, bf=lambda i: board_by[i]))
-                pygame.draw.polygon(surface=self.screen, color=WHITE, points=trapezoid_points
-                                    (i=i, lf=lambda i: board_lx[i]+BOARD_W[i]*0.49, rf=lambda i: board_rx[i]-BOARD_W[i]*0.49, bf=lambda i: board_by[i]))
-                pygame.draw.polygon(surface=self.screen, color=WHITE, points=trapezoid_points
-                                    (i=i, lf=lambda i: board_rx[i]-BOARD_W[i]*0.26, rf=lambda i: board_rx[i]-BOARD_W[i]*0.24, bf=lambda i: board_by[i]))
+                self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: board_lx[i]+BOARD_W[i]*0.24, rf=lambda i: board_lx[i]+BOARD_W[i]*0.26, bf=lambda i: board_by[i])
+                self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: board_lx[i]+BOARD_W[i]*0.49, rf=lambda i: board_rx[i]-BOARD_W[i]*0.49, bf=lambda i: board_by[i])
+                self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: board_rx[i]-BOARD_W[i]*0.26, rf=lambda i: board_rx[i]-BOARD_W[i]*0.24, bf=lambda i: board_by[i])
 
         pygame.display.update()
         self.clock.tick(60)
@@ -125,3 +113,9 @@ class RacerGame():
     def _mod_car_y(self, dy: int) -> int:
         '''car_yをコース全長で循環させる処理をこの関数で統一して字数も減らします。'''
         return (self.car_y+dy) % self.COURSE.CMAX
+
+    def _draw_trapezoid(self, color: pygame.Color, i: int,
+                        lf: Callable[[int], float], rf: Callable[[int], float], bf: Callable[[int], float]) -> None:
+        '''色color,板番号i,上辺の左X座標関数lf,上辺の右座標関数rf,上辺のY座標関数bfから台形を描画する命令です。'''
+        pygame.draw.polygon(surface=self.screen, color=color,
+                            points=[[lf(i), bf(i)], [rf(i), bf(i)], [rf(i-1), bf(i-1)], [lf(i-1), bf(i-1)]])
