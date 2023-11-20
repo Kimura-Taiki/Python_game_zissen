@@ -86,18 +86,18 @@ class RacerGame():
         self.screen.blit(self.COURSE.IMG_BG, [self.vertical-WX, horizon-Y_AT_0_DEGREES])
         self.screen.blit(self.COURSE.IMG_BG, [self.vertical, horizon-Y_AT_0_DEGREES])
 
+        def trapezoid_points(i: int, lf: Callable[[int], float], rf: Callable[[int], float], bf: Callable[[int], float]) -> tuple[
+            tuple[float, float], tuple[float, float], tuple[float, float], tuple[float, float]]:
+            return ((lf(i), bf(i)), (rf(i), bf(i)), (rf(i-1), bf(i-1)), (lf(i-1), bf(i-1)))
         # 描画用データをもとに道路を描く
         for i in range(BOARD-1, 0, -1):
-            pygame.draw.polygon(surface=self.screen, color=trapezoid_color(course_point=self.car_y+i),
-                                points=[[board_lx[i  ], board_by[i  ]], [board_rx[i  ], board_by[i  ]],
-                                        [board_rx[i-1], board_by[i-1]], [board_lx[i-1], board_by[i-1]]])
+            pygame.draw.polygon(surface=self.screen, color=trapezoid_color(course_point=self.car_y+i),points=trapezoid_points
+                                (i=i, lf=lambda i: board_lx[i], rf=lambda i: board_rx[i], bf=lambda i: board_by[i]))
             if int(self.car_y+i)%10 <= 4: # 左右の黄色線
-                pygame.draw.polygon(surface=self.screen, color=YELLOW,
-                                    points=[[board_lx[i  ],                   board_by[i  ]], [board_lx[i  ]+BOARD_W[i]*0.02, board_by[i  ]],
-                                            [board_lx[i-1]+BOARD_W[i-1]*0.02, board_by[i-1]], [board_lx[i-1],                 board_by[i-1]]])
-                pygame.draw.polygon(surface=self.screen, color=YELLOW,
-                                    points=[[board_rx[i  ]-BOARD_W[i]*0.02, board_by[i  ]], [board_rx[i  ],                   board_by[i  ]],
-                                            [board_rx[i-1],                 board_by[i-1]], [board_rx[i-1]-BOARD_W[i-1]*0.02, board_by[i-1]]])
+                pygame.draw.polygon(surface=self.screen, color=YELLOW, points=trapezoid_points
+                                    (i=i, lf=lambda i: board_lx[i], rf=lambda i: board_lx[i]+BOARD_W[i]*0.02, bf=lambda i: board_by[i]))
+                pygame.draw.polygon(surface=self.screen, color=YELLOW, points=trapezoid_points
+                                    (i=i, lf=lambda i: board_rx[i]-BOARD_W[i]*0.02, rf=lambda i: board_rx[i], bf=lambda i: board_by[i]))
             # if int(self.car_y+i)%20 <= 10: # 白線
             #     pygame.draw.polygon(screen, WHITE, [[ux+uw*0.24, uy], [ux+uw*0.26, uy], [bx+bw*0.26, by], [bx+bw*0.24, by]])
             #     pygame.draw.polygon(screen, WHITE, [[ux+uw*0.49, uy], [ux+uw*0.51, uy], [bx+bw*0.51, by], [bx+bw*0.49, by]])
