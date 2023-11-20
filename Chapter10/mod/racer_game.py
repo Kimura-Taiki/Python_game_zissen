@@ -98,10 +98,13 @@ class RacerGame():
                                     (i=i, lf=lambda i: board_lx[i], rf=lambda i: board_lx[i]+BOARD_W[i]*0.02, bf=lambda i: board_by[i]))
                 pygame.draw.polygon(surface=self.screen, color=YELLOW, points=trapezoid_points
                                     (i=i, lf=lambda i: board_rx[i]-BOARD_W[i]*0.02, rf=lambda i: board_rx[i], bf=lambda i: board_by[i]))
-            # if int(self.car_y+i)%20 <= 10: # 白線
-            #     pygame.draw.polygon(screen, WHITE, [[ux+uw*0.24, uy], [ux+uw*0.26, uy], [bx+bw*0.26, by], [bx+bw*0.24, by]])
-            #     pygame.draw.polygon(screen, WHITE, [[ux+uw*0.49, uy], [ux+uw*0.51, uy], [bx+bw*0.51, by], [bx+bw*0.49, by]])
-            #     pygame.draw.polygon(screen, WHITE, [[ux+uw*0.74, uy], [ux+uw*0.76, uy], [bx+bw*0.76, by], [bx+bw*0.74, by]])
+            if int(self.car_y+i)%20 <= 10: # 白線
+                pygame.draw.polygon(surface=self.screen, color=WHITE, points=trapezoid_points
+                                    (i=i, lf=lambda i: board_lx[i]+BOARD_W[i]*0.24, rf=lambda i: board_lx[i]+BOARD_W[i]*0.26, bf=lambda i: board_by[i]))
+                pygame.draw.polygon(surface=self.screen, color=WHITE, points=trapezoid_points
+                                    (i=i, lf=lambda i: board_lx[i]+BOARD_W[i]*0.49, rf=lambda i: board_rx[i]-BOARD_W[i]*0.49, bf=lambda i: board_by[i]))
+                pygame.draw.polygon(surface=self.screen, color=WHITE, points=trapezoid_points
+                                    (i=i, lf=lambda i: board_rx[i]-BOARD_W[i]*0.26, rf=lambda i: board_rx[i]-BOARD_W[i]*0.24, bf=lambda i: board_by[i]))
 
         pygame.display.update()
         self.clock.tick(60)
