@@ -125,6 +125,7 @@ class RacerGame():
         self.screen.fill(color=SEA_BLUE)
         self.screen.blit(self.COURSE.IMG_BG, [self.vertical-WX, horizon-Y_AT_0_DEGREES])
         self.screen.blit(self.COURSE.IMG_BG, [self.vertical, horizon-Y_AT_0_DEGREES])
+        self.screen.blit(source=IMG_SEA, dest=[board_lx[BOARD-1]-780, horizon])
 
         # 描画用データをもとに道路を描く
         for i in range(BOARD-1, 0, -1):
@@ -137,6 +138,17 @@ class RacerGame():
                 self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: board_lx[i]+BOARD_W[i]*0.24, rf=lambda i: board_lx[i]+BOARD_W[i]*0.26, bf=lambda i: board_by[i])
                 self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: board_lx[i]+BOARD_W[i]*0.49, rf=lambda i: board_rx[i]-BOARD_W[i]*0.49, bf=lambda i: board_by[i])
                 self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: board_rx[i]-BOARD_W[i]*0.26, rf=lambda i: board_rx[i]-BOARD_W[i]*0.24, bf=lambda i: board_by[i])
+            scale = 1.5*BOARD_W[i]/BOARD_W[0]
+            obj_l = BOARD_LEFT_OBJECT[self._mod_car_y(dy=i)]
+            if obj_l == OBJECT_PALM_TREE:
+                draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=board_lx[i]-BOARD_W[i]*0.05, y=board_by[i], scale=scale)
+            if obj_l == OBJECT_YACHT:
+                draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=board_lx[i]-BOARD_W[i]*0.5, y=board_by[i], scale=scale)
+            if obj_l == OBJECT_SEA:
+                draw_obj(surface=self.screen, img=IMG_SEA, x=board_lx[i], y=board_by[i])
+            obj_r = BOARD_RIGHT_OBJECT[self._mod_car_y(dy=i)]
+            if obj_r == OBJECT_BIKINI_BILLBOARD:
+                draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=board_rx[i]+BOARD_W[i]*0.3, y=board_by[i], scale=scale)
 
         pygame.display.update()
         self.clock.tick(60)
