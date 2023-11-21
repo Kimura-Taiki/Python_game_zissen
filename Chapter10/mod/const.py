@@ -22,9 +22,11 @@ BOARD_UD: Final = [2*sin(radians(i*1.5)) for i in range(BOARD)]
 '''板の起伏です。0が手前、BOARD-1が最遠です。正弦曲線の半周期×2に相当します。'''
 
 DATA_LR: Final = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+# DATA_LR: Final = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 2, 1, 0, 2, 4, 2, 4, 2, 0, 0, 0,-2,-2,-4,-4,-2,-1, 0, 0, 0, 0, 0, 0, 0]
 '''コースのBOARD枚毎の極値曲率です。曲率は各極値から次の極値へ一次関数的に遷移します。'''
 
 DATA_UD: Final = [0,-2,-4,-6,-4,-2, 2, 4, 2]
+# DATA_UD: Final = [0, 0, 1, 2, 3, 2, 1, 0,-2,-4,-2, 0, 0, 0, 0, 0,-1,-2,-3,-4,-3,-2,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-3, 3, 0,-6, 6, 0]
 '''コースのBOARD枚毎の極値仰角です。仰角は各極値から次の極値へ一次関数的に遷移します。'''
 
 CLEN: Final = len(DATA_LR)
@@ -41,14 +43,19 @@ OBJECT_YACHT: Final = 3
 OBJECT_SEA: Final = 9
 '''海岸のオブジェクト番号です。'''
 
-BOARD_LEFT_OBJECT: Final = [OBJECT_PALM_TREE if i % 12 == 0 else
+BOARD_LEFT_OBJECT: Final = [OBJECT_SEA if i % 12 == 6 else
                             OBJECT_YACHT if i % 20 == 0 else
-                            OBJECT_SEA if i % 12 == 6 else NO_OBJECT for i in range(CLEN*BOARD)]
+                            OBJECT_PALM_TREE if i % 12 == 0 else
+                            NO_OBJECT for i in range(CLEN*BOARD)]
+
 '''コース左側の設置物設定です。インデックス値はスタート地点からの距離を示しています。'''
 BOARD_RIGHT_OBJECT: Final = [OBJECT_BIKINI_BILLBOARD if i % BOARD == 60 else NO_OBJECT for i in range(CLEN*BOARD)]
 '''コース右側の設置物設定です。インデックス値はスタート地点からの距離を示しています。'''
 
 Y_AT_0_DEGREES: Final = 400
+'''コースの仰角積分が0度の時の地平線のY座標です。'''
+SEA_BLIT_X_OFFSET: Final = -780
+'''海岸線画像を描画する際のオフセット値です。'''
 
 # di: float
 # di = 400.0

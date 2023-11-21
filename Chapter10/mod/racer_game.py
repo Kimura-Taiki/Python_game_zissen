@@ -4,6 +4,7 @@ from math import sin, radians
 from pygame.locals import K_UP, QUIT
 from typing import Callable, Final, Optional
 from mod.const import *
+from mod.course import Course
 
 
 def process_input_events(move_forward: Callable[[], None]) -> None:
@@ -32,61 +33,6 @@ def draw_obj(surface: pygame.surface.Surface, img: pygame.surface.Surface, x: in
     surface.blit(source=img_rz, dest=[x-img_rz.get_width()/2, y-img_rz.get_height()])
 
 
-class Course():
-    '''レースで使うコース情報を保持するクラスです。'''
-    def __init__(self, img_bg: pygame.surface.Surface, cmax: int, curve: list[float], updown: list[float],
-                 object_left: Optional[list[int]]=None, object_right: Optional[list[int]]=None) -> None:
-        self.IMG_BG: Final = img_bg
-        '''pygame.surface.Surface : コースの背景の複製元となる面です。'''
-        self.CMAX: Final = cmax
-        '''コースの全長、板の枚数で定義されています。１周するとまた最初から数えます。'''
-        self.CURVE: Final = curve
-        '''コースの該当地点での曲率です。実際に描画する際には視点位置からの曲率積分を使います。'''
-        self.UPDOWN: Final = updown
-        '''コースの該当地点での仰角です。実際に描画する際には視点位置からの仰角積分を使います。'''
-        self.object_left: Final = object_left if object_left else [0]*cmax
-        '''コース左側に置いてある設置物番号です。インデックス値はスタート地点からの距離を示しています。'''
-        self.object_right: Final = object_right if object_right else [0]*cmax
-        '''コース右側に置いてある設置物番号です。インデックス値はスタート地点からの距離を示しています。'''
-        
-
-    @classmethod
-    def updown_course(cls) -> 'Course':
-        '''list1003_1.pyで用いられているアップダウンのみのコースを返す関数です。'''
-        return Course(img_bg=pygame.image.load(PNG_BG).convert(), cmax=480,
-                      curve=[0.0 for _ in range(480)],
-                      updown=[5*sin(radians(i-120)) if i > 120 else 0 for i in range(480)])
-
-    @classmethod
-    def lr_list_course(cls) -> 'Course':
-        '''list1006_1.pyで用いられているDATA_LRからコースを生成する関数です。
-        DATA_LRで示される各値を曲率の極値として、隣接極値間では一次関数で補完します。
-        各極値間はBOARD枚分の距離があります。'''
-        return Course(img_bg=pygame.image.load(PNG_BG), cmax=BOARD*CLEN,
-                      curve=[DATA_LR[i]*(BOARD-j)/BOARD+DATA_LR[(i+1) % CLEN]*j/BOARD for i in range(CLEN) for j in range(BOARD)],
-                      updown=[0.0 for _ in range(BOARD*CLEN)])
-    
-    @classmethod
-    def lrud_list_course(cls) -> 'Course':
-        '''list1007_1.pyで用いられているDATA_LRとDATA_UDからコースを生成する関数です。
-        DATA_LRを曲率の極値として、DATA_UDを仰角の極値として、隣接極値間では一次関数で補完します。
-        各極値間はBOARD枚分の距離があります。'''
-        return Course(img_bg=pygame.image.load(PNG_BG), cmax=BOARD*CLEN,
-                      curve=[DATA_LR[i]*(BOARD-j)/BOARD+DATA_LR[(i+1) % CLEN]*j/BOARD for i in range(CLEN) for j in range(BOARD)],
-                      updown=[DATA_UD[i]*(BOARD-j)/BOARD+DATA_UD[(i+1) % CLEN]*j/BOARD for i in range(CLEN) for j in range(BOARD)])
-    
-    @classmethod
-    def obj_list_course(cls) -> 'Course':
-        '''list1008_1.pyで用いられている設置物付きのコースを生成する関数です。
-        設置物の配置は定数から取り出します。'''
-        # return Course(img_bg=pygame.image.load(PNG_BG), cmax=BOARD*CLEN,
-        return Course(img_bg=IMG_BG, cmax=BOARD*CLEN,
-                      curve=[DATA_LR[i]*(BOARD-j)/BOARD+DATA_LR[(i+1) % CLEN]*j/BOARD for i in range(CLEN) for j in range(BOARD)],
-                      updown=[DATA_UD[i]*(BOARD-j)/BOARD+DATA_UD[(i+1) % CLEN]*j/BOARD for i in range(CLEN) for j in range(BOARD)],
-                      object_left=BOARD_LEFT_OBJECT,
-                      object_right=BOARD_RIGHT_OBJECT)
-
-
 class RacerGame():
     def __init__(self) -> None:
         pygame.init()
@@ -112,19 +58,11 @@ class RacerGame():
     def mainloop(self) -> None:
         process_input_events(move_forward=self._move_forward)
 
-        _sum_curve = 0.0
-        curvature_integral = [(_sum_curve := _sum_curve+self.COURSE.CURVE[self._mod_car_y(dy=i)]/2) for i in range(BOARD)]
-        board_lx = [WX/2-BOARD_W[i]/2+curvature_integral[i] for i in range(BOARD)]
-        board_rx = [WX/2+BOARD_W[i]/2+curvature_integral[i] for i in range(BOARD)]
-        ud: float = 0.0
-        board_ud: list[float] = [(ud := ud+self.COURSE.UPDOWN[self._mod_car_y(dy=i)])/30 for i in range(BOARD)]
-        horizon: int = Y_AT_0_DEGREES+int(sum(self.COURSE.UPDOWN[self._mod_car_y(dy=i)] for i in range(BOARD))/3)
-        sy: float = float(horizon)
-        board_by: list[float] = [(sy := sy+BOARD_H[BOARD-1-i]*(WY-horizon)/200)-BOARD_UD[BOARD-1-i]*board_ud[BOARD-1-i] for i in range(BOARD)][::-1]
+        board_lx, board_rx = self.COURSE.both_curve_lists(car_y=self.car_y)
+        board_by, horizon = self.COURSE.both_updown_lists(car_y=self.car_y)
 
-        self._draw_background(sea_x=int(board_lx[BOARD-1]-780), horizon_y=horizon)
-
-        # 描画用データをもとに道路を描く
+        # 描画部分
+        self._draw_background(sea_x=int(board_lx[BOARD-1]+SEA_BLIT_X_OFFSET), horizon_y=horizon)
         for i in range(BOARD-1, 0, -1):
             self._draw_board_section(i=i, lxf=lambda i: board_lx[i], rxf=lambda i: board_rx[i], wxf=lambda i: BOARD_W[i], yf=lambda i: board_by[i])
 
@@ -148,25 +86,37 @@ class RacerGame():
         pygame.draw.polygon(surface=self.screen, color=color,
                             points=[[lf(i), bf(i)], [rf(i), bf(i)], [rf(i-1), bf(i-1)], [lf(i-1), bf(i-1)]])
 
-    def _draw_board_section(self, i: int, lxf: Callable[[int], float], rxf: Callable[[int], float], wxf: Callable[[int], float], yf: Callable[[int], float]) -> None:
-        '''板番号i,上辺の左X座標関数lxf,上辺の右座標関数rxf,上辺の幅関数wxf,上辺のY座標関数yfから板の存在する面全域を描画する命令です。
-        描画対象には道路と設置物があります。'''
-        self._draw_trapezoid(color=trapezoid_color(course_point=self.car_y+i), i=i, lf=lxf, rf=rxf, bf=yf)
-        if int(self.car_y+i)%10 <= 4: # 左右の黄色線
-            self._draw_trapezoid(color=YELLOW, i=i, lf=lxf, rf=lambda i: lxf(i)+wxf(i)*0.02, bf=yf)
-            self._draw_trapezoid(color=YELLOW, i=i, lf=lambda i: rxf(i)-wxf(i)*0.02, rf=rxf, bf=yf)
-        if int(self.car_y+i)%20 <= 10: # 白線
-            self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: lxf(i)+wxf(i)*0.24, rf=lambda i: lxf(i)+wxf(i)*0.26, bf=yf)
-            self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: lxf(i)+wxf(i)*0.49, rf=lambda i: rxf(i)-wxf(i)*0.49, bf=yf)
-            self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: rxf(i)-wxf(i)*0.26, rf=lambda i: rxf(i)-wxf(i)*0.24, bf=yf)
-        scale = 1.5*BOARD_W[i]/BOARD_W[0]
+    def _draw_yellow_line(self, i: int, lxf: Callable[[int], float], rxf: Callable[[int], float], wxf: Callable[[int], float], yf: Callable[[int], float]) -> None:
+        '''道路脇の黄線を描画します。'''
+        self._draw_trapezoid(color=YELLOW, i=i, lf=lxf, rf=lambda i: lxf(i) + wxf(i) * 0.02, bf=yf)
+        self._draw_trapezoid(color=YELLOW, i=i, lf=lambda i: rxf(i) - wxf(i) * 0.02, rf=rxf, bf=yf)
+
+    def _draw_white_line(self, i: int, lxf: Callable[[int], float], rxf: Callable[[int], float], wxf: Callable[[int], float], yf: Callable[[int], float]) -> None:
+        '''道路の白線を描画します。'''
+        self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: lxf(i) + wxf(i) * 0.24, rf=lambda i: lxf(i) + wxf(i) * 0.26, bf=yf)
+        self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: lxf(i) + wxf(i) * 0.49, rf=lambda i: rxf(i) - wxf(i) * 0.49, bf=yf)
+        self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: rxf(i) - wxf(i) * 0.26, rf=lambda i: rxf(i) - wxf(i) * 0.24, bf=yf)
+
+    def _draw_object(self, i: int, lxf: Callable[[int], float], rxf: Callable[[int], float], wxf: Callable[[int], float], yf: Callable[[int], float]) -> None:
+        '''設置物を描画します。'''
+        scale = 1.5 * BOARD_W[i] / BOARD_W[0]
         obj_l = BOARD_LEFT_OBJECT[self._mod_car_y(dy=i)]
         if obj_l == OBJECT_PALM_TREE:
-            draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=lxf(i)-wxf(i)*0.05, y=yf(i), scale=scale)
+            draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=lxf(i) - wxf(i) * 0.05, y=yf(i), scale=scale)
         if obj_l == OBJECT_YACHT:
-            draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=lxf(i)-wxf(i)*0.5, y=yf(i), scale=scale)
+            draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=lxf(i) - wxf(i) * 0.5, y=yf(i), scale=scale)
         if obj_l == OBJECT_SEA:
-            self.screen.blit(source=IMG_SEA, dest=[lxf(i)-wxf(i)*0.5-780, yf(i)])
+            self.screen.blit(source=IMG_SEA, dest=[lxf(i) - wxf(i) * 0.5 + SEA_BLIT_X_OFFSET, yf(i)])
         obj_r = BOARD_RIGHT_OBJECT[self._mod_car_y(dy=i)]
         if obj_r == OBJECT_BIKINI_BILLBOARD:
             draw_obj(surface=self.screen, img=IMG_OBJ[obj_r], x=rxf(i)+wxf(i)*0.3, y=yf(i), scale=scale)
+
+    def _draw_board_section(self, i: int, lxf: Callable[[int], float], rxf: Callable[[int], float], wxf: Callable[[int], float], yf: Callable[[int], float]) -> None:
+        '''板番号i,上辺の左X座標関数lxf,上辺の右座標関数rxf,上辺の幅関数wxf,上辺のY座標関数yfから板の存在する面全域を描画する命令です。
+        描画対象には道路と設置物があります。'''
+        self._draw_trapezoid(color=trapezoid_color(course_point=self.car_y + i), i=i, lf=lxf, rf=rxf, bf=yf)
+        if int(self.car_y + i) % 10 <= 4:
+            self._draw_yellow_line(i=i, lxf=lxf, rxf=rxf, wxf=wxf, yf=yf)
+        if int(self.car_y + i) % 20 <= 10:
+            self._draw_white_line(i=i, lxf=lxf, rxf=rxf, wxf=wxf, yf=yf)
+        self._draw_object(i=i, lxf=lxf, rxf=rxf, wxf=wxf, yf=yf)
