@@ -63,7 +63,7 @@ class RacerGame():
 
         # 描画部分
         draw = Draw(screen=self.screen, lxf=lambda i: board_lx[i], rxf=lambda i: board_rx[i], yf=lambda i: board_by[i])
-        draw.draw_background(img_bg=self.COURSE.IMG_BG, vertical_x=self.vertical,
+        draw.draw_background(img_bg=self.COURSE.IMG_BG, vertical_x=int(self.vertical),
                              sea_x=int(board_lx[BOARD-1]+SEA_BLIT_X_OFFSET), horizon_y=horizon)
         for i in range(BOARD-1, 0, -1):
             draw.draw_board_section(i=i, car_y=self.car_y, cmax=self.COURSE.CMAX)
@@ -105,11 +105,13 @@ class Draw():
             self._draw_white_line(i=i)
         self._draw_object(i=i, car_y=car_y, cmax=cmax)
 
-    def _draw_trapezoid(self, color: pygame.Color, i: int,
-                        lf: Callable[[int], float], rf: Callable[[int], float], bf: Callable[[int], float]) -> None:
-        '''色color,板番号i,上辺の左X座標関数lf,上辺の右座標関数rf,上辺のY座標関数bfから台形を描画する命令です。'''
+    def _draw_trapezoid(self, color: pygame.Color, i: int, lf: Callable[[int], float], rf: Callable[[int], float],
+                        bf: Callable[[int], float]) -> Optional[bool]:
+        '''色color,板番号i,上辺の左X座標関数lf,上辺の右座標関数rf,上辺のY座標関数bfから台形を描画する命令です。
+        リスト内包表記で一括操作する際にmypyが戻り値要求をする為、Optionalな型ヒントを与えてあります。'''
         pygame.draw.polygon(surface=self.screen, color=color,
                             points=[[lf(i), bf(i)], [rf(i), bf(i)], [rf(i-1), bf(i-1)], [lf(i-1), bf(i-1)]])
+        return None
 
     def _internal_division(self, ratio: float) -> Callable[[int], float]:
         '''ratioの比率でlxf-rxf間を内分する関数を返す関数です。ratio=0.0でlxf(左端)、ratio=1.0でrxf(右端)となります。'''
@@ -117,14 +119,18 @@ class Draw():
 
     def _draw_yellow_line(self, i: int) -> None:
         '''道路脇の黄線を描画します。'''
-        self._draw_trapezoid(color=YELLOW, i=i, lf=self.lxf, rf=self.idx002, bf=self.yf)
-        self._draw_trapezoid(color=YELLOW, i=i, lf=self.idx098, rf=self.rxf, bf=self.yf)
+        [self._draw_trapezoid(color=j[0], i=i, lf=j[1], rf=j[2], bf=self.yf) for j
+         in [[YELLOW, self.lxf, self.idx002], [YELLOW,  self.idx098, self.rxf]]]
+        # self._draw_trapezoid(color=YELLOW, i=i, lf=self.lxf, rf=self.idx002, bf=self.yf)
+        # self._draw_trapezoid(color=YELLOW, i=i, lf=self.idx098, rf=self.rxf, bf=self.yf)
 
     def _draw_white_line(self, i: int) -> None:
         '''道路の白線を描画します。'''
-        self._draw_trapezoid(color=WHITE, i=i, lf=self.idx024, rf=self.idx026, bf=self.yf)
-        self._draw_trapezoid(color=WHITE, i=i, lf=self.idx049, rf=self.idx051, bf=self.yf)
-        self._draw_trapezoid(color=WHITE, i=i, lf=self.idx074, rf=self.idx076, bf=self.yf)
+        [self._draw_trapezoid(color=j[0], i=i, lf=j[1], rf=j[2], bf=self.yf) for j
+         in [[WHITE, self.idx024, self.idx026], [WHITE,  self.idx049, self.idx051], [WHITE, self.idx074, self.idx076]]]
+        # self._draw_trapezoid(color=WHITE, i=i, lf=self.idx024, rf=self.idx026, bf=self.yf)
+        # self._draw_trapezoid(color=WHITE, i=i, lf=self.idx049, rf=self.idx051, bf=self.yf)
+        # self._draw_trapezoid(color=WHITE, i=i, lf=self.idx074, rf=self.idx076, bf=self.yf)
 
     def _draw_object(self, i: int, car_y: int, cmax: int) -> None:
         '''設置物を描画します。'''
