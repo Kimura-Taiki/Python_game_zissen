@@ -27,9 +27,9 @@ def trapezoid_color(course_point: int) -> pygame.Color:
     return GRAY
 
 
-def draw_obj(surface: pygame.surface.Surface, img: pygame.surface.Surface, x: int, y: int, scale: float) -> None:
+def draw_obj(surface: pygame.surface.Surface, img: pygame.surface.Surface, x: int | float, y: int | float, scale: float) -> None:
     img_rz = pygame.transform.rotozoom(surface=img, angle=0, scale=scale)
-    surface.blit(source=img_rz, dest=[x-img_rz.get_width(), y-img_rz.get_height()])
+    surface.blit(source=img_rz, dest=[x-img_rz.get_width()/2, y-img_rz.get_height()])
 
 
 class Course():
@@ -112,43 +112,21 @@ class RacerGame():
     def mainloop(self) -> None:
         process_input_events(move_forward=self._move_forward)
 
-        di1: float = 0.0
-        board_lx: list[float] = [WX/2-BOARD_W[i]/2+(di1 := di1+self.COURSE.CURVE[self._mod_car_y(dy=i)])/2 for i in range(BOARD)]
-        di2: float = 0.0
-        board_rx: list[float] = [WX/2+BOARD_W[i]/2+(di2 := di2+self.COURSE.CURVE[self._mod_car_y(dy=i)])/2 for i in range(BOARD)]
+        _sum_curve = 0.0
+        curvature_integral = [(_sum_curve := _sum_curve+self.COURSE.CURVE[self._mod_car_y(dy=i)]/2) for i in range(BOARD)]
+        board_lx = [WX/2-BOARD_W[i]/2+curvature_integral[i] for i in range(BOARD)]
+        board_rx = [WX/2+BOARD_W[i]/2+curvature_integral[i] for i in range(BOARD)]
         ud: float = 0.0
         board_ud: list[float] = [(ud := ud+self.COURSE.UPDOWN[self._mod_car_y(dy=i)])/30 for i in range(BOARD)]
         horizon: int = Y_AT_0_DEGREES+int(sum(self.COURSE.UPDOWN[self._mod_car_y(dy=i)] for i in range(BOARD))/3)
         sy: float = float(horizon)
         board_by: list[float] = [(sy := sy+BOARD_H[BOARD-1-i]*(WY-horizon)/200)-BOARD_UD[BOARD-1-i]*board_ud[BOARD-1-i] for i in range(BOARD)][::-1]
 
-        self.screen.fill(color=SEA_BLUE)
-        self.screen.blit(self.COURSE.IMG_BG, [self.vertical-WX, horizon-Y_AT_0_DEGREES])
-        self.screen.blit(self.COURSE.IMG_BG, [self.vertical, horizon-Y_AT_0_DEGREES])
-        self.screen.blit(source=IMG_SEA, dest=[board_lx[BOARD-1]-780, horizon])
+        self._draw_background(sea_x=int(board_lx[BOARD-1]-780), horizon_y=horizon)
 
         # 描画用データをもとに道路を描く
         for i in range(BOARD-1, 0, -1):
-            self._draw_trapezoid(color=trapezoid_color(course_point=self.car_y+i), i=i,
-                                 lf=lambda i: board_lx[i], rf=lambda i: board_rx[i], bf=lambda i: board_by[i])
-            if int(self.car_y+i)%10 <= 4: # 左右の黄色線
-                self._draw_trapezoid(color=YELLOW, i=i, lf=lambda i: board_lx[i], rf=lambda i: board_lx[i]+BOARD_W[i]*0.02, bf=lambda i: board_by[i])
-                self._draw_trapezoid(color=YELLOW, i=i, lf=lambda i: board_rx[i]-BOARD_W[i]*0.02, rf=lambda i: board_rx[i], bf=lambda i: board_by[i])
-            if int(self.car_y+i)%20 <= 10: # 白線
-                self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: board_lx[i]+BOARD_W[i]*0.24, rf=lambda i: board_lx[i]+BOARD_W[i]*0.26, bf=lambda i: board_by[i])
-                self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: board_lx[i]+BOARD_W[i]*0.49, rf=lambda i: board_rx[i]-BOARD_W[i]*0.49, bf=lambda i: board_by[i])
-                self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: board_rx[i]-BOARD_W[i]*0.26, rf=lambda i: board_rx[i]-BOARD_W[i]*0.24, bf=lambda i: board_by[i])
-            scale = 1.5*BOARD_W[i]/BOARD_W[0]
-            obj_l = BOARD_LEFT_OBJECT[self._mod_car_y(dy=i)]
-            if obj_l == OBJECT_PALM_TREE:
-                draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=board_lx[i]-BOARD_W[i]*0.05, y=board_by[i], scale=scale)
-            if obj_l == OBJECT_YACHT:
-                draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=board_lx[i]-BOARD_W[i]*0.5, y=board_by[i], scale=scale)
-            if obj_l == OBJECT_SEA:
-                draw_obj(surface=self.screen, img=IMG_SEA, x=board_lx[i], y=board_by[i])
-            obj_r = BOARD_RIGHT_OBJECT[self._mod_car_y(dy=i)]
-            if obj_r == OBJECT_BIKINI_BILLBOARD:
-                draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=board_rx[i]+BOARD_W[i]*0.3, y=board_by[i], scale=scale)
+            self._draw_board_section(i=i, lxf=lambda i: board_lx[i], rxf=lambda i: board_rx[i], wxf=lambda i: BOARD_W[i], yf=lambda i: board_by[i])
 
         pygame.display.update()
         self.clock.tick(60)
@@ -157,8 +135,38 @@ class RacerGame():
         '''car_yをコース全長で循環させる処理をこの関数で統一して字数も減らします。'''
         return (self.car_y+dy) % self.COURSE.CMAX
 
+    def _draw_background(self, sea_x: int, horizon_y: int) -> None:
+        '''背景部分を描画する命令です。道路や設置物は連続的なので_draw_board_section命令の繰り返しで描画しています。'''
+        self.screen.fill(color=SEA_BLUE)
+        self.screen.blit(self.COURSE.IMG_BG, [self.vertical-WX, horizon_y-Y_AT_0_DEGREES])
+        self.screen.blit(self.COURSE.IMG_BG, [self.vertical, horizon_y-Y_AT_0_DEGREES])
+        self.screen.blit(source=IMG_SEA, dest=[sea_x, horizon_y])
+
     def _draw_trapezoid(self, color: pygame.Color, i: int,
                         lf: Callable[[int], float], rf: Callable[[int], float], bf: Callable[[int], float]) -> None:
         '''色color,板番号i,上辺の左X座標関数lf,上辺の右座標関数rf,上辺のY座標関数bfから台形を描画する命令です。'''
         pygame.draw.polygon(surface=self.screen, color=color,
                             points=[[lf(i), bf(i)], [rf(i), bf(i)], [rf(i-1), bf(i-1)], [lf(i-1), bf(i-1)]])
+
+    def _draw_board_section(self, i: int, lxf: Callable[[int], float], rxf: Callable[[int], float], wxf: Callable[[int], float], yf: Callable[[int], float]) -> None:
+        '''板番号i,上辺の左X座標関数lxf,上辺の右座標関数rxf,上辺の幅関数wxf,上辺のY座標関数yfから板の存在する面全域を描画する命令です。
+        描画対象には道路と設置物があります。'''
+        self._draw_trapezoid(color=trapezoid_color(course_point=self.car_y+i), i=i, lf=lxf, rf=rxf, bf=yf)
+        if int(self.car_y+i)%10 <= 4: # 左右の黄色線
+            self._draw_trapezoid(color=YELLOW, i=i, lf=lxf, rf=lambda i: lxf(i)+wxf(i)*0.02, bf=yf)
+            self._draw_trapezoid(color=YELLOW, i=i, lf=lambda i: rxf(i)-wxf(i)*0.02, rf=rxf, bf=yf)
+        if int(self.car_y+i)%20 <= 10: # 白線
+            self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: lxf(i)+wxf(i)*0.24, rf=lambda i: lxf(i)+wxf(i)*0.26, bf=yf)
+            self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: lxf(i)+wxf(i)*0.49, rf=lambda i: rxf(i)-wxf(i)*0.49, bf=yf)
+            self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: rxf(i)-wxf(i)*0.26, rf=lambda i: rxf(i)-wxf(i)*0.24, bf=yf)
+        scale = 1.5*BOARD_W[i]/BOARD_W[0]
+        obj_l = BOARD_LEFT_OBJECT[self._mod_car_y(dy=i)]
+        if obj_l == OBJECT_PALM_TREE:
+            draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=lxf(i)-wxf(i)*0.05, y=yf(i), scale=scale)
+        if obj_l == OBJECT_YACHT:
+            draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=lxf(i)-wxf(i)*0.5, y=yf(i), scale=scale)
+        if obj_l == OBJECT_SEA:
+            self.screen.blit(source=IMG_SEA, dest=[lxf(i)-wxf(i)*0.5-780, yf(i)])
+        obj_r = BOARD_RIGHT_OBJECT[self._mod_car_y(dy=i)]
+        if obj_r == OBJECT_BIKINI_BILLBOARD:
+            draw_obj(surface=self.screen, img=IMG_OBJ[obj_r], x=rxf(i)+wxf(i)*0.3, y=yf(i), scale=scale)

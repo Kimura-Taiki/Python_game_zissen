@@ -95,9 +95,15 @@ IMG_BG: Final = pygame.image.load("image_pr/bg.png").convert()
 '''Surface化済みの背景画像の原板です。'''
 IMG_SEA: Final = pygame.image.load("image_pr/sea.png").convert_alpha()
 '''Surface化済みの海岸画像の原板です。'''
-IMG_OBJ: Final[list[Optional[pygame.surface.Surface]]] = [
-    None,
+IMG_OBJ: Final[list[pygame.surface.Surface]] = [
+    pygame.image.load("image_pr/car03.png").convert_alpha(),
     pygame.image.load("image_pr/board.png").convert_alpha(),
     pygame.image.load("image_pr/yashi.png").convert_alpha(),
     pygame.image.load("image_pr/yacht.png").convert_alpha()]
 '''Surface化済みのオブジェクト画像の原板です。'''
+# IMG_OBJ: Final[list[Optional[pygame.surface.Surface]]] = [
+#     None,
+#     pygame.image.load("image_pr/board.png").convert_alpha(),
+#     pygame.image.load("image_pr/yashi.png").convert_alpha(),
+#     pygame.image.load("image_pr/yacht.png").convert_alpha()]
+# '''Surface化済みのオブジェクト画像の原板です。'''
