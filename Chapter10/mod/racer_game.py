@@ -2,7 +2,7 @@ import pygame
 import sys
 from math import sin, radians
 from pygame.locals import K_UP, QUIT
-from typing import Callable, Final, Optional
+from typing import Callable, Final, Optional, NamedTuple
 from mod.const import *
 from mod.course import Course
 
@@ -87,6 +87,9 @@ class Draw():
         [self.idx002, self.idx098, self.idx024, self.idx026, self.idx049, self.idx051, self.idx074, self.idx076,
          self.idxm05, self.idxm50, self.idx130] = [
              self._internal_division(ratio=value) for value in [0.02, 0.98, 0.24, 0.26, 0.49, 0.51, 0.74, 0.76, -0.05, -0.50, 1.30]]
+        self.yellow_tz = [self._TZ(YELLOW, self.lxf, self.idx002), self._TZ(YELLOW,  self.idx098, self.rxf)]
+        self.white_tz = [self._TZ(WHITE, self.idx024, self.idx026), self._TZ(WHITE,  self.idx049, self.idx051),
+                         self._TZ(WHITE, self.idx074, self.idx076)]
 
     def draw_background(self, img_bg: pygame.surface.Surface, vertical_x: int, sea_x: int, horizon_y: int) -> None:
         '''背景部分を描画する命令です。道路や設置物は連続的なので_draw_board_section命令の繰り返しで描画しています。'''
@@ -95,16 +98,18 @@ class Draw():
         self.screen.blit(img_bg, [vertical_x, horizon_y-Y_AT_0_DEGREES])
         self.screen.blit(source=IMG_SEA, dest=[sea_x, horizon_y])
 
+    class _TZ(NamedTuple):
+        '''下記のdraw_board_section命令中に_draw_trapezoid命令を走査する際にmypyでエラーを起こさない為のクラスです。'''
+        color: pygame.Color; lxf: Callable[[int], float]; rxf: Callable[[int], float]
+
     def draw_board_section(self, i: int, car_y: int, cmax: int) -> None:
         '''板番号i,上辺の左X座標関数lxf,上辺の右座標関数rxf,上辺の幅関数wxf,上辺のY座標関数yfから板の存在する面全域を描画する命令です。
         描画対象には道路と設置物があります。'''
         self._draw_trapezoid(color=trapezoid_color(course_point=car_y+i), i=i, lf=self.lxf, rf=self.rxf, bf=self.yf)
         if int(car_y+i) % 10 <= 4:
-            [self._draw_trapezoid(color=j[0], i=i, lf=j[1], rf=j[2], bf=self.yf) for j
-            in [[YELLOW, self.lxf, self.idx002], [YELLOW,  self.idx098, self.rxf]]]
+            [self._draw_trapezoid(color=j.color, i=i, lf=j.lxf, rf=j.rxf, bf=self.yf) for j in self.yellow_tz]
         if int(car_y+i) % 20 <= 10:
-            [self._draw_trapezoid(color=j[0], i=i, lf=j[1], rf=j[2], bf=self.yf) for j
-            in [[WHITE, self.idx024, self.idx026], [WHITE,  self.idx049, self.idx051], [WHITE, self.idx074, self.idx076]]]
+            [self._draw_trapezoid(color=j.color, i=i, lf=j.lxf, rf=j.rxf, bf=self.yf) for j in self.white_tz]
         self._draw_object(i=i, car_y=car_y, cmax=cmax)
 
     def _draw_trapezoid(self, color: pygame.Color, i: int, lf: Callable[[int], float], rf: Callable[[int], float],
