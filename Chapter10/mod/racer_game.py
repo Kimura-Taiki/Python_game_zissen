@@ -100,9 +100,11 @@ class Draw():
         描画対象には道路と設置物があります。'''
         self._draw_trapezoid(color=trapezoid_color(course_point=car_y+i), i=i, lf=self.lxf, rf=self.rxf, bf=self.yf)
         if int(car_y+i) % 10 <= 4:
-            self._draw_yellow_line(i=i)
+            [self._draw_trapezoid(color=j[0], i=i, lf=j[1], rf=j[2], bf=self.yf) for j
+            in [[YELLOW, self.lxf, self.idx002], [YELLOW,  self.idx098, self.rxf]]]
         if int(car_y+i) % 20 <= 10:
-            self._draw_white_line(i=i)
+            [self._draw_trapezoid(color=j[0], i=i, lf=j[1], rf=j[2], bf=self.yf) for j
+            in [[WHITE, self.idx024, self.idx026], [WHITE,  self.idx049, self.idx051], [WHITE, self.idx074, self.idx076]]]
         self._draw_object(i=i, car_y=car_y, cmax=cmax)
 
     def _draw_trapezoid(self, color: pygame.Color, i: int, lf: Callable[[int], float], rf: Callable[[int], float],
@@ -116,21 +118,6 @@ class Draw():
     def _internal_division(self, ratio: float) -> Callable[[int], float]:
         '''ratioの比率でlxf-rxf間を内分する関数を返す関数です。ratio=0.0でlxf(左端)、ratio=1.0でrxf(右端)となります。'''
         return lambda i: self.lxf(i)*(1.0-ratio)+self.rxf(i)*ratio
-
-    def _draw_yellow_line(self, i: int) -> None:
-        '''道路脇の黄線を描画します。'''
-        [self._draw_trapezoid(color=j[0], i=i, lf=j[1], rf=j[2], bf=self.yf) for j
-         in [[YELLOW, self.lxf, self.idx002], [YELLOW,  self.idx098, self.rxf]]]
-        # self._draw_trapezoid(color=YELLOW, i=i, lf=self.lxf, rf=self.idx002, bf=self.yf)
-        # self._draw_trapezoid(color=YELLOW, i=i, lf=self.idx098, rf=self.rxf, bf=self.yf)
-
-    def _draw_white_line(self, i: int) -> None:
-        '''道路の白線を描画します。'''
-        [self._draw_trapezoid(color=j[0], i=i, lf=j[1], rf=j[2], bf=self.yf) for j
-         in [[WHITE, self.idx024, self.idx026], [WHITE,  self.idx049, self.idx051], [WHITE, self.idx074, self.idx076]]]
-        # self._draw_trapezoid(color=WHITE, i=i, lf=self.idx024, rf=self.idx026, bf=self.yf)
-        # self._draw_trapezoid(color=WHITE, i=i, lf=self.idx049, rf=self.idx051, bf=self.yf)
-        # self._draw_trapezoid(color=WHITE, i=i, lf=self.idx074, rf=self.idx076, bf=self.yf)
 
     def _draw_object(self, i: int, car_y: int, cmax: int) -> None:
         '''設置物を描画します。'''
