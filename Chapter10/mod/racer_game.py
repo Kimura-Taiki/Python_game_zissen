@@ -68,9 +68,6 @@ class RacerGame():
                              sea_x=int(board_lx[BOARD-1]+SEA_BLIT_X_OFFSET), horizon_y=horizon)
         for i in range(BOARD-1, 0, -1):
             draw.draw_board_section(i=i, car_y=self.car_y, cmax=self.COURSE.CMAX)
-        # self._draw_background(sea_x=int(board_lx[BOARD-1]+SEA_BLIT_X_OFFSET), horizon_y=horizon)
-        # for i in range(BOARD-1, 0, -1):
-        #     self._draw_board_section(i=i, lxf=lambda i: board_lx[i], rxf=lambda i: board_rx[i], wxf=lambda i: BOARD_W[i], yf=lambda i: board_by[i])
 
         pygame.display.update()
         self.clock.tick(60)
@@ -79,53 +76,6 @@ class RacerGame():
         '''car_yをコース全長で循環させる処理をこの関数で統一して字数も減らします。'''
         return (self.car_y+dy) % self.COURSE.CMAX
 
-    def _draw_background(self, sea_x: int, horizon_y: int) -> None:
-        '''背景部分を描画する命令です。道路や設置物は連続的なので_draw_board_section命令の繰り返しで描画しています。'''
-        self.screen.fill(color=SEA_BLUE)
-        self.screen.blit(self.COURSE.IMG_BG, [self.vertical-WX, horizon_y-Y_AT_0_DEGREES])
-        self.screen.blit(self.COURSE.IMG_BG, [self.vertical, horizon_y-Y_AT_0_DEGREES])
-        self.screen.blit(source=IMG_SEA, dest=[sea_x, horizon_y])
-
-    def _draw_trapezoid(self, color: pygame.Color, i: int,
-                        lf: Callable[[int], float], rf: Callable[[int], float], bf: Callable[[int], float]) -> None:
-        '''色color,板番号i,上辺の左X座標関数lf,上辺の右座標関数rf,上辺のY座標関数bfから台形を描画する命令です。'''
-        pygame.draw.polygon(surface=self.screen, color=color,
-                            points=[[lf(i), bf(i)], [rf(i), bf(i)], [rf(i-1), bf(i-1)], [lf(i-1), bf(i-1)]])
-
-    def _draw_yellow_line(self, i: int, lxf: Callable[[int], float], rxf: Callable[[int], float], wxf: Callable[[int], float], yf: Callable[[int], float]) -> None:
-        '''道路脇の黄線を描画します。'''
-        self._draw_trapezoid(color=YELLOW, i=i, lf=lxf, rf=lambda i: lxf(i) + wxf(i) * 0.02, bf=yf)
-        self._draw_trapezoid(color=YELLOW, i=i, lf=lambda i: rxf(i) - wxf(i) * 0.02, rf=rxf, bf=yf)
-
-    def _draw_white_line(self, i: int, lxf: Callable[[int], float], rxf: Callable[[int], float], wxf: Callable[[int], float], yf: Callable[[int], float]) -> None:
-        '''道路の白線を描画します。'''
-        self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: lxf(i) + wxf(i) * 0.24, rf=lambda i: lxf(i) + wxf(i) * 0.26, bf=yf)
-        self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: lxf(i) + wxf(i) * 0.49, rf=lambda i: rxf(i) - wxf(i) * 0.49, bf=yf)
-        self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: rxf(i) - wxf(i) * 0.26, rf=lambda i: rxf(i) - wxf(i) * 0.24, bf=yf)
-
-    def _draw_object(self, i: int, lxf: Callable[[int], float], rxf: Callable[[int], float], wxf: Callable[[int], float], yf: Callable[[int], float]) -> None:
-        '''設置物を描画します。'''
-        scale = 1.5 * BOARD_W[i] / BOARD_W[0]
-        obj_l = BOARD_LEFT_OBJECT[self._mod_car_y(dy=i)]
-        if obj_l == OBJECT_PALM_TREE:
-            draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=lxf(i) - wxf(i) * 0.05, y=yf(i), scale=scale)
-        if obj_l == OBJECT_YACHT:
-            draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=lxf(i) - wxf(i) * 0.5, y=yf(i), scale=scale)
-        if obj_l == OBJECT_SEA:
-            self.screen.blit(source=IMG_SEA, dest=[lxf(i) - wxf(i) * 0.5 + SEA_BLIT_X_OFFSET, yf(i)])
-        obj_r = BOARD_RIGHT_OBJECT[self._mod_car_y(dy=i)]
-        if obj_r == OBJECT_BIKINI_BILLBOARD:
-            draw_obj(surface=self.screen, img=IMG_OBJ[obj_r], x=rxf(i)+wxf(i)*0.3, y=yf(i), scale=scale)
-
-    def _draw_board_section(self, i: int, lxf: Callable[[int], float], rxf: Callable[[int], float], wxf: Callable[[int], float], yf: Callable[[int], float]) -> None:
-        '''板番号i,上辺の左X座標関数lxf,上辺の右座標関数rxf,上辺の幅関数wxf,上辺のY座標関数yfから板の存在する面全域を描画する命令です。
-        描画対象には道路と設置物があります。'''
-        self._draw_trapezoid(color=trapezoid_color(course_point=self.car_y + i), i=i, lf=lxf, rf=rxf, bf=yf)
-        if int(self.car_y + i) % 10 <= 4:
-            self._draw_yellow_line(i=i, lxf=lxf, rxf=rxf, wxf=wxf, yf=yf)
-        if int(self.car_y + i) % 20 <= 10:
-            self._draw_white_line(i=i, lxf=lxf, rxf=rxf, wxf=wxf, yf=yf)
-        self._draw_object(i=i, lxf=lxf, rxf=rxf, wxf=wxf, yf=yf)
 
 class Draw():
     def __init__(self, screen: pygame.surface.Surface, lxf: Callable[[int], float], rxf: Callable[[int], float],
@@ -136,6 +86,17 @@ class Draw():
         self.rxf = rxf
         self.wxf = wxf
         self.yf = yf
+        self.idx002 = self._internal_division(ratio=0.02)
+        self.idx098 = self._internal_division(ratio=0.98)
+        self.idx024 = self._internal_division(ratio=0.24)
+        self.idx026 = self._internal_division(ratio=0.26)
+        self.idx049 = self._internal_division(ratio=0.49)
+        self.idx051 = self._internal_division(ratio=0.51)
+        self.idx074 = self._internal_division(ratio=0.74)
+        self.idx076 = self._internal_division(ratio=0.76)
+        self.idxm05 = self._internal_division(ratio=-0.05)
+        self.idxm50 = self._internal_division(ratio=-0.50)
+        self.idx130 = self._internal_division(ratio=1.30)
 
     def draw_background(self, img_bg: pygame.surface.Surface, vertical_x: int, sea_x: int, horizon_y: int) -> None:
         '''背景部分を描画する命令です。道路や設置物は連続的なので_draw_board_section命令の繰り返しで描画しています。'''
@@ -160,16 +121,19 @@ class Draw():
         pygame.draw.polygon(surface=self.screen, color=color,
                             points=[[lf(i), bf(i)], [rf(i), bf(i)], [rf(i-1), bf(i-1)], [lf(i-1), bf(i-1)]])
 
+    def _internal_division(self, ratio: float) -> Callable[[int], float]:
+        return lambda i: self.lxf(i)*(1.0-ratio)+self.rxf(i)*ratio
+
     def _draw_yellow_line(self, i: int) -> None:
         '''道路脇の黄線を描画します。'''
-        self._draw_trapezoid(color=YELLOW, i=i, lf=self.lxf, rf=lambda i: self.lxf(i) + self.wxf(i) * 0.02, bf=self.yf)
-        self._draw_trapezoid(color=YELLOW, i=i, lf=lambda i: self.rxf(i) - self.wxf(i) * 0.02, rf=self.rxf, bf=self.yf)
+        self._draw_trapezoid(color=YELLOW, i=i, lf=self.lxf, rf=self.idx002, bf=self.yf)
+        self._draw_trapezoid(color=YELLOW, i=i, lf=self.idx098, rf=self.rxf, bf=self.yf)
 
     def _draw_white_line(self, i: int) -> None:
         '''道路の白線を描画します。'''
-        self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: self.lxf(i) + self.wxf(i) * 0.24, rf=lambda i: self.lxf(i) + self.wxf(i) * 0.26, bf=self.yf)
-        self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: self.lxf(i) + self.wxf(i) * 0.49, rf=lambda i: self.rxf(i) - self.wxf(i) * 0.49, bf=self.yf)
-        self._draw_trapezoid(color=WHITE, i=i, lf=lambda i: self.rxf(i) - self.wxf(i) * 0.26, rf=lambda i: self.rxf(i) - self.wxf(i) * 0.24, bf=self.yf)
+        self._draw_trapezoid(color=WHITE, i=i, lf=self.idx024, rf=self.idx026, bf=self.yf)
+        self._draw_trapezoid(color=WHITE, i=i, lf=self.idx049, rf=self.idx051, bf=self.yf)
+        self._draw_trapezoid(color=WHITE, i=i, lf=self.idx074, rf=self.idx076, bf=self.yf)
 
     def _draw_object(self, i: int, car_y: int, cmax: int) -> None:
         '''設置物を描画します。'''
@@ -177,12 +141,12 @@ class Draw():
         mod_car_y = (car_y+i) % cmax
         obj_l = BOARD_LEFT_OBJECT[mod_car_y]
         if obj_l == OBJECT_PALM_TREE:
-            draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=self.lxf(i) - self.wxf(i) * 0.05, y=self.yf(i), scale=scale)
+            draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=self.idxm05(i), y=self.yf(i), scale=scale)
         if obj_l == OBJECT_YACHT:
-            draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=self.lxf(i) - self.wxf(i) * 0.5, y=self.yf(i), scale=scale)
+            draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=self.idxm50(i), y=self.yf(i), scale=scale)
         if obj_l == OBJECT_SEA:
-            self.screen.blit(source=IMG_SEA, dest=[self.lxf(i) - self.wxf(i) * 0.5 + SEA_BLIT_X_OFFSET, self.yf(i)])
+            self.screen.blit(source=IMG_SEA, dest=[self.idxm50(i) + SEA_BLIT_X_OFFSET, self.yf(i)])
         obj_r = BOARD_RIGHT_OBJECT[mod_car_y]
         if obj_r == OBJECT_BIKINI_BILLBOARD:
-            draw_obj(surface=self.screen, img=IMG_OBJ[obj_r], x=self.rxf(i)+self.wxf(i)*0.3, y=self.yf(i), scale=scale)
+            draw_obj(surface=self.screen, img=IMG_OBJ[obj_r], x=self.idx130(i), y=self.yf(i), scale=scale)
 
