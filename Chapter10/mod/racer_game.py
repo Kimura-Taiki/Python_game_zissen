@@ -62,8 +62,7 @@ class RacerGame():
         board_by, horizon = self.COURSE.both_updown_lists(car_y=self.car_y)
 
         # 描画部分
-        draw = Draw(screen=self.screen, lxf=lambda i: board_lx[i], rxf=lambda i: board_rx[i],
-                    wxf=lambda i: BOARD_W[i], yf=lambda i: board_by[i])
+        draw = Draw(screen=self.screen, lxf=lambda i: board_lx[i], rxf=lambda i: board_rx[i], yf=lambda i: board_by[i])
         draw.draw_background(img_bg=self.COURSE.IMG_BG, vertical_x=self.vertical,
                              sea_x=int(board_lx[BOARD-1]+SEA_BLIT_X_OFFSET), horizon_y=horizon)
         for i in range(BOARD-1, 0, -1):
@@ -79,12 +78,11 @@ class RacerGame():
 
 class Draw():
     def __init__(self, screen: pygame.surface.Surface, lxf: Callable[[int], float], rxf: Callable[[int], float],
-                 wxf: Callable[[int], float], yf: Callable[[int], float]) -> None:
+                 yf: Callable[[int], float]) -> None:
         self.screen = screen
         '''描画先です。'''
         self.lxf = lxf
         self.rxf = rxf
-        self.wxf = wxf
         self.yf = yf
         self.idx002 = self._internal_division(ratio=0.02)
         self.idx098 = self._internal_division(ratio=0.98)
