@@ -84,17 +84,9 @@ class Draw():
         self.lxf = lxf
         self.rxf = rxf
         self.yf = yf
-        self.idx002 = self._internal_division(ratio=0.02)
-        self.idx098 = self._internal_division(ratio=0.98)
-        self.idx024 = self._internal_division(ratio=0.24)
-        self.idx026 = self._internal_division(ratio=0.26)
-        self.idx049 = self._internal_division(ratio=0.49)
-        self.idx051 = self._internal_division(ratio=0.51)
-        self.idx074 = self._internal_division(ratio=0.74)
-        self.idx076 = self._internal_division(ratio=0.76)
-        self.idxm05 = self._internal_division(ratio=-0.05)
-        self.idxm50 = self._internal_division(ratio=-0.50)
-        self.idx130 = self._internal_division(ratio=1.30)
+        [self.idx002, self.idx098, self.idx024, self.idx026, self.idx049, self.idx051, self.idx074, self.idx076,
+         self.idxm05, self.idxm50, self.idx130] = [
+             self._internal_division(ratio=value) for value in [0.02, 0.98, 0.24, 0.26, 0.49, 0.51, 0.74, 0.76, -0.05, -0.50, 1.30]]
 
     def draw_background(self, img_bg: pygame.surface.Surface, vertical_x: int, sea_x: int, horizon_y: int) -> None:
         '''背景部分を描画する命令です。道路や設置物は連続的なので_draw_board_section命令の繰り返しで描画しています。'''
@@ -120,6 +112,7 @@ class Draw():
                             points=[[lf(i), bf(i)], [rf(i), bf(i)], [rf(i-1), bf(i-1)], [lf(i-1), bf(i-1)]])
 
     def _internal_division(self, ratio: float) -> Callable[[int], float]:
+        '''ratioの比率でlxf-rxf間を内分する関数を返す関数です。ratio=0.0でlxf(左端)、ratio=1.0でrxf(右端)となります。'''
         return lambda i: self.lxf(i)*(1.0-ratio)+self.rxf(i)*ratio
 
     def _draw_yellow_line(self, i: int) -> None:
