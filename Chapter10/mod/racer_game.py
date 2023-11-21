@@ -27,6 +27,11 @@ def trapezoid_color(course_point: int) -> pygame.Color:
     return GRAY
 
 
+def draw_obj(surface: pygame.surface.Surface, img: pygame.surface.Surface, x: int, y: int, scale: float) -> None:
+    img_rz = pygame.transform.rotozoom(surface=img, angle=0, scale=scale)
+    surface.blit(source=img_rz, dest=[x-img_rz.get_width(), y-img_rz.get_height()])
+
+
 class Course():
     '''レースで使うコース情報を保持するクラスです。'''
     def __init__(self, img_bg: pygame.surface.Surface, cmax: int, curve: list[float], updown: list[float],
@@ -69,6 +74,17 @@ class Course():
         return Course(img_bg=pygame.image.load(PNG_BG), cmax=BOARD*CLEN,
                       curve=[DATA_LR[i]*(BOARD-j)/BOARD+DATA_LR[(i+1) % CLEN]*j/BOARD for i in range(CLEN) for j in range(BOARD)],
                       updown=[DATA_UD[i]*(BOARD-j)/BOARD+DATA_UD[(i+1) % CLEN]*j/BOARD for i in range(CLEN) for j in range(BOARD)])
+    
+    @classmethod
+    def obj_list_course(cls) -> 'Course':
+        '''list1008_1.pyで用いられている設置物付きのコースを生成する関数です。
+        設置物の配置は定数から取り出します。'''
+        # return Course(img_bg=pygame.image.load(PNG_BG), cmax=BOARD*CLEN,
+        return Course(img_bg=IMG_BG, cmax=BOARD*CLEN,
+                      curve=[DATA_LR[i]*(BOARD-j)/BOARD+DATA_LR[(i+1) % CLEN]*j/BOARD for i in range(CLEN) for j in range(BOARD)],
+                      updown=[DATA_UD[i]*(BOARD-j)/BOARD+DATA_UD[(i+1) % CLEN]*j/BOARD for i in range(CLEN) for j in range(BOARD)],
+                      object_left=BOARD_LEFT_OBJECT,
+                      object_right=BOARD_RIGHT_OBJECT)
 
 
 class RacerGame():
@@ -80,7 +96,7 @@ class RacerGame():
         self.clock = pygame.time.Clock()
         '''pygame.time.Clock : ゲームループのフレームレートを制御するためのClockインスタンスです。
         このクロックは主に `Clock.tick` メソッドを使用して一定のフレームレートを維持します。'''
-        self.COURSE = Course.lrud_list_course()
+        self.COURSE = Course.obj_list_course()
         '''現在走っているコースです。変更を想定していないので現時点では定数です。
         本来ならRacerGameインスタンス生成時に注入すべき値ですが、今回は面倒なので直埋めします。'''
         self.car_y = 0

@@ -1,4 +1,5 @@
-from typing import Final
+import pygame
+from typing import Final, Optional
 from pygame import Color
 from math import sin, radians
 
@@ -84,5 +85,19 @@ SEA_BLUE: Final[Color] = Color(0, 56, 255)
 YELLOW: Final[Color] = Color(255, 224, 0)
 '''#FFE000'''
 
+pygame.init()
+pygame.display.set_caption("")
+_scr = pygame.display.set_mode((WX, WY))
+
 PNG_BG: Final[str] = "image_pr/bg.png"
 '''ゲーム背景の画像アドレス'''
+IMG_BG: Final = pygame.image.load("image_pr/bg.png").convert()
+'''Surface化済みの背景画像の原板です。'''
+IMG_SEA: Final = pygame.image.load("image_pr/sea.png").convert_alpha()
+'''Surface化済みの海岸画像の原板です。'''
+IMG_OBJ: Final[list[Optional[pygame.surface.Surface]]] = [
+    None,
+    pygame.image.load("image_pr/board.png").convert_alpha(),
+    pygame.image.load("image_pr/yashi.png").convert_alpha(),
+    pygame.image.load("image_pr/yacht.png").convert_alpha()]
+'''Surface化済みのオブジェクト画像の原板です。'''
