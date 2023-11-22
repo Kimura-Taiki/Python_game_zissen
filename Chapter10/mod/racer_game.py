@@ -94,8 +94,8 @@ class Draw():
     def draw_background(self, img_bg: pygame.surface.Surface, vertical_x: int, sea_x: int, horizon_y: int) -> None:
         '''背景部分を描画する命令です。道路や設置物は連続的なので_draw_board_section命令の繰り返しで描画しています。'''
         self.screen.fill(color=SEA_BLUE)
-        self.screen.blit(img_bg, [vertical_x-WX, horizon_y-Y_AT_0_DEGREES])
-        self.screen.blit(img_bg, [vertical_x, horizon_y-Y_AT_0_DEGREES])
+        self.screen.blit(source=img_bg, dest=[vertical_x-WX, horizon_y-Y_AT_0_DEGREES])
+        self.screen.blit(source=img_bg, dest=[vertical_x, horizon_y-Y_AT_0_DEGREES])
         self.screen.blit(source=IMG_SEA, dest=[sea_x, horizon_y])
 
     class _TZ(NamedTuple):
@@ -124,18 +124,19 @@ class Draw():
         '''ratioの比率でlxf-rxf間を内分する関数を返す関数です。ratio=0.0でlxf(左端)、ratio=1.0でrxf(右端)となります。'''
         return lambda i: self.lxf(i)*(1.0-ratio)+self.rxf(i)*ratio
 
+    class _DO(NamedTuple):
+        '''下記の_draw_object命令中にdraw_object命令を走査する際にmypyでエラーを起こさない為のクラスです。'''
+        object: int; cond: int; x: float
+
     def _draw_object(self, i: int, car_y: int, cmax: int) -> None:
         '''設置物を描画します。'''
         scale = 1.5 * BOARD_W[i] / BOARD_W[0]
         mod_car_y = (car_y+i) % cmax
         obj_l = BOARD_LEFT_OBJECT[mod_car_y]
-        if obj_l == OBJECT_PALM_TREE:
-            draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=self.idxm05(i), y=self.yf(i), scale=scale)
-        if obj_l == OBJECT_YACHT:
-            draw_obj(surface=self.screen, img=IMG_OBJ[obj_l], x=self.idxm50(i), y=self.yf(i), scale=scale)
+        obj_r = BOARD_RIGHT_OBJECT[mod_car_y]
+        [draw_obj(surface=self.screen, img=IMG_OBJ[j.object], x=j.x, y=self.yf(i), scale=scale) for j in
+         [self._DO(obj_r, OBJECT_BIKINI_BILLBOARD, self.idx130(i)), self._DO(obj_l, OBJECT_PALM_TREE, self.idxm05(i)),
+          self._DO(obj_l, OBJECT_YACHT, self.idxm50(i))] if j.object == j.cond]
         if obj_l == OBJECT_SEA:
             self.screen.blit(source=IMG_SEA, dest=[self.idxm50(i) + SEA_BLIT_X_OFFSET, self.yf(i)])
-        obj_r = BOARD_RIGHT_OBJECT[mod_car_y]
-        if obj_r == OBJECT_BIKINI_BILLBOARD:
-            draw_obj(surface=self.screen, img=IMG_OBJ[obj_r], x=self.idx130(i), y=self.yf(i), scale=scale)
 
