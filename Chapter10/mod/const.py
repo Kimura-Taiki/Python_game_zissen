@@ -57,6 +57,8 @@ Y_AT_0_DEGREES: Final = 400
 SEA_BLIT_X_OFFSET: Final = -780
 '''海岸線画像を描画する際のオフセット値です。'''
 
+FRAMES_PER_SECOND: Final = 60
+'''秒間更新回数です。'''
 # di: float
 # di = 400.0
 # BOARD_BY: Final[
