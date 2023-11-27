@@ -1,3 +1,8 @@
+for i in range(1, 10+1):
+    print(i)
+exit()
+
+
 from typing import Final
 import csv
 from urllib.request import urlopen
