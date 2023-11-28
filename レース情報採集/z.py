@@ -1,11 +1,13 @@
 import re
 
-race = "農林省賞典中山大障害(OP) "
+names = ["クリスマスハンデキャ(800万下)", "4歳以上500万下", "3歳200万下"]
 
-# 正規表現で"OP"が含まれているか判定
-if re.search(r'OP', race):
-    print("文字列中に'OP'が含まれています。")
-else:
-    print("文字列中に'OP'は含まれていません。")
+pattern = re.compile(r'\d+万下')
 
-print(re.search(r'OP', race))
+for name in names:
+    match = pattern.search(name)
+    if match:
+        result = match.group()
+        print(result)
+    else:
+        print("マッチなし")
