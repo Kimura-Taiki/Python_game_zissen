@@ -10,7 +10,7 @@ MAPPING = [r'G1', r'G2', r'G3', r'(G)', r'(L)', r'(OP)', r'\d+万下', r'勝入'
 
 def load_table(path: str) -> DataFrame:
     df = pd.read_csv(path)
-    races = df.loc[:, ["レース名", "距離"]]
+    races = df.loc[:, ["開催日", "レース名", "距離"]]
     skin = [terrain[0] for terrain in df.loc[:, "距離"]]
     distance = [terrain[-(len(terrain)-1):] for terrain in df.loc[:, "距離"]]
     rank = [get_rank(name) for name in df.loc[:, "レース名"]]
@@ -23,5 +23,11 @@ def get_rank(name: str) -> str:
             return match.group()
     return ""
 
-print(sorted(glob('競争一覧/1975/races*.csv')))
+# print(sorted(glob('競争一覧/1975/races*.csv')))
+# result_df = pd.concat([df1, df2], ignore_index=True)
 
+# for path in sorted(glob('競争一覧/1975/races*.csv'))[0:5]:
+#     print(load_table(path=path))
+
+result_df = pd.concat([load_table(path=path) for path in sorted(glob('競争一覧/1975/races*.csv'))[0:5]], ignore_index=True)
+print(type(result_df))
