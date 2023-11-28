@@ -4,7 +4,7 @@ from re import search
 from glob import glob
 
 # 1.G1, 2.G2, 3.G3, 4.G, 5.L, 6.OP, 7.４勝, 8.３勝, 9.２勝, 10.１勝, 11.未勝利, 12.新馬戦, 13.勝入
-MAPPING = [r'G1', r'G2', r'G3', r'(G)', r'(L)', r'(OP)', r'\d+万下', r'勝入', r'未勝利', r'新馬']
+MAPPING = [r'G1', r'G2', r'G3', r'(G)', r'(L)', r'(OP)', r'\d+万下', r'勝入', r'未勝利', r'未出走', r'新馬']
 
 # 開催日,開催,天気,R,レース名,映像,距離,頭数,馬場,タイム,ペース,勝ち馬,騎手,調教師,2着馬,3着馬
 
@@ -23,4 +23,12 @@ def get_rank(name: str) -> str:
             return match.group()
     return ""
 
-pd.concat([load_table(path=path) for path in sorted(glob('競争一覧/1975/races*.csv'))], ignore_index=True).to_csv("年単位競争一覧/races1975.csv", index=False)
+def organize_races(year_range: range) -> None:
+    for year in year_range:
+        pd.concat(
+            [load_table(path=path) for path in sorted(glob('競争一覧/{}/races*.csv'.format(year)))],
+            ignore_index=True).to_csv("年単位競争一覧/races{}.csv".format(year), index=False)
+        print("{}年度の競争の簡易整理が終わりました。".format(year))
+    print("全ての年度の競争の簡易整理が終わりました。")
+
+organize_races(range(1975, 1980))
