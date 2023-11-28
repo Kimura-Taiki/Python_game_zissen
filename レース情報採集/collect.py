@@ -24,12 +24,12 @@ def total_pages(year: int) -> int:
     total_races = int(match.group().replace(',', '')) if (match := search(r'\d{1,3}(,\d{3})*', pager)) else exit("数字が見つかりませんでした。")
     return ceil(total_races/20)
 
-def make_year(year: int) -> None:
-    for page in range(1, total_pages(year=year)+1):
+def make_year(year: int, start: int=1) -> None:
+    for page in range(start, total_pages(year=year)+1):
         html = urlopen(url=URL(year=year, page=page))
         bsObj = BeautifulSoup(html, features="html.parser")
         table: Any = _tag if (_tag := bsObj.find("table", {"class":CLS})) else exit("<table class={}>が見つかりませんでした。".format(CLS))
-        make_races(path=PATH(year=year), file=FILE(year=year, page=page), table=table)
+        make_races(path=PATH(year=year), file_name=FILE(year=year, page=page), table=table)
     print("{}年度の全ての競争を記録しました。".format(year))
 
 def csvrow_from_tablerow(row: list[Tag]) -> str:
@@ -50,7 +50,9 @@ def make_races(path: str, file_name: str, table: list[Tag]) -> None:
     print('{}が作成されました。'.format(file_name))
 
 def main() -> None:
-    make_year(year=1976)
+    # for year in range(1980, 2022+1, 1):
+    for year in range(2022, 2022+1, 1):
+        make_year(year=year)
     print("全ての競争を記録しました。EoF")
 
 
