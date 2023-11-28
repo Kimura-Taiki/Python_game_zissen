@@ -23,11 +23,4 @@ def get_rank(name: str) -> str:
             return match.group()
     return ""
 
-# print(sorted(glob('競争一覧/1975/races*.csv')))
-# result_df = pd.concat([df1, df2], ignore_index=True)
-
-# for path in sorted(glob('競争一覧/1975/races*.csv'))[0:5]:
-#     print(load_table(path=path))
-
-result_df = pd.concat([load_table(path=path) for path in sorted(glob('競争一覧/1975/races*.csv'))[0:5]], ignore_index=True)
-print(type(result_df))
+pd.concat([load_table(path=path) for path in sorted(glob('競争一覧/1975/races*.csv'))], ignore_index=True).to_csv("年単位競争一覧/races1975.csv", index=False)
