@@ -2,9 +2,12 @@ import pandas as pd
 from pandas.core.frame import DataFrame
 from re import search
 from glob import glob
+from datetime import datetime
 
 # 1.G1, 2.G2, 3.G3, 4.G, 5.L, 6.OP, 7.４勝, 8.３勝, 9.２勝, 10.１勝, 11.未勝利, 12.新馬戦, 13.勝入
-MAPPING = [r'G1', r'G2', r'G3', r'(G)', r'(L)', r'(OP)', r'\d+万下', r'勝入', r'未勝利', r'未出走', r'新馬']
+# MAPPING = [r'G1', r'G2', r'G3', r'(G)', r'(L)', r'(OP)', r'\d+万', r'勝入', r'未勝利', r'未出走', r'新馬']
+# MAPPING = [r'G1', r'G2', r'G3', r'\(G\)', r'\(L\)', r'\(OP\)', r'\d+万', r'勝入', r'未勝利', r'未出走', r'新馬']
+MAPPING = [r'\d+万', r'勝入', r'未勝利', r'未出走', r'新馬', r'G1', r'G2', r'G3', r'OP', r'\(L\)', r'\(G\)']
 
 # 開催日,開催,天気,R,レース名,映像,距離,頭数,馬場,タイム,ペース,勝ち馬,騎手,調教師,2着馬,3着馬
 
@@ -14,6 +17,7 @@ def load_table(path: str) -> DataFrame:
     skin = [terrain[0] for terrain in df.loc[:, "距離"]]
     distance = [terrain[-(len(terrain)-1):] for terrain in df.loc[:, "距離"]]
     rank = [get_rank(name) for name in df.loc[:, "レース名"]]
+    year = [datetime.strptime(date, "%Y/%m/%d").year for date in df.loc[:, "開催日"]]
     races["地肌"], races["距離"], races["クラス"] = skin, distance, rank
     return races
 
@@ -31,4 +35,7 @@ def organize_races(year_range: range) -> None:
         print("{}年度の競争の簡易整理が終わりました。".format(year))
     print("全ての年度の競争の簡易整理が終わりました。")
 
-organize_races(range(1975, 1980))
+# print(load_table(path="test.csv"))
+# exit()
+
+organize_races(range(1975, 2022+1))
