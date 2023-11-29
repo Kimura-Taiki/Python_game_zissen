@@ -3,6 +3,8 @@ from pandas.core.frame import DataFrame
 from re import search
 from glob import glob
 from datetime import datetime
+from collections import Counter
+from functools import reduce, partial
 
 # 1.G1, 2.G2, 3.G3, 4.G, 5.L, 6.OP, 7.４勝, 8.３勝, 9.２勝, 10.１勝, 11.未勝利, 12.新馬戦, 13.勝入
 # MAPPING = [r'G1', r'G2', r'G3', r'(G)', r'(L)', r'(OP)', r'\d+万', r'勝入', r'未勝利', r'未出走', r'新馬']
@@ -43,9 +45,20 @@ def all_races_integrate() -> None:
 def make_database() -> None:
     organize_races(range(1975, 2022+1))
     all_races_integrate()
-
     df = pd.read_csv(filepath_or_buffer="簡易整理競争全統合.csv")
     df[df["クラス"] == "NoClass"].to_csv("クラス未定義競争一覧.csv", index=False)
     print("クラス未定義競争一覧を作成しました。")
 
-make_database()
+def race_count_table(year: int) -> DataFrame:
+    return DataFrame(
+        data=list(Counter(pd.read_csv(
+            filepath_or_buffer="年単位競争一覧/races{}.csv".format(year)).loc[:, "クラス"]).items()),
+        columns=["クラス", str(year)])
+
+def make_class_count_table() -> None:
+    func = partial(pd.merge, how="outer", on="クラス")
+    tables = [race_count_table(year=year) for year in range(1975, 2022+1)]
+    reduce(func, tables).to_csv(path_or_buf="クラス別年間競争一覧.csv", index=False, float_format="%.0f")
+    print("クラス別年間競争一覧を作成しました。")
+
+make_class_count_table()
