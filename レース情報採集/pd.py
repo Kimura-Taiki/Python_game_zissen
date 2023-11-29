@@ -7,8 +7,6 @@ from collections import Counter
 from functools import reduce, partial
 
 # 1.G1, 2.G2, 3.G3, 4.G, 5.L, 6.OP, 7.４勝, 8.３勝, 9.２勝, 10.１勝, 11.未勝利, 12.新馬戦, 13.勝入
-# MAPPING = [r'G1', r'G2', r'G3', r'(G)', r'(L)', r'(OP)', r'\d+万', r'勝入', r'未勝利', r'未出走', r'新馬']
-# MAPPING = [r'G1', r'G2', r'G3', r'\(G\)', r'\(L\)', r'\(OP\)', r'\d+万', r'勝入', r'未勝利', r'未出走', r'新馬']
 MAPPING = [r'\d+万', r'未勝利', r'未出走', r'1勝', r'2勝', r'3勝', r'新馬', r'G1', r'G2', r'G3', r'OP', r'\(L\)', r'\(G\)']
 
 # 開催日,開催,天気,R,レース名,映像,距離,頭数,馬場,タイム,ペース,勝ち馬,騎手,調教師,2着馬,3着馬
@@ -18,11 +16,12 @@ def load_table(path: str) -> DataFrame:
     races = df.loc[:, ["開催日", "レース名", "距離"]]
     skin = [terrain[0] for terrain in df.loc[:, "距離"]]
     distance = [terrain[-(len(terrain)-1):] for terrain in df.loc[:, "距離"]]
-    rank = [get_rank(name) for name in df.loc[:, "レース名"]]
-    races["地肌"], races["距離"], races["クラス"] = skin, distance, rank
+    rank = [get_class(name) for name in df.loc[:, "レース名"]]
+    diachronic_class = [get_diachronic_class(name=rank, year=datetime.strptime(date, "%Y/%m/%d").year) for rank, date in zip(rank, df.loc[:, "開催日"])]
+    races["地肌"], races["距離"], races["クラス"], races["通時"] = skin, distance, rank, diachronic_class
     return races
 
-def get_rank(name: str) -> str:
+def get_class(name: str) -> str:
     for morphism in MAPPING:
         if match := search(morphism, name):
             return match.group()
@@ -61,4 +60,30 @@ def make_class_count_table() -> None:
     reduce(func, tables).to_csv(path_or_buf="クラス別年間競争一覧.csv", index=False, float_format="%.0f")
     print("クラス別年間競争一覧を作成しました。")
 
-make_class_count_table()
+# MAPPING = [r'\d+万', r'未勝利', r'未出走', r'1勝', r'2勝', r'3勝', r'新馬', r'G1', r'G2', r'G3', r'OP', r'\(L\)', r'\(G\)']
+# 1.G1 2.G2 3.G3 4.(G) 5.(L) 6.OP 7.3勝 8.2勝 9.1勝 o.未勝利 z.----
+DIACHRONIC = ["Nooo!!!", "G1", "G2", "G3", "(G)", "(L)", "OP", "3勝", "2勝", "1勝"]
+
+def get_diachronic_class(name: str, year: int=2020) -> str:
+    if name[-1] == "万":
+        prize = int(name[:-1])
+        if (prize > 1000) or (prize > 800 and year < 1984) or (prize > 600 and year < 1978):
+            return "7.3勝"
+        elif (prize > 500) or (prize >300 and year <1979):
+            return "8.2勝"
+        else:
+            return "9.1勝"
+    for i, cond in enumerate(DIACHRONIC):
+        if name == cond:
+            return "{}.{}".format(i, cond)
+    if (name == "未勝利") or (name == "未出走") or (name == "新馬"):
+        return "o.未勝利"
+    return "z.NoClass"
+
+# print(get_diachronic_class("153万"))
+# print(get_diachronic_class("G1"))
+
+# print(load_table(path="競争一覧/1975/races001.csv"))
+
+make_database()
+# make_class_count_table()
