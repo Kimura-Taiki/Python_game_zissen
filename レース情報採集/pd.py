@@ -17,7 +17,6 @@ def load_table(path: str) -> DataFrame:
     skin = [terrain[0] for terrain in df.loc[:, "距離"]]
     distance = [terrain[-(len(terrain)-1):] for terrain in df.loc[:, "距離"]]
     rank = [get_rank(name) for name in df.loc[:, "レース名"]]
-    year = [datetime.strptime(date, "%Y/%m/%d").year for date in df.loc[:, "開催日"]]
     races["地肌"], races["距離"], races["クラス"] = skin, distance, rank
     return races
 
@@ -25,7 +24,7 @@ def get_rank(name: str) -> str:
     for morphism in MAPPING:
         if match := search(morphism, name):
             return match.group()
-    return ""
+    return "NoClass"
 
 def organize_races(year_range: range) -> None:
     for year in year_range:
@@ -35,7 +34,15 @@ def organize_races(year_range: range) -> None:
         print("{}年度の競争の簡易整理が終わりました。".format(year))
     print("全ての年度の競争の簡易整理が終わりました。")
 
-# print(load_table(path="test.csv"))
-# exit()
+def all_races_integrate() -> None:
+    pd.concat(
+        [pd.read_csv(filepath_or_buffer=path) for path in sorted(glob('年単位競争一覧/races*.csv'))],
+        ignore_index=True).to_csv("簡易整理競争全統合.csv", index=False)
+    print("簡易整理の全統合が終わりました。")
 
 organize_races(range(1975, 2022+1))
+all_races_integrate()
+
+df = pd.read_csv(filepath_or_buffer="簡易整理競争全統合.csv")
+df[df["クラス"] == "NoClass"].to_csv("クラス未定義競争一覧.csv", index=False)
+print("クラス未定義競争一覧を作成しました。")
