@@ -7,7 +7,7 @@ from datetime import datetime
 # 1.G1, 2.G2, 3.G3, 4.G, 5.L, 6.OP, 7.４勝, 8.３勝, 9.２勝, 10.１勝, 11.未勝利, 12.新馬戦, 13.勝入
 # MAPPING = [r'G1', r'G2', r'G3', r'(G)', r'(L)', r'(OP)', r'\d+万', r'勝入', r'未勝利', r'未出走', r'新馬']
 # MAPPING = [r'G1', r'G2', r'G3', r'\(G\)', r'\(L\)', r'\(OP\)', r'\d+万', r'勝入', r'未勝利', r'未出走', r'新馬']
-MAPPING = [r'\d+万', r'勝入', r'未勝利', r'未出走', r'新馬', r'G1', r'G2', r'G3', r'OP', r'\(L\)', r'\(G\)']
+MAPPING = [r'\d+万', r'未勝利', r'未出走', r'1勝', r'2勝', r'3勝', r'新馬', r'G1', r'G2', r'G3', r'OP', r'\(L\)', r'\(G\)']
 
 # 開催日,開催,天気,R,レース名,映像,距離,頭数,馬場,タイム,ペース,勝ち馬,騎手,調教師,2着馬,3着馬
 
@@ -40,9 +40,12 @@ def all_races_integrate() -> None:
         ignore_index=True).to_csv("簡易整理競争全統合.csv", index=False)
     print("簡易整理の全統合が終わりました。")
 
-organize_races(range(1975, 2022+1))
-all_races_integrate()
+def make_database() -> None:
+    organize_races(range(1975, 2022+1))
+    all_races_integrate()
 
-df = pd.read_csv(filepath_or_buffer="簡易整理競争全統合.csv")
-df[df["クラス"] == "NoClass"].to_csv("クラス未定義競争一覧.csv", index=False)
-print("クラス未定義競争一覧を作成しました。")
+    df = pd.read_csv(filepath_or_buffer="簡易整理競争全統合.csv")
+    df[df["クラス"] == "NoClass"].to_csv("クラス未定義競争一覧.csv", index=False)
+    print("クラス未定義競争一覧を作成しました。")
+
+make_database()
