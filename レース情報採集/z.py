@@ -1,43 +1,63 @@
-import pandas as pd
+# import matplotlib.pyplot as plt
+# import japanize_matplotlib
 
-# # ダミーのデータを作成 (実際にはCSVから読み込んでください)
-# data = {
-#     "通時": [1, 2, 3, 4, 5],
-#     "適性": [6, 7, 8, 9, 10]
-# }
+# x = [1, 2, 3, 4, 5]
+# y = [1, 4, 9, 16, 25]
+# plt.plot(x, y, color='limegreen', linewidth=2, linestyle="solid", marker="o")
+# plt.xlabel('X', fontsize=18)
+# plt.ylabel('Y', fontsize=18)
+# plt.grid()
+# plt.annotate('annotation', xy=(3,9), xytext=(1,20), fontsize=15, color="red",
+#              arrowprops=dict(color="grey"))
+# plt.title('グラフタイトル(Graph)')
+# plt.show()
 
-# df = pd.DataFrame(data)
+# from pandas_datareader import data
+# import pandas as pd
+# import matplotlib.pyplot as plt
 
-# # "通時" 列と "適性" 列を結合した新しい列を追加
-# df["結合列"] = df.apply(lambda row: (row["通時"], row["適性"]), axis=1)
+# start = "2019-11-01"
+# end = "2020-11-01"
 
-# # 結果を表示
+# df = data.DataReader("^N225", "yahoo", start, end)
+
 # print(df)
-# exit()
 
-# from collections import Counter
-
-# # 該当集合（例としてリストを使用）
-# original_set = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]
-
-# # 重複のない集合を作成
-# unique_set = set(original_set)
-
-# # 各要素の個数を記録するCounterを作成
-# element_counts = Counter(original_set)
-
-# print("重複のない集合:", unique_set)
-# print("各要素の個数:", element_counts)
-
-
+import yfinance as yf
 import pandas as pd
-from pandas.core.frame import DataFrame
-# df = pd.read_csv(filepath_or_buffer="年単位競争一覧/races1975.csv")
-# frequency_distribution = df[["通時", "適性"]].value_counts().reset_index(name="1975")
-# print(frequency_distribution)
-# frequency_distribution.to_csv(path_or_buf="test3.csv", index=True, float_format="%.0f")
+import matplotlib.pyplot as plt
+import japanize_matplotlib
+import matplotlib.dates as mdates
 
+start = "2019-11-01"
+end = "2020-11-01"
 
-fd1975 = pd.read_csv(filepath_or_buffer="年単位競争一覧/races1975.csv")[["通時", "適性"]].value_counts().reset_index(name="1975")
-fd1976 = pd.read_csv(filepath_or_buffer="年単位競争一覧/races1976.csv")[["通時", "適性"]].value_counts().reset_index(name="1976")
-pd.merge(fd1975, fd1976, how="outer", on=["通時", "適性"]).to_csv(path_or_buf="test4.csv", index=True, float_format="%.0f")
+df: pd.DataFrame = yf.download("^N225", start=start, end=end)
+# df["index_num"] = df.reset_index().index
+# # print(df.head(20)); exit()
+
+x = df.index
+y = df["Adj Close"] #終値
+
+#移動平均線追加(５日、２５日)
+span05 = 5
+span25 = 25
+df["sma05"] = y.rolling(window=span05).mean()
+df["sma25"] = y.rolling(window=span25).mean()
+
+plt.figure(figsize=(15, 7))
+plt.plot(x, y, label="close", color="skyblue", linewidth=3, linestyle="dashed", marker="o")
+plt.xticks(fontsize=20)
+plt.yticks(fontsize=20)
+plt.xlabel("日付", fontsize=30)
+plt.ylabel("Price", fontsize=30)
+plt.grid(axis="y")
+plt.title("日経平均株価2019-2020", fontsize=35)
+plt.annotate("points", xy=(mdates.date2num(x[10]), y[10]),
+             xytext=(mdates.date2num(x[10])+10, 24000), fontsize=30,
+             color="red", arrowprops=dict(color="black"))
+plt.plot(x, df["sma05"], label="sma05", color="limegreen")
+plt.plot(x, df["sma25"], label="sma25", color="turquoise")
+plt.legend(fontsize=20)
+plt.savefig("N225.png")
+plt.show()
