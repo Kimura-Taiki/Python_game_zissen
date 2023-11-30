@@ -99,7 +99,17 @@ def get_group(skin: str, distance: str) -> str:
             return "6.砂 中以遠"
     return "z.----"
 
+def make_diachronic_count_table() -> None:
+    func = partial(pd.merge, how="outer", on=["通時", "適性"])
+    tables = [pd.read_csv(filepath_or_buffer="年単位競争一覧/races{}.csv".format(year))[["通時", "適性"]]
+              .value_counts().reset_index(name=str(year)) for year in range(1975, 2022+1)]
+    # tables = [diachronic_count_table(year=year) for year in range(1975, 2022+1)]
+    reduce(func, tables).sort_values(by=["通時", "適性"]).to_csv(path_or_buf="通時クラス別年間競争一覧.csv", index=False, float_format="%.0f")
+    print("通時クラス別年間競争一覧を作成しました。")
+
 # print(load_table(path="競争一覧/1975/races001.csv"))
 # exit()
 
-make_database()
+# make_database()
+
+make_diachronic_count_table()
