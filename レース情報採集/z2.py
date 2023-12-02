@@ -2,14 +2,12 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import japanize_matplotlib
+from matplotlib.axes import Axes
 
-# Read the CSV file
 df = pd.read_csv(filepath_or_buffer="通時クラス別年間競争一覧.csv")
 
-# Filter rows for the specified conditions
 filtered_df = df[(df["通時"] == "o.未勝利") & ((df["適性"] == "1.芝 短距離") | (df["適性"] == "2.芝 マイル") | (df["適性"] == "3.芝 中以遠"))]
 
-# Extract x values (years) and y values for each condition
 x = df.columns[2:]
 x = [int(i) for i in list(x)]
 y1 = filtered_df[filtered_df["適性"] == "1.芝 短距離"].values.flatten()[2:]
@@ -18,9 +16,9 @@ y3 = filtered_df[filtered_df["適性"] == "3.芝 中以遠"].values.flatten()[2:
 labels = ["短距離", "マイル", "中以遠"]
 print(x, y1, y2, y3)
 
+ax: Axes
 fig, ax = plt.subplots()
 ax.stackplot(x, [list(y1), list(y2), list(y3)], labels=labels)
-# ax.stackplot(x, [y1, y2, y3], labels=labels)
 ax.legend(loc="upper left")
 plt.show()
 
