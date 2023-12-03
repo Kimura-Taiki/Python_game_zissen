@@ -1,82 +1,66 @@
-from typing import Type, Any
+import requests
+from bs4 import BeautifulSoup, Tag
+from typing import Any, Type
+from urllib.request import urlopen
+from urllib.parse import urljoin
 
-# 参考:   https://docs.python.org/ja/3/library/typing.html#building-generic-types-and-type-aliases
+ACCOUNT_LOGIN_ID = 'akari15_5ngo@icloud.com'
+ACCOUNT_PSWD = '1kei24ba8'
+LOGIN_URL = 'https://regist.netkeiba.com/account/?pid=login'
+ARIMA_URL = 'https://db.netkeiba.com/race/198206050809/'
 
-def 新規関数[X](instance: Any, cond: Type[X]) -> X:
+
+# セッションを開始
+session = requests.session()
+
+# ログインが必要な情報
+login_info = {
+    "login_id":ACCOUNT_LOGIN_ID,
+    "pswd":ACCOUNT_PSWD,
+    "pid":"login",
+    "action":"auth",
+    # "return_url2":ARIMA_URL
+}
+
+# action
+res = session.post(LOGIN_URL, data=login_info)
+res.raise_for_status() # エラーならここで例外を発生させる
+arima = session.get(ARIMA_URL)
+with open('logged_in_page.txt', 'wb') as file:
+    file.write(res.content)
+with open('arima_page.txt', 'wb') as file:
+    file.write(arima.content)
+exit("終了！")
+
+
+def enforce_type[X](instance: Any, cond: Type[X]) -> X:
     if isinstance(instance, cond):
         return instance
     else:
         raise TypeError(f"検証インスタンスは{type(instance)}型、要求型は{cond}です。")
 
-a = 100
-b = func(a, int)
-c = func(a, str)
-print(b, c)
-exit()
+def find_element[X](bsObj: BeautifulSoup, tag: str="div", class_name: str="", type: Type[X]=Tag, num: int=0) -> X:
+    if num == 0:
+        result = bsObj.find(tag, {"class":class_name}) if class_name != "" else bsObj.find(tag)
+    else:
+        result = bsObj.find_all(tag, {"class":class_name})[num] if class_name != "" else bsObj.find_all(tag)[num]
+    return enforce_type(result, type)
 
+# セッションを開始してログイン
+with requests.Session() as session:
+    login_url = 'https://regist.netkeiba.com/account/?pid=login'  # ログインページのURLに置き換える
+    session.post(login_url, data=login_payload)
 
-def example_function[X](class_type: Type[X]) -> X:
-    print()
-    return class_type()
+    # ログイン後のページにアクセス
+    target_url = 'https://db.netkeiba.com/race/198206050809/'  # 取得したいページのURLに置き換える
+    # response = session.get(target_url)
 
-class Hoge():
-    def __init__(self) -> None:
-        self.x = 11
-        self.y = 22
+    # ログイン後のページのHTMLをBeautifulSoupで解析
+    # exit(urlopen(target_url))
+    bsObj = BeautifulSoup(urlopen(target_url), "html.parser")
+    # bsObj = BeautifulSoup(response.text, 'html.parser')
+    # bsObj = BeautifulSoup(response.text, 'html.parser')
 
-    def coord(self) -> str:
-        return f'({self.x},{self.y})'
-
-h = example_function(Hoge)
-print(h.coord())
-
-# import matplotlib.pyplot as plt
-# import pandas as pd
-# import numpy as np
-# import japanize_matplotlib
-# from matplotlib.axes import Axes
-
-# df = pd.read_csv(filepath_or_buffer="通時クラス別年間競争一覧.csv")
-
-# filtered_df = df[(df["通時"] == "o.未勝利") & ((df["適性"] == "1.芝 短距離") | (df["適性"] == "2.芝 マイル") | (df["適性"] == "3.芝 中以遠"))]
-
-# x = df.columns[2:]
-# x = [int(i) for i in list(x)]
-# y1 = filtered_df[filtered_df["適性"] == "1.芝 短距離"].values.flatten()[2:]
-# y2 = filtered_df[filtered_df["適性"] == "2.芝 マイル"].values.flatten()[2:]
-# y3 = filtered_df[filtered_df["適性"] == "3.芝 中以遠"].values.flatten()[2:]
-# labels = ["短距離", "マイル", "中以遠"]
-# print(x, y1, y2, y3)
-
-# ax: Axes
-# fig, ax = plt.subplots()
-# ax.stackplot(x, [list(y1), list(y2), list(y3)], labels=labels)
-# ax.legend(loc="upper left")
-# plt.show()
-
-
-# exit([len(y1), len(y2), len(y3), [int(i) for i in list(x)]])
-
-# # Plot the data
-# # plt.plot(x, y1, label="(o.未勝利,1.芝 短距離)")
-# # plt.plot(x, y2, label="(o.未勝利,2.芝 マイル)")
-# # plt.plot(x, y3, label="(o.未勝利,3.芝 中以遠)")
-
-# # Set plot labels and title
-# plt.title("Performance Over the Years")
-# plt.xlabel("Year")
-# plt.ylabel("Performance")
-# plt.legend()  # Show legend
-
-# # plt.bar(x, y3, tick_label=x, align="center", color = "c") # (8)棒グラフ描画
-# # plt.bar(x, y2, bottom=y3, tick_label=x, align="center", color = "b") # (8)棒グラフ描画
-# # plt.bar(x, y1, bottom=y3+y2, tick_label=x, align="center", color = "y") # (8)棒グラフ描画
-# plt.stackplot(
-#   x,
-#   y3,
-#   y2,
-#   y1,)
-
-
-# # Show the plot
-# plt.show()
+    # 以降、bsObjを使用してログイン後のページの情報を取得できる
+    table = find_element(bsObj=bsObj, class_name="race_table_01", tag="table", num=0)
+    print(table)
