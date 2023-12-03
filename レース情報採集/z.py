@@ -1,33 +1,59 @@
-import matplotlib.pyplot as plt
-import pandas as pd
+from typing import Final, Callable, Any, Type
+import csv
+from urllib.request import urlopen
+from bs4 import BeautifulSoup, element, Tag, NavigableString
+from re import search
+from math import ceil
+from pathlib import Path
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
-df = pd.read_csv(filepath_or_buffer="通時クラス別年間競争一覧.csv")
+URL = "https://db.netkeiba.com/race/198206050809/"
 
-x = pd.DataFrame(df.columns)
-y = df[(df["通時"] == "o.未勝利") & (df["適性"] == "3.芝 中以遠")].T
-t = list(df.columns)
-# print(x)
-# exit(y)
+def enforce_type[X](instance: Any, cond: Type[X]) -> X:
+    if isinstance(instance, cond):
+        return instance
+    else:
+        raise TypeError(f"検証インスタンスは{type(instance)}型、要求型は{cond}です。")
 
-plt.title("Sales by Product (m$)", fontsize = 22) # (3)タイトル
-plt.xlabel("Product", fontsize = 22) # (4)x軸ラベル
-plt.ylabel("Sales", fontsize = 22) # (5)y軸ラベル
-plt.grid(True) # (6)目盛線表示
-plt.tick_params(labelsize=14) # (7)目盛線ラベルサイズ
 
-plt.bar(x, y, tick_label=t,
-        align="center", color = "c") # (8)棒グラフ描画
-plt.show()
+# def 新規関数[X](instance: Any, cond: Type[X]) -> X:
+#     if isinstance(instance, cond):
+#         return instance
+#     elif not result:
+#         TypeError(f"<{tag} class={class_name}>が存在しません。")
+#     else:
+#         TypeError(f"<{tag} class={class_name}>は{type(result)}インスタンスです。")
 
-# df_sales=pd.read_csv("electric_appliances_sales.csv")
-# print(df_sales)
+def find_element[X](bsObj: BeautifulSoup, tag: str="div", class_name: str="", type: Type[X]=Tag, num: int=0) -> X:
+    if num == 0:
+        result = bsObj.find(tag, {"class":class_name}) if class_name != "" else bsObj.find(tag)
+    else:
+        result = bsObj.find_all(tag, {"class":class_name})[num] if class_name != "" else bsObj.find_all(tag)[num]
+    return enforce_type(result, type)
 
-# plt.title("Sales by Product (m$)", fontsize = 22) # (3)タイトル
-# plt.xlabel("Product", fontsize = 22) # (4)x軸ラベル
-# plt.ylabel("Sales", fontsize = 22) # (5)y軸ラベル
-# plt.grid(True) # (6)目盛線表示
-# plt.tick_params(labelsize=14) # (7)目盛線ラベルサイズ
+def find_tag(bsObj: BeautifulSoup, class_name: str, tag: str="div") -> Tag:
+    result = bsObj.find(tag, {"class":class_name})
+    if isinstance(result, Tag):
+        return result
+    elif not result:
+        TypeError(f"<{tag} class={class_name}>が存在しません。")
+    else:
+        TypeError(f"<{tag} class={class_name}>は{type(result)}インスタンスです。")
 
-# plt.bar(df_sales["Product"], df_sales["Sales"], tick_label=df_sales["Product"],
-#         align="center", color = "c") # (8)棒グラフ描画
-# plt.show()
+def find_navigable_string(bsObj: BeautifulSoup, class_name: str, tag: str="div") -> NavigableString:
+    result = bsObj.find(tag, {"class":class_name})
+    if isinstance(result, NavigableString):
+        return result
+    elif not result:
+        TypeError(f"<{tag} class={class_name}>が存在しません。")
+    else:
+        TypeError(f"<{tag} class={class_name}>は{type(result)}インスタンスです。")
+
+html = urlopen(URL)
+bsObj = BeautifulSoup(html, "html.parser")
+age_limit = find_tag(bsObj=bsObj, class_name="smalltxt", tag="p").getText().split()[2]
+print(age_limit)
+# table = find_tag(bsObj=bsObj, class_name="race_table_01", tag="table")
+table = find_element(bsObj=bsObj, class_name="race_table_01", tag="table", num=1)
+print(bsObj)
