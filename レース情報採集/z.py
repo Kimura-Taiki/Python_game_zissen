@@ -13,6 +13,16 @@ from login_info import ACCOUNT_LOGIN_ID, ACCOUNT_PSWD, LOGIN_URL
 
 URL = "https://db.netkeiba.com/race/198206050809/"
 
+AGE_LIMITS = [
+    [(r"５歳以上|5歳以上", "4:４歳以上"), (r"４歳以上|4歳以上", "3:３歳以上"), (r"４歳|4歳", "2:３歳"), (r"３歳|3歳", "1:２歳")],
+    [(r"４歳以上|4歳以上", "4:４歳以上"), (r"３歳以上|3歳以上", "3:３歳以上"), (r"３歳|3歳", "2:３歳"), (r"２歳|2歳", "1:２歳"),],]
+def get_agelimit(smalltxt: str, year: int) -> str:
+    limits = AGE_LIMITS[0] if year <= 2000 else AGE_LIMITS[1]
+    for pattern, result in limits:
+        if search(pattern, smalltxt):
+            return result
+    return f"0:NoClass {smalltxt}"
+
 def enforce_type[X](instance: Any, cond: Type[X]) -> X:
     if isinstance(instance, cond):
         return instance
