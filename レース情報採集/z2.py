@@ -6,6 +6,8 @@ from urllib.request import urlopen
 from urllib.parse import urljoin
 from login_info import ACCOUNT_LOGIN_ID, ACCOUNT_PSWD, LOGIN_URL
 
+# 参考:https://qiita.com/syunyo/items/36af8bcb501baf8c7014
+
 ARIMA_URL = 'https://db.netkeiba.com/race/198206050809/'
 
 def enforce_type[X](instance: Any, cond: Type[X]) -> X:
