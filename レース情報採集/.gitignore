@@ -1,0 +1,4 @@
+# .gitignore
+
+# ログイン情報ファイルを無視
+login_info.py

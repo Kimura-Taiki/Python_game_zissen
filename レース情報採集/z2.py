@@ -4,10 +4,8 @@ from bs4 import BeautifulSoup, Tag
 from typing import Any, Type
 from urllib.request import urlopen
 from urllib.parse import urljoin
+from login_info import ACCOUNT_LOGIN_ID, ACCOUNT_PSWD, LOGIN_URL
 
-ACCOUNT_LOGIN_ID = 'akari15_5ngo@icloud.com'
-ACCOUNT_PSWD = '1kei24ba8'
-LOGIN_URL = 'https://regist.netkeiba.com/account/?pid=login'
 ARIMA_URL = 'https://db.netkeiba.com/race/198206050809/'
 
 def enforce_type[X](instance: Any, cond: Type[X]) -> X:
