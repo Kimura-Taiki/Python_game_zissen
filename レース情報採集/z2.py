@@ -46,7 +46,7 @@ def find_element[X](bsObj: BeautifulSoup, tag: str="div", class_name: str="", ty
 #     return f"0:NoClass {smalltxt}"
 
 AGE_LIMITS = [
-    [(r"５歳以上|5歳以上", "4:４歳以上"), (r"４歳以上|4歳以上", "3:３歳以上"), (r"４歳|4歳", "2:３歳"), (r"３歳|3歳", "1:２歳")],
+    [(r"５歳以上|5歳以上", "4:４歳以上"), (r"４歳以上|4歳以上", "3:３歳以上"), (r"４歳|4歳", "2:３歳"), (r"３歳|3歳", "1:２歳"),],
     [(r"４歳以上|4歳以上", "4:４歳以上"), (r"３歳以上|3歳以上", "3:３歳以上"), (r"３歳|3歳", "2:３歳"), (r"２歳|2歳", "1:２歳"),],]
 def get_agelimit(smalltxt: str, year: int) -> str:
     limits = AGE_LIMITS[0] if year <= 2000 else AGE_LIMITS[1]
@@ -54,6 +54,8 @@ def get_agelimit(smalltxt: str, year: int) -> str:
         if search(pattern, smalltxt):
             return result
     return f"0:NoClass {smalltxt}"
+
+exit(get_agelimit(smalltxt="2歳未勝利", year=2022))
 
 # セッションを開始
 session = requests.session()

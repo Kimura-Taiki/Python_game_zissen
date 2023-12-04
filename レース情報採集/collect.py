@@ -6,6 +6,7 @@ from re import search
 from math import ceil
 from pathlib import Path
 from requests import Session
+from locale import setlocale, atof, LC_NUMERIC
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -20,7 +21,7 @@ PATH: Final[Callable[[int], str]] = lambda year: "競争一覧/{}".format(year)
 FILE: Final[Callable[[int, int], str]] = lambda year, page: "競争一覧/{}/races{}.csv".format(year, str(page).zfill(3))
 
 AGE_LIMITS = [
-    [(r"５歳以上|5歳以上", "4:４歳以上"), (r"４歳以上|4歳以上", "3:３歳以上"), (r"４歳|4歳", "2:３歳"), (r"３歳|3歳", "1:２歳")],
+    [(r"５歳以上|5歳以上", "4:４歳以上"), (r"４歳以上|4歳以上", "3:３歳以上"), (r"４歳|4歳", "2:３歳"), (r"３歳|3歳", "1:２歳"),],
     [(r"４歳以上|4歳以上", "4:４歳以上"), (r"３歳以上|3歳以上", "3:３歳以上"), (r"３歳|3歳", "2:３歳"), (r"２歳|2歳", "1:２歳"),],]
 
 def get_agelimit(smalltxt: str, year: int) -> str:
@@ -30,11 +31,17 @@ def get_agelimit(smalltxt: str, year: int) -> str:
             return result
     return f"0:NoClass {smalltxt}"
 
+setlocale(LC_NUMERIC, "")
 def first_prize(bsObj: BeautifulSoup) -> float:
-    table = find_element(bsObj=bsObj, class_name="race_table_01", tag="table")
-    tr5 = find_element(bsObj=table, tag="tr", num=5)
-    tdm1 = find_element(bsObj=tr5, tag="td", num=-1)
-    return float(tdm1.get_text().strip())*10
+    try:
+        table = find_element(bsObj=bsObj, class_name="race_table_01", tag="table")
+        tr5 = find_element(bsObj=table, tag="tr", num=5)
+        tdm1 = find_element(bsObj=tr5, tag="td", num=-1)
+        result = atof(tdm1.get_text().strip())*10
+    except:
+        result = 0.0
+    return result
+    # return float(tdm1.get_text().strip())*10
     # td13 = find_element(bsObj=tr5, tag="td", num=13)
     # return float(td13.get_text().strip())*10
 
@@ -74,11 +81,14 @@ def netkeiba_session() -> Session:
     res.raise_for_status() # エラーならここで例外を発生させる
     return session
 
+global_year = 0
 def main() -> None:
+    global global_year
     # for year in range(1980, 2022+1, 1):
     session = netkeiba_session()
     for year in range(2022, 2022+1, 1):
-        make_year(year=year, session=session)
+        global_year = year
+        make_year(year=year, session=session, start=1)
     print("全ての競争を記録しました。EoF")
 
 def make_year(year: int, session: Session, start: int=1) -> None:
@@ -99,6 +109,7 @@ def make_races(path: str, file_name: str, table: list[Tag], session: Session) ->
     print('{}が作成されました。'.format(file_name))
 
 def csvrow_from_tablerow(row: Tag, is_th: bool, session: Session) -> str:
+    global global_year
     csvRow: list[str] = []
     cell: Tag
     for cell in row.findAll(['td', 'th']):
@@ -109,15 +120,9 @@ def csvrow_from_tablerow(row: Tag, is_th: bool, session: Session) -> str:
         csvRow.append("一着賞金")
     else:
         bsObj = race_bsObj(row=row, session=session)
-        formatted_html = bsObj.prettify()
-        with open("output.html", "w", encoding="utf-8") as file:
-            file.write(formatted_html)
-        print("HTML をファイルに保存しました。")
-        exit(first_prize(bsObj=bsObj))
-        csvRow.append(first_prize(bsObj=bsObj))
         smalltxt = find_element(bsObj=bsObj, class_name="smalltxt", tag="p").get_text().strip().split()[2]
-        exit(get_agelimit(smalltxt, 1982))
-        exit(bsObj)
+        csvRow.append(get_agelimit(smalltxt, global_year))
+        csvRow.append(first_prize(bsObj=bsObj))
     return csvRow
 
 def race_bsObj(row: Tag, session: Session) -> BeautifulSoup:
