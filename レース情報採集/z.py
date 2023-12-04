@@ -8,6 +8,9 @@ from pathlib import Path
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
+from login_info import ACCOUNT_LOGIN_ID, ACCOUNT_PSWD, LOGIN_URL
+
+
 URL = "https://db.netkeiba.com/race/198206050809/"
 
 def enforce_type[X](instance: Any, cond: Type[X]) -> X:
@@ -15,15 +18,6 @@ def enforce_type[X](instance: Any, cond: Type[X]) -> X:
         return instance
     else:
         raise TypeError(f"検証インスタンスは{type(instance)}型、要求型は{cond}です。")
-
-
-# def 新規関数[X](instance: Any, cond: Type[X]) -> X:
-#     if isinstance(instance, cond):
-#         return instance
-#     elif not result:
-#         TypeError(f"<{tag} class={class_name}>が存在しません。")
-#     else:
-#         TypeError(f"<{tag} class={class_name}>は{type(result)}インスタンスです。")
 
 def find_element[X](bsObj: BeautifulSoup, tag: str="div", class_name: str="", type: Type[X]=Tag, num: int=0) -> X:
     if num == 0:

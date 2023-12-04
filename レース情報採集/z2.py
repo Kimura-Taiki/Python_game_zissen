@@ -45,7 +45,9 @@ table = find_element(bsObj=bsObj, class_name="race_table_01", tag="table")
 tr5 = find_element(bsObj=table, tag="tr", num=5)
 td13 = find_element(bsObj=tr5, tag="td", num=13)
 prize = float(td13.get_text().strip())*10
-exit(prize)
+print(prize)
+smalltxt = find_element(bsObj=bsObj, class_name="smalltxt", tag="p").get_text().strip().split()[2]
+exit(smalltxt)
 
 # セッションを開始してログイン
 with requests.Session() as session:
