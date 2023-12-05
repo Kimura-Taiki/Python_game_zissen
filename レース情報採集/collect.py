@@ -81,16 +81,6 @@ def netkeiba_session() -> Session:
     res.raise_for_status() # エラーならここで例外を発生させる
     return session
 
-global_year = 0
-def main() -> None:
-    global global_year
-    # for year in range(1980, 2022+1, 1):
-    session = netkeiba_session()
-    for year in range(2022, 2022+1, 1):
-        global_year = year
-        make_year(year=year, session=session, start=1)
-    print("全ての競争を記録しました。EoF")
-
 def make_year(year: int, session: Session, start: int=1) -> None:
     for page in range(start, total_pages(year=year)+1):
         html = urlopen(url=URL(year=year, page=page))
@@ -131,6 +121,16 @@ def race_bsObj(row: Tag, session: Session) -> BeautifulSoup:
     race_href = race_a.get("href")
     race_response = session.get(url=f"https://db.netkeiba.com{race_href}")
     return BeautifulSoup(race_response.content, "html.parser")
+
+global_year = 0
+def main() -> None:
+    global global_year
+    # for year in range(1970, 2022+1, 1):
+    session = netkeiba_session()
+    for year in range(1998, 1998+1, 1):
+        global_year = year
+        make_year(year=year, session=session, start=1)
+    print("全ての競争を記録しました。EoF")
 
 
 main()
