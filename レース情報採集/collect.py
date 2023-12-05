@@ -127,7 +127,7 @@ def main() -> None:
     global global_year
     # for year in range(1970, 2022+1, 1):
     session = netkeiba_session()
-    for year in range(1998, 1998+1, 1):
+    for year in range(2022, 2022+1, 1):
         global_year = year
         make_year(year=year, session=session, start=1)
     print("全ての競争を記録しました。EoF")
