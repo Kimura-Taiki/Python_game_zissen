@@ -13,7 +13,7 @@ DIACHRONIC = ["Nooo!!!", "G1", "G2", "G3", "(G)", "(L)", "OP", "3勝", "2勝", "
 
 def load_table(path: str) -> DataFrame:
     df = pd.read_csv(path)
-    races = df.loc[:, ["開催日", "レース名", "距離"]]
+    races = df.loc[:, ["開催日", "レース名", "距離", "年齢制限", "一着賞金"]]
     skin = [terrain[0] for terrain in df.loc[:, "距離"]]
     distance = [terrain[-(len(terrain)-1):] for terrain in df.loc[:, "距離"]]
     rank = [get_class(name) for name in df.loc[:, "レース名"]]
@@ -44,7 +44,7 @@ def all_races_integrate() -> None:
     print("簡易整理の全統合が終わりました。")
 
 def make_database() -> None:
-    organize_races(range(1975, 2022+1))
+    organize_races(range(1970, 2022+1))
     all_races_integrate()
     df = pd.read_csv(filepath_or_buffer="簡易整理競争全統合.csv")
     df[df["クラス"] == "NoClass"].to_csv("クラス未定義競争一覧.csv", index=False)
@@ -121,6 +121,6 @@ def make_diachronic_count_table() -> None:
 # print(load_table(path="競争一覧/1975/races001.csv"))
 # exit()
 
-# make_database()
+make_database()
 
-make_diachronic_count_table()
+# make_diachronic_count_table()
