@@ -4,6 +4,7 @@ from typing import Callable, Optional, NamedTuple
 from mod.const import BOARD_W, BOARD_LEFT_OBJECT, BOARD_RIGHT_OBJECT, Y_AT_0_DEGREES, WX, SEA_BLIT_X_OFFSET, \
     IMG_OBJ, IMG_SEA, OBJECT_BIKINI_BILLBOARD, OBJECT_PALM_TREE, OBJECT_YACHT, OBJECT_SEA, \
     YELLOW, WHITE, SEA_BLUE, RED, GREEN, BLUE, BLACK, GRAY, O1ST_QUARTER, O2ND_QUARTER, O3RD_QUARTER, O4TH_QUARTER
+from mod.car import Car
 
 def trapezoid_color(course_point: int) -> pygame.Color:
     '''道路ポリゴンの色を作ります。スタートからの絶対距離で色分けします。'''
@@ -93,4 +94,13 @@ class Draw():
           self._DO(obj_l, OBJECT_YACHT, self.idxm50(i))] if j.object == j.cond]
         if obj_l == OBJECT_SEA:
             self.screen.blit(source=IMG_SEA, dest=[self.idxm50(i) + SEA_BLIT_X_OFFSET, self.yf(i)])
+
+    # def draw_player_car(self, car: Car):
+    #     if i == car_y: # PLAYERカー
+    #         pass
+    #     tyome = self._internal_division(ratio=car.x/WX)(car.y)
+    #     draw_shadow(surface=self.screen, x=self._internal_division(ratio=car.x/WX)(car.y),
+    #                 y=self.yf(car.y), size=200*BOARD_W[i]/BOARD_W[0])
+    #     draw_obj(surface=self.screen, img=img_car[3+car_lr[0]], x=ux+car_x[0]*BOARD_W[i]/800, y=self.yf(car.y), scale=0.05+BOARD_W[i]/BOARD_W[0])
+
 
