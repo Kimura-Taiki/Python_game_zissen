@@ -49,7 +49,7 @@ class Car():
         return 0 if value < 0 else (value if value < 320 else 320)
 
 
-
+'''
 print(Car().speed)
 
 def drive_car(key): # プレイヤーの車の操作、制御
@@ -87,3 +87,4 @@ def drive_car(key): # プレイヤーの車の操作、制御
     car_y[0] = car_y[0] + car_spd[0]/100
     if car_y[0] > CMAX-1:
         car_y[0] -= CMAX
+'''
