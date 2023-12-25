@@ -21,6 +21,15 @@ def draw_obj(surface: pygame.surface.Surface, img: pygame.surface.Surface, x: in
     return None
 
 
+def draw_shadow(surface: pygame.surface.Surface, x: int | float, y: int | float, size: int | float) -> None:
+    shadow = pygame.Surface([size, size/4])
+    shadow.fill(RED)
+    shadow.set_colorkey(RED) # Surfaceの透過色を設定
+    shadow.set_alpha(128) # Surfaceの透明度を設定
+    pygame.draw.ellipse(shadow, BLACK, [0, 0, size, size/4])
+    surface.blit(shadow, [x-size/2, y-size/4])
+
+
 class Draw():
     def __init__(self, screen: pygame.surface.Surface, lxf: Callable[[int], float], rxf: Callable[[int], float],
                  yf: Callable[[int], float]) -> None:

@@ -106,6 +106,16 @@ IMG_OBJ: Final[list[pygame.surface.Surface]] = [
     pygame.image.load("image_pr/yashi.png").convert_alpha(),
     pygame.image.load("image_pr/yacht.png").convert_alpha()]
 '''Surface化済みのオブジェクト画像の原板です。'''
+IMG_CAR = [
+    pygame.image.load("image_pr/car00.png").convert_alpha(),
+    pygame.image.load("image_pr/car01.png").convert_alpha(),
+    pygame.image.load("image_pr/car02.png").convert_alpha(),
+    pygame.image.load("image_pr/car03.png").convert_alpha(),
+    pygame.image.load("image_pr/car04.png").convert_alpha(),
+    pygame.image.load("image_pr/car05.png").convert_alpha(),
+    pygame.image.load("image_pr/car06.png").convert_alpha(),
+]
+'''Surface化済みの車画像の原板です。'''
 
 CAR: Final = 30
 '''レースに参加する車の最大数です。'''
