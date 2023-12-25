@@ -6,6 +6,7 @@ from typing import Callable, Final, Optional, NamedTuple
 from mod.const import *
 from mod.course import Course
 from mod.draw import Draw
+from mod.car import Car
 
 
 def process_input_events(move_forward: Callable[[], None]) -> None:
@@ -67,12 +68,19 @@ class RacerGame():
         self.clock.tick(FRAMES_PER_SECOND)
 
 
-def draw_shadow(bg, x, y, siz):
-    shadow = pygame.Surface([siz, siz/4])
+def draw_shadow(bg: pygame.surface.Surface, x: int, y: int, size: int):
+    shadow = pygame.Surface([size, size/4])
     shadow.fill(RED)
     shadow.set_colorkey(RED) # Surfaceの透過色を設定
     shadow.set_alpha(128) # Surfaceの透明度を設定
-    pygame.draw.ellipse(shadow, BLACK, [0,0,siz,siz/4])
-    bg.blit(shadow, [x-siz/2, y-siz/4])
+    pygame.draw.ellipse(shadow, BLACK, [0, 0, size, size/4])
+    bg.blit(shadow, [x-size/2, y-size/4])
+
+
+def draw_obj(bg: pygame.surface.Surface, img: pygame.surface.Surface, x: int, y: int, scale: float):
+    img_rz = pygame.transform.rotozoom(img, 0, scale)
+    w = img_rz.get_width()
+    h = img_rz.get_height()
+    bg.blit(img_rz, [x-w/2, y-h])
 
 
